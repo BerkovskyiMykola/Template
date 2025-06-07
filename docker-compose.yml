@@ -1,4 +1,7 @@
 services:
+  seq:
+    image: datalust/seq:latest
+
   template.api:
     image: ${DOCKER_REGISTRY-}template.api
     build:

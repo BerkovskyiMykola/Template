@@ -1,7 +1,17 @@
 services:
+  seq:
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - 5341:5341
+      - 8000:80
+
   template.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
+      - Serilog__WriteTo__1__Args__serverUrl=http://seq:5341
     ports:
-      - "8080:8080"
+      - 8001:8080
+    depends_on:
+      - seq
