@@ -1,0 +1,6 @@
+services:
+  template.api:
+    image: ${DOCKER_REGISTRY-}template.api
+    build:
+      context: .
+      dockerfile: Template.Api/Dockerfile
