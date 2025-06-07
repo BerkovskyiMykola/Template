@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NullGuard.Fody" Version="3.1.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+	<PackageReference Include="NullGuard.Fody" Version="3.1.1" />
   </ItemGroup>
 
 </Project>
