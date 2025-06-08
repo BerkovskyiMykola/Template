@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Api", "Template.Ap
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{88D13D12-415A-4EE3-84D0-1520811F3AF8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{8AD22927-1DB3-441E-95F4-F824CF1495ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Enrichers.Custom", "Utils\Serilog.Enrichers.Custom\Serilog.Enrichers.Custom.csproj", "{28F6E4B7-8859-4039-832C-9731BD5AF92D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +25,15 @@ Global
 		{88D13D12-415A-4EE3-84D0-1520811F3AF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88D13D12-415A-4EE3-84D0-1520811F3AF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88D13D12-415A-4EE3-84D0-1520811F3AF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28F6E4B7-8859-4039-832C-9731BD5AF92D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28F6E4B7-8859-4039-832C-9731BD5AF92D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28F6E4B7-8859-4039-832C-9731BD5AF92D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28F6E4B7-8859-4039-832C-9731BD5AF92D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{28F6E4B7-8859-4039-832C-9731BD5AF92D} = {8AD22927-1DB3-441E-95F4-F824CF1495ED}
 	EndGlobalSection
 EndGlobal

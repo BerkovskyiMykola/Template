@@ -12,6 +12,7 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Template.Api/Template.Api.csproj", "Template.Api/"]
+COPY ["Utils/Serilog.Enrichers.Custom/Serilog.Enrichers.Custom.csproj", "Utils/Serilog.Enrichers.Custom/"]
 RUN dotnet restore "./Template.Api/Template.Api.csproj"
 COPY . .
 WORKDIR "/src/Template.Api"
