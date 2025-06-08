@@ -9,7 +9,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
-      - Serilog__WriteTo__1__Args__serverUrl=http://seq:5341
+      - Serilog__WriteTo__2__Args__serverUrl=http://seq:5341
     ports:
       - 9001:8080
     depends_on:
