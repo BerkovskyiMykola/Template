@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.HttpLogging;
 using Serilog;
+using Template.Api.Common.Logging;
 using Template.Api.Common.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,6 +58,16 @@ app.UseMiddleware<CorrelationIdMiddleware>();
 
 app.UseHttpLogging();
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/", (ILogger<Program> logger) =>
+{
+    logger.LogInformationSomething(
+        "This is a log message from the root endpoint.");
+
+    logger.LogErrorSomething(
+        "This is an error message from the root endpoint.", 
+        new InvalidOperationException("This is an error message from the root endpoint."));
+
+    return "Hello World!";
+});
 
 await app.RunAsync();
