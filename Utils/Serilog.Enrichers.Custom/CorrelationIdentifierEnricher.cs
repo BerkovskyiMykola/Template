@@ -40,7 +40,14 @@ internal sealed class CorrelationIdentifierEnricher : ILogEventEnricher
             return;
         }
 
-        var property = propertyFactory.CreateProperty("CorrelationIdentifier", httpContext.Request.Headers[_headerName].FirstOrDefault());
+        var correlationId = httpContext.Request.Headers[_headerName].FirstOrDefault();
+
+        if (string.IsNullOrWhiteSpace(correlationId))
+        {
+            return;
+        }
+
+        var property = propertyFactory.CreateProperty("CorrelationIdentifier", correlationId);
         logEvent.AddPropertyIfAbsent(property);
     }
 }

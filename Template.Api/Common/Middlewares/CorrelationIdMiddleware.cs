@@ -16,10 +16,10 @@ internal sealed class CorrelationIdMiddleware : IMiddleware
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="context"/> or <paramref name="next"/> is null.</exception>  
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        if (!context.Request.Headers.TryGetValue(LoggerEnrichmentConfigurationExtensions.CorrelationIdHeader, out var correlationId))
+        if (!context.Request.Headers.TryGetValue(LoggerEnrichmentConfigurationExtensions.CorrelationIdHeader, out var correlationIds) || 
+            string.IsNullOrWhiteSpace(correlationIds.FirstOrDefault()))
         {
-            correlationId = Ulid.NewUlid().ToString();
-            context.Request.Headers[LoggerEnrichmentConfigurationExtensions.CorrelationIdHeader] = correlationId;
+            context.Request.Headers[LoggerEnrichmentConfigurationExtensions.CorrelationIdHeader] = Ulid.NewUlid().ToString();
         }
 
         await next(context);

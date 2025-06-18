@@ -1,18 +1,19 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Serilog.Core;
 using Serilog.Events;
 
 namespace Serilog.Enrichers.Custom;
 
 /// <summary>
-/// Enricher that adds the TraceId if absent from the current HTTP context to the log event.
+/// Enricher that adds the UserId if absent from the current HTTP context to the log event.
 /// </summary>
-internal sealed class TraceIdentifierEnricher : ILogEventEnricher
+internal sealed class UserIdentifierEnricher : ILogEventEnricher
 {
     private readonly HttpContextAccessor _httpContextAccessor = new HttpContextAccessor();
 
     /// <summary>
-    /// Enriches the log event with the TraceId if absent and if an HTTP context is available.
+    /// Enriches the log event with the UserId if absent and if an HTTP context is available.
     /// </summary>
     /// <param name="logEvent">The log event to enrich.</param>
     /// <param name="propertyFactory">Factory to create log event properties.</param>
@@ -26,14 +27,14 @@ internal sealed class TraceIdentifierEnricher : ILogEventEnricher
             return;
         }
 
-        var traceId = httpContext.TraceIdentifier;
+        var userId = httpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (string.IsNullOrWhiteSpace(traceId))
+        if (string.IsNullOrWhiteSpace(userId))
         {
             return;
         }
 
-        var property = propertyFactory.CreateProperty("TraceIdentifier", traceId);
+        var property = propertyFactory.CreateProperty("UserIdentifier", userId);
         logEvent.AddPropertyIfAbsent(property);
     }
 }

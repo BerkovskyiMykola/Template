@@ -37,4 +37,15 @@ public static class LoggerEnrichmentConfigurationExtensions
 
         return enrichmentConfiguration.With(new CorrelationIdentifierEnricher(headerName));
     }
+
+    /// <summary>
+    /// Adds a UserId enricher to the logger configuration.
+    /// </summary>
+    /// <param name="enrichmentConfiguration">The logger enrichment configuration.</param>
+    /// <returns>The updated logger configuration.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="enrichmentConfiguration"/> is null.</exception>  
+    public static LoggerConfiguration WithUserIdentifier(this LoggerEnrichmentConfiguration enrichmentConfiguration)
+    {
+        return enrichmentConfiguration.With<UserIdentifierEnricher>();
+    }
 }
