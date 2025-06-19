@@ -1,6 +1,6 @@
-services:
-  seq:
-    image: datalust/seq:latest
+﻿services:
+  aspire.dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
 
   template.api:
     image: ${DOCKER_REGISTRY-}template.api

@@ -1,16 +1,16 @@
 services:
-  seq:
+  aspire.dashboard:
     environment:
-      - ACCEPT_EULA=Y
+      - ASPIRE_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS=true
     ports:
-      - 80:80
+      - 18888:18888
 
   template.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
-      - Serilog__WriteTo__2__Args__serverUrl=http://seq:5341
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://aspire.dashboard:18889
     ports:
       - 9001:8080
     depends_on:
-      - seq
+      - aspire.dashboard
