@@ -19,6 +19,6 @@ internal static partial class LoggingHelper
     /// <param name="logger">The logger instance.</param>
     /// <param name="something">The contextual information to log.</param>
     /// <param name="ex">The exception to include in the log.</param>
-    [LoggerMessage(1001, LogLevel.Error, "Something is logged: {Someting}")]
-    public static partial void LogErrorSomething(this ILogger logger, string someting, Exception ex);
+    [LoggerMessage(1001, LogLevel.Error, "Something is logged: {Something}")]
+    public static partial void LogErrorSomething(this ILogger logger, string something, Exception ex);
 }

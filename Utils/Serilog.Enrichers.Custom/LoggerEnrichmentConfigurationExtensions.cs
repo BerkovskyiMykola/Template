@@ -27,7 +27,7 @@ public static class LoggerEnrichmentConfigurationExtensions
     /// Adds a CorrelationId enricher to the logger configuration.
     /// </summary>
     /// <param name="enrichmentConfiguration">The logger enrichment configuration.</param>
-    /// <param name="headerName">The name of the header to use for the correlation Id. Defaults to "X-Correlation-Id".</param>
+    /// <param name="headerName">The name of the header to use for the correlation Id. Defaults to <see cref="CorrelationIdHeader"/>.</param>
     /// <returns>The updated logger configuration.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="enrichmentConfiguration"/> or <paramref name="headerName"/> is null.</exception>  
     /// <exception cref="ArgumentException">Thrown if <paramref name="headerName"/> is empty or whitespace.</exception>  

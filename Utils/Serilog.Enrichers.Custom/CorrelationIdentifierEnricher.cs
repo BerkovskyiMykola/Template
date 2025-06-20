@@ -5,7 +5,7 @@ using Serilog.Events;
 namespace Serilog.Enrichers.Custom;
 
 /// <summary>  
-/// Enricher that adds a CorrelationId if absent to log events based on a specified HTTP header.  
+/// Enricher that adds a CorrelationId if absent to log events based on the current HTTP context.  
 /// </summary>  
 internal sealed class CorrelationIdentifierEnricher : ILogEventEnricher
 {

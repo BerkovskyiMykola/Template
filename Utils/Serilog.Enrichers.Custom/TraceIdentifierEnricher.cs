@@ -5,14 +5,14 @@ using Serilog.Events;
 namespace Serilog.Enrichers.Custom;
 
 /// <summary>
-/// Enricher that adds the TraceId if absent from the current HTTP context to the log event.
+/// Enricher that adds a TraceId if absent to the log event based on the current HTTP context.
 /// </summary>
 internal sealed class TraceIdentifierEnricher : ILogEventEnricher
 {
     private readonly HttpContextAccessor _httpContextAccessor = new HttpContextAccessor();
 
     /// <summary>
-    /// Enriches the log event with the TraceId if absent and if an HTTP context is available.
+    /// Enriches the log event with the TraceId if absent and if available in the HTTP context.
     /// </summary>
     /// <param name="logEvent">The log event to enrich.</param>
     /// <param name="propertyFactory">Factory to create log event properties.</param>
