@@ -17,6 +17,9 @@ internal static class OpenTelemetryExtensions
     /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="services"/>, <paramref name="configuration"/> or <paramref name="environment"/> is null.
     /// </exception> 
+    /// <exception cref="ArgumentException">
+    /// Thrown if serviceName or serviceInstanceId in <paramref name="configuration"/> is null, empty or whitespace.
+    /// </exception> 
     public static IServiceCollection AddConfiguredOpenTelemetry(
         this IServiceCollection services, 
         IConfiguration configuration, 
@@ -26,14 +29,14 @@ internal static class OpenTelemetryExtensions
 
         if (string.IsNullOrWhiteSpace(serviceName))
         {
-            throw new ArgumentNullException(nameof(serviceName), "Service name must be configured in OpenTelemetry settings.");
+            throw new ArgumentException(nameof(configuration), "Service name must be configured in OpenTelemetry settings.");
         }
 
         var serviceInstanceId = configuration["OpenTelemetry:ResourceAttributes:service.instance.id"];
 
         if (string.IsNullOrWhiteSpace(serviceInstanceId))
         {
-            throw new ArgumentNullException(nameof(serviceInstanceId), "Service instance Id must be configured in OpenTelemetry settings.");
+            throw new ArgumentException(nameof(configuration), "Service instance Id must be configured in OpenTelemetry settings.");
         }
 
         var metricsAddRuntimeInstrumentation = configuration.GetRequiredSection("OpenTelemetry:Metrics:AddRuntimeInstrumentation").Get<bool>();

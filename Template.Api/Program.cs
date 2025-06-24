@@ -16,11 +16,7 @@ builder.Services
 
 builder.Services.AddConfiguredHttpLogging(builder.Configuration);
 
-builder.Services.AddTransient<CorrelationIdMiddleware>();
-
 var app = builder.Build();
-
-app.UseMiddleware<CorrelationIdMiddleware>();
 
 app.UseHttpLogging();
 
