@@ -19,15 +19,15 @@ internal static class HttpLoggingExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var loggingFields = configuration.GetSection("HttpLogging:LoggingFields").Get<HttpLoggingFields>();
-        var requestHeaders = configuration.GetSection("HttpLogging:RequestHeaders").Get<string[]>() ?? [];
-        var responseHeaders = configuration.GetSection("HttpLogging:ResponseHeaders").Get<string[]>() ?? [];
-        var textMediaTypes = configuration.GetSection("HttpLogging:TextMediaTypes").Get<string[]>() ?? [];
-        var requestBodyLogLimit = configuration.GetSection("HttpLogging:RequestBodyLogLimit").Get<int>();
-        var responseBodyLogLimit = configuration.GetSection("HttpLogging:ResponseBodyLogLimit").Get<int>();
-
         services.AddHttpLogging(config =>
         {
+            var loggingFields = configuration.GetSection("HttpLogging:LoggingFields").Get<HttpLoggingFields>();
+            var requestHeaders = configuration.GetSection("HttpLogging:RequestHeaders").Get<string[]>() ?? [];
+            var responseHeaders = configuration.GetSection("HttpLogging:ResponseHeaders").Get<string[]>() ?? [];
+            var textMediaTypes = configuration.GetSection("HttpLogging:TextMediaTypes").Get<TextMediaTypeOption[]>() ?? [];
+            var requestBodyLogLimit = configuration.GetSection("HttpLogging:RequestBodyLogLimit").Get<int>();
+            var responseBodyLogLimit = configuration.GetSection("HttpLogging:ResponseBodyLogLimit").Get<int>();
+
             config.LoggingFields = loggingFields;
 
             config.RequestHeaders.Clear();
@@ -37,12 +37,18 @@ internal static class HttpLoggingExtensions
             foreach (var header in responseHeaders) config.ResponseHeaders.Add(header);
 
             config.MediaTypeOptions.Clear();
-            foreach (var mediaType in textMediaTypes) config.MediaTypeOptions.AddText(mediaType, Encoding.UTF8);
+            foreach (var textMediaType in textMediaTypes) config.MediaTypeOptions.AddText(textMediaType.ContentType, Encoding.GetEncoding(textMediaType.Encoding));
 
             config.RequestBodyLogLimit = requestBodyLogLimit;
             config.ResponseBodyLogLimit = responseBodyLogLimit;
         });
 
         return services;
+    }
+
+    private sealed record TextMediaTypeOption
+    {
+        public string ContentType { get; init; } = string.Empty;
+        public string Encoding { get; init; } = string.Empty;
     }
 }
