@@ -1,6 +1,5 @@
 using Template.Api.Common.HttpLogging;
 using Template.Api.Common.Logging;
-using Template.Api.Common.Middlewares;
 using Template.Api.Common.OpenTelemetry;
 using Template.Api.Common.Serilog;
 
