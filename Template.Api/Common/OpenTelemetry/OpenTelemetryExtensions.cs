@@ -47,52 +47,52 @@ internal static class OpenTelemetryExtensions
         var tracingAddEntityFrameworkCoreInstrumentation = configuration.GetRequiredSection("OpenTelemetry:Tracing:AddEntityFrameworkCoreInstrumentation").Get<bool>();
 
         services.AddOpenTelemetry()
-            .ConfigureResource(configuration =>
+            .ConfigureResource(config =>
             {
-                configuration
+                config
                     .AddService(
                         serviceName: serviceName,
                         serviceInstanceId: serviceInstanceId)
                     .AddEnvironmentVariableDetector()
                     .AddTelemetrySdk();
             })
-            .WithMetrics(configuration =>
+            .WithMetrics(config =>
             {
                 if (metricsAddRuntimeInstrumentation)
                 {
-                    configuration.AddRuntimeInstrumentation();
+                    config.AddRuntimeInstrumentation();
                 }
 
                 if (metricsAddHttpClientInstrumentation)
                 {
-                    configuration.AddHttpClientInstrumentation();
+                    config.AddHttpClientInstrumentation();
                 }
 
                 if (metricsAddAspNetCoreInstrumentation)
                 {
-                    configuration.AddAspNetCoreInstrumentation();
+                    config.AddAspNetCoreInstrumentation();
                 }
             })
-            .WithTracing(configuration =>
+            .WithTracing(config =>
             {
                 if (environment.IsDevelopment())
                 {
-                    configuration.SetSampler<AlwaysOnSampler>();
+                    config.SetSampler<AlwaysOnSampler>();
                 }
 
                 if (tracingAddHttpClientInstrumentation)
                 {
-                    configuration.AddHttpClientInstrumentation();
+                    config.AddHttpClientInstrumentation();
                 }
 
                 if (tracingAddAspNetCoreInstrumentation)
                 {
-                    configuration.AddAspNetCoreInstrumentation();
+                    config.AddAspNetCoreInstrumentation();
                 }
 
                 if (tracingAddEntityFrameworkCoreInstrumentation)
                 {
-                    configuration.AddEntityFrameworkCoreInstrumentation();
+                    config.AddEntityFrameworkCoreInstrumentation();
                 }
             });
 

@@ -15,10 +15,10 @@ internal static class SerilogExtensions
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="services"/> is null.</exception>  
     public static IServiceCollection AddConfiguredSerilog(this IServiceCollection services)
     {
-        services.AddSerilog((provider, config) =>
+        services.AddSerilog((sp, config) =>
         {
-            config.ReadFrom.Configuration(provider.GetRequiredService<IConfiguration>());
-            config.ReadFrom.Services(provider);
+            config.ReadFrom.Configuration(sp.GetRequiredService<IConfiguration>());
+            config.ReadFrom.Services(sp);
         });
 
         return services;
