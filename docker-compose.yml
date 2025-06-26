@@ -6,4 +6,4 @@
     image: ${DOCKER_REGISTRY-}template.api
     build:
       context: .
-      dockerfile: Template.Api/Dockerfile
+      dockerfile: src/Services/Template.Api/Dockerfile

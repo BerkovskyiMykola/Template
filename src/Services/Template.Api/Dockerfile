@@ -11,11 +11,11 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Template.Api/Template.Api.csproj", "Template.Api/"]
-COPY ["Utils/Serilog.Enrichers.Custom/Serilog.Enrichers.Custom.csproj", "Utils/Serilog.Enrichers.Custom/"]
-RUN dotnet restore "./Template.Api/Template.Api.csproj"
+COPY ["src/Services/Template.Api/Template.Api.csproj", "src/Services/Template.Api/"]
+COPY ["src/BuildingBlocks/Serilog.Enrichers.Custom/Serilog.Enrichers.Custom.csproj", "src/BuildingBlocks/Serilog.Enrichers.Custom/"]
+RUN dotnet restore "./src/Services/Template.Api/Template.Api.csproj"
 COPY . .
-WORKDIR "/src/Template.Api"
+WORKDIR "/src/src/Services/Template.Api"
 RUN dotnet build "./Template.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage

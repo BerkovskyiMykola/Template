@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+    <DockerfileContext>..\..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Utils\Serilog.Enrichers.Custom\Serilog.Enrichers.Custom.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\Serilog.Enrichers.Custom\Serilog.Enrichers.Custom.csproj" />
   </ItemGroup>
 	
 </Project>
