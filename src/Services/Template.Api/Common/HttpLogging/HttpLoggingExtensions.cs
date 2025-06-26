@@ -24,7 +24,7 @@ internal static class HttpLoggingExtensions
             var loggingFields = configuration.GetSection("HttpLogging:LoggingFields").Get<HttpLoggingFields>();
             var requestHeaders = configuration.GetSection("HttpLogging:RequestHeaders").Get<string[]>() ?? [];
             var responseHeaders = configuration.GetSection("HttpLogging:ResponseHeaders").Get<string[]>() ?? [];
-            var textMediaTypes = configuration.GetSection("HttpLogging:TextContentTypes").Get<TextContentTypeOption[]>() ?? [];
+            var textMediaTypes = configuration.GetSection("HttpLogging:TextContentTypes").Get<TextContentTypeOptions[]>() ?? [];
             var requestBodyLogLimit = configuration.GetSection("HttpLogging:RequestBodyLogLimit").Get<int>();
             var responseBodyLogLimit = configuration.GetSection("HttpLogging:ResponseBodyLogLimit").Get<int>();
 
@@ -46,7 +46,7 @@ internal static class HttpLoggingExtensions
         return services;
     }
 
-    private sealed record TextContentTypeOption
+    private sealed record TextContentTypeOptions
     {
         public string MediaType { get; init; } = string.Empty;
         public string Encoding { get; init; } = string.Empty;
