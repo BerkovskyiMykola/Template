@@ -24,7 +24,7 @@ internal static class HttpLoggingExtensions
             var loggingFields = configuration.GetSection("HttpLogging:LoggingFields").Get<HttpLoggingFields>();
             var requestHeaders = configuration.GetSection("HttpLogging:RequestHeaders").Get<string[]>() ?? [];
             var responseHeaders = configuration.GetSection("HttpLogging:ResponseHeaders").Get<string[]>() ?? [];
-            var textMediaTypes = configuration.GetSection("HttpLogging:TextContentTypes").Get<TextContentTypeOptions[]>() ?? [];
+            var textContentTypes = configuration.GetSection("HttpLogging:TextContentTypes").Get<TextContentTypeOptions[]>() ?? [];
             var requestBodyLogLimit = configuration.GetSection("HttpLogging:RequestBodyLogLimit").Get<int>();
             var responseBodyLogLimit = configuration.GetSection("HttpLogging:ResponseBodyLogLimit").Get<int>();
 
@@ -37,7 +37,7 @@ internal static class HttpLoggingExtensions
             foreach (var header in responseHeaders) config.ResponseHeaders.Add(header);
 
             config.MediaTypeOptions.Clear();
-            foreach (var textMediaType in textMediaTypes) config.MediaTypeOptions.AddText(textMediaType.MediaType, Encoding.GetEncoding(textMediaType.Encoding));
+            foreach (var textContentType in textContentTypes) config.MediaTypeOptions.AddText(textContentType.MediaType, Encoding.GetEncoding(textContentType.Encoding));
 
             config.RequestBodyLogLimit = requestBodyLogLimit;
             config.ResponseBodyLogLimit = responseBodyLogLimit;
