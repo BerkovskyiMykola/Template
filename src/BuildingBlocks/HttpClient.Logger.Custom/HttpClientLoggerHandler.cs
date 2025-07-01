@@ -96,7 +96,7 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
             && request.RequestUri.IsAbsoluteUri)
         {
             parameters ??= new List<KeyValuePair<string, object?>>();
-            parameters.Add(new(nameof(request.RequestUri.Host), request.RequestUri.Host));
+            parameters.Add(new("Host", $"{request.RequestUri.Host}:{request.RequestUri.Port}"));
         }
 
         if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestAbsolutePath)
@@ -215,7 +215,7 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
         if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.ResponseStatusCode))
         {
             parameters ??= new List<KeyValuePair<string, object?>>();
-            parameters.Add(new(nameof(response.StatusCode), response.StatusCode));
+            parameters.Add(new(nameof(response.StatusCode), (int)response.StatusCode));
         }
 
         if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.ResponseHeaders))

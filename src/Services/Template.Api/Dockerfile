@@ -13,6 +13,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/Services/Template.Api/Template.Api.csproj", "src/Services/Template.Api/"]
 COPY ["src/BuildingBlocks/Serilog.Enrichers.Custom/Serilog.Enrichers.Custom.csproj", "src/BuildingBlocks/Serilog.Enrichers.Custom/"]
+COPY ["src/BuildingBlocks/HttpClient.Logger.Custom/HttpClient.Logger.Custom.csproj", "src/BuildingBlocks/HttpClient.Logger.Custom/"]
 RUN dotnet restore "./src/Services/Template.Api/Template.Api.csproj"
 COPY . .
 WORKDIR "/src/src/Services/Template.Api"

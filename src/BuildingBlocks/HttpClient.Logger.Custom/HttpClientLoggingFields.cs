@@ -40,10 +40,10 @@ public enum HttpClientLoggingFields : long
     RequestScheme = 4,
 
     /// <summary>
-    /// Flag for logging the HTTP Request <see cref="HttpRequestMessage.RequestUri.Host"/>.
+    /// Flag for logging the HTTP Request <see cref="HttpRequestMessage.RequestUri.Host"/> and <see cref="HttpRequestMessage.RequestUri.Port"/>.
     /// <para>
     /// For example:
-    /// Host: example.com
+    /// Host: example.com:443
     /// </para>
     /// </summary>
     RequestHost = 8,

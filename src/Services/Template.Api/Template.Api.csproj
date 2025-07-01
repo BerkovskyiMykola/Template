@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\HttpClient.Logger.Custom\HttpClient.Logger.Custom.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\Serilog.Enrichers.Custom\Serilog.Enrichers.Custom.csproj" />
   </ItemGroup>
 	
