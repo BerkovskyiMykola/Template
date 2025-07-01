@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Logging;
 
 namespace HttpClient.Logger.Custom;
@@ -306,7 +305,7 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
 
         _logger.LogInformationResponseBody(bodyString);
     }
-    
+
     /// <summary>
     /// Logs the duration of the HTTP request-response round trip if enabled.
     /// </summary>
