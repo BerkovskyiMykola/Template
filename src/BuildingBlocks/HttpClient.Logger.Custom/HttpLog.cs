@@ -22,7 +22,6 @@ internal sealed class HttpLog : IReadOnlyList<KeyValuePair<string, object?>>
     /// </summary>
     /// <param name="keyValues">The key-value pairs to be logged.</param>
     /// <param name="title">The title of the log entry.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="keyValues"/> or <paramref name="title"/> is null.</exception>  
     public HttpLog(List<KeyValuePair<string, object?>> keyValues, string title)
     {
         _keyValues = keyValues;
@@ -58,6 +57,7 @@ internal sealed class HttpLog : IReadOnlyList<KeyValuePair<string, object?>>
     /// Caches the result to avoid repeated string building.
     /// </summary>
     /// <returns>A string representation of the log.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the resulting string is <c>null</c>.</exception>
     public override string ToString()
     {
         if (_cachedToString == null)
@@ -96,6 +96,7 @@ internal sealed class HttpLog : IReadOnlyList<KeyValuePair<string, object?>>
     /// Returns an enumerator that iterates through the collection (non-generic implementation).
     /// </summary>
     /// <returns>An enumerator for the key-value pairs.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the resulting enumerator is <c>null</c>.</exception>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();

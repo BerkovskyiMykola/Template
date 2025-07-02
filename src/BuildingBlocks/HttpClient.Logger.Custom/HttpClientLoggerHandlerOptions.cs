@@ -24,6 +24,8 @@ public sealed record HttpClientLoggerHandlerOptions
     /// access controlled and the privacy impact assessed.
     /// </para>
     /// </summary>
+    /// <exception cref="ArgumentNullException">Thrown when trying to set a null value.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if the getter is called when the value is null.</exception>
     public ISet<string> RequestHeaders { get; set; } = new HashSet<string>();
 
     /// <summary>
@@ -33,6 +35,8 @@ public sealed record HttpClientLoggerHandlerOptions
     /// the header name will be logged with a redacted value.
     /// </para>
     /// </summary>
+    /// <exception cref="ArgumentNullException">Thrown when trying to set a null value.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if the getter is called when the value is null.</exception>
     public ISet<string> ResponseHeaders { get; set; } = new HashSet<string>();
 
     /// <summary>
@@ -42,6 +46,8 @@ public sealed record HttpClientLoggerHandlerOptions
     /// the response body will not be logged.
     /// </para>
     /// </summary>
+    /// <exception cref="ArgumentNullException">Thrown when trying to set a null value.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if the getter is called when the value is null.</exception>
     public IList<MediaTypeHeaderValue> TextContentTypes { get; set; } = [];
 
     /// <summary>

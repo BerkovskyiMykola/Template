@@ -13,6 +13,7 @@ public static class LoggerEnrichmentConfigurationExtensions
     /// <param name="config">The logger enrichment configuration.</param>
     /// <returns>The updated logger configuration.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="config"/> is null.</exception>  
+    /// <exception cref="InvalidOperationException">Thrown when the resulting logger configuration is <c>null</c>.</exception>
     public static LoggerConfiguration WithUserId(this LoggerEnrichmentConfiguration config)
     {
         return config.With<UserIdEnricher>();

@@ -20,7 +20,6 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
     /// <param name="options">The options controlling which parts of the request/response are logged.</param>
     /// <param name="timeProvider">The time provider used to measure request duration.</param>
     /// <param name="logger">The logger used for logging messages.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="options"/>, <paramref name="timeProvider"/>, or <paramref name="logger"/> is null.</exception>  
     public HttpClientLoggerHandler(
         HttpClientLoggerHandlerOptions options,
         TimeProvider timeProvider,
@@ -37,7 +36,6 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
     /// <param name="request">The HTTP request message to send.</param>
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
     /// <returns>The HTTP response message.</returns>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="request"/> is null.</exception>  
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         if (!_logger.IsEnabled(LogLevel.Information) || _options.LoggingFields == HttpClientLoggingFields.None)
@@ -66,7 +64,6 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
     /// Logs the HTTP request properties and headers based on the configured logging fields.
     /// </summary>
     /// <param name="request">The HTTP request message.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="request"/> is null.</exception>  
     private void LogRequestPropertiesAndHeaders(HttpRequestMessage request)
     {
         var parameters = new List<KeyValuePair<string, object?>>();
@@ -122,7 +119,6 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
     /// </summary>
     /// <param name="request">The HTTP request message.</param>
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="request"/> is null.</exception>  
     private async Task LogRequestBodyAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         if (!_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestBody))
@@ -165,7 +161,6 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
     /// Logs the HTTP response properties and headers based on the configured logging fields.
     /// </summary>
     /// <param name="response">The HTTP response message.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="response"/> is null.</exception>  
     private void LogResponsePropertiesAndHeaders(HttpResponseMessage response)
     {
         var parameters = new List<KeyValuePair<string, object?>>();
@@ -192,7 +187,6 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
     /// </summary>
     /// <param name="response">The HTTP response message.</param>
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="response"/> is null.</exception>  
     private async Task LogResponseBodyAsync(HttpResponseMessage response, CancellationToken cancellationToken)
     {
         if (!_options.LoggingFields.HasFlag(HttpClientLoggingFields.ResponseBody))

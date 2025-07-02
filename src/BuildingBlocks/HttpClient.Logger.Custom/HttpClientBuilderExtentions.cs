@@ -16,6 +16,7 @@ public static class HttpClientBuilderExtentions
     /// <param name="configure">An action to configure <see cref="HttpClientLoggerHandlerOptions"/>.</param>
     /// <returns>The configured <see cref="IHttpClientBuilder"/>.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="builder"/> or <paramref name="configure"/> is null.</exception>  
+    /// <exception cref="InvalidOperationException">Thrown when the resulting <see cref="IHttpClientBuilder"/> is <c>null</c>.</exception>
     public static IHttpClientBuilder AddCustomLogger(
         this IHttpClientBuilder builder,
         Action<HttpClientLoggerHandlerOptions> configure)
