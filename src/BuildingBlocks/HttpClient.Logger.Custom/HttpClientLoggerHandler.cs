@@ -170,28 +170,11 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
             return;
         }
 
-        await request.Content.LoadIntoBufferAsync(cancellationToken);
-        using var stream = await request.Content.ReadAsStreamAsync(cancellationToken);
+        var bodyString = await ReadContentAsStringOrDefaultAsync(request.Content, matchedType.Encoding, _options.RequestBodyLogLimit, cancellationToken);
 
-        if (stream.Length == 0)
+        if (bodyString is null)
         {
             return;
-        }
-
-        var bufferSize = (int)Math.Min(stream.Length, _options.ResponseBodyLogLimit);
-        var buffer = new byte[bufferSize];
-        var bytesRead = await stream.ReadAsync(buffer.AsMemory(0, bufferSize), cancellationToken);
-
-        string bodyString;
-
-        try
-        {
-            bodyString = matchedType.Encoding.GetString(buffer, 0, bytesRead);
-        }
-        catch (DecoderFallbackException ex)
-        {
-            _logger.LogDebugDecodeFailure(ex);
-            bodyString = "<Decoder failure>";
         }
 
         _logger.LogInformationRequestBody(bodyString);
@@ -273,28 +256,11 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
             return;
         }
 
-        await response.Content.LoadIntoBufferAsync(cancellationToken);
-        using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+        var bodyString = await ReadContentAsStringOrDefaultAsync(response.Content, matchedType.Encoding, _options.ResponseBodyLogLimit, cancellationToken);
 
-        if (stream.Length == 0)
+        if (bodyString is null)
         {
             return;
-        }
-
-        var bufferSize = (int)Math.Min(stream.Length, _options.ResponseBodyLogLimit);
-        var buffer = new byte[bufferSize];
-        var bytesRead = await stream.ReadAsync(buffer.AsMemory(0, bufferSize), cancellationToken);
-
-        string bodyString;
-
-        try
-        {
-            bodyString = matchedType.Encoding.GetString(buffer, 0, bytesRead);
-        }
-        catch (DecoderFallbackException ex)
-        {
-            _logger.LogDebugDecodeFailure(ex);
-            bodyString = "<Decoder failure>";
         }
 
         _logger.LogInformationResponseBody(bodyString);
@@ -312,5 +278,43 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
         }
 
         _logger.LogInformationDuration(_timeProvider.GetElapsedTime(startTimestamp).TotalMilliseconds);
+    }
+
+    /// <summary>
+    /// Reads the HTTP content as a string using the provided encoding and respecting the log limit.
+    /// </summary>
+    /// <param name="content">The HTTP content to read.</param>
+    /// <param name="encoding">The encoding to use when converting bytes to a string.</param>
+    /// <param name="logLimit">The maximum number of bytes to read from the stream.</param>
+    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
+    /// <returns>
+    /// A <see cref="string"/> representation of the content if readable; otherwise, <c>null</c>.
+    /// Returns <c>"&lt;Decoder failure&gt;"</c> if decoding fails due to a <see cref="DecoderFallbackException"/>.
+    /// </returns>
+    private async Task<string?> ReadContentAsStringOrDefaultAsync(HttpContent content, Encoding encoding, long logLimit, CancellationToken cancellationToken)
+    {
+        await content.LoadIntoBufferAsync(cancellationToken);
+
+        using var stream = await content.ReadAsStreamAsync(cancellationToken);
+
+        if (stream.Length == 0)
+        {
+            return null;
+        }
+
+        var bufferSize = (int)Math.Min(stream.Length, logLimit);
+        var buffer = new byte[bufferSize];
+
+        var bytesRead = await stream.ReadAsync(buffer.AsMemory(0, bufferSize), cancellationToken);
+
+        try
+        {
+            return encoding.GetString(buffer, 0, bytesRead);
+        }
+        catch (DecoderFallbackException ex)
+        {
+            _logger.LogDebugDecodeFailure(ex);
+            return "<Decoder failure>";
+        }
     }
 }
