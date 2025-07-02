@@ -83,44 +83,38 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
             parameters.Add(new(nameof(request.Method), request.Method));
         }
 
-        if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestScheme)
-            && request.RequestUri is not null
-            && request.RequestUri.IsAbsoluteUri)
+        if (request.RequestUri is not null && request.RequestUri.IsAbsoluteUri)
         {
-            parameters ??= new List<KeyValuePair<string, object?>>();
-            parameters.Add(new(nameof(request.RequestUri.Scheme), request.RequestUri.Scheme));
-        }
-
-        if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestHost)
-            && request.RequestUri is not null
-            && request.RequestUri.IsAbsoluteUri)
-        {
-            parameters ??= new List<KeyValuePair<string, object?>>();
-            parameters.Add(new("Host", $"{request.RequestUri.Host}:{request.RequestUri.Port}"));
-        }
-
-        if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestAbsolutePath)
-            && request.RequestUri is not null
-            && request.RequestUri.IsAbsoluteUri)
-        {
-            parameters ??= new List<KeyValuePair<string, object?>>();
-            parameters.Add(new(nameof(request.RequestUri.AbsolutePath), request.RequestUri.AbsolutePath));
-        }
-
-        if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestQuery)
-            && request.RequestUri is not null
-            && request.RequestUri.IsAbsoluteUri)
-        {
-            parameters ??= new List<KeyValuePair<string, object?>>();
-            parameters.Add(new(nameof(request.RequestUri.Query), request.RequestUri.Query));
-        }
-
-        if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestHeaders) && request.Content is not null)
-        {
-            if (request.Content.Headers.Any())
+            if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestScheme))
             {
                 parameters ??= new List<KeyValuePair<string, object?>>();
+                parameters.Add(new(nameof(request.RequestUri.Scheme), request.RequestUri.Scheme));
             }
+
+            if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestHost))
+            {
+                parameters ??= new List<KeyValuePair<string, object?>>();
+                parameters.Add(new("Host", $"{request.RequestUri.Host}:{request.RequestUri.Port}"));
+            }
+
+            if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestAbsolutePath))
+            {
+                parameters ??= new List<KeyValuePair<string, object?>>();
+                parameters.Add(new(nameof(request.RequestUri.AbsolutePath), request.RequestUri.AbsolutePath));
+            }
+
+            if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestQuery))
+            {
+                parameters ??= new List<KeyValuePair<string, object?>>();
+                parameters.Add(new(nameof(request.RequestUri.Query), request.RequestUri.Query));
+            }
+        }
+
+        if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestHeaders) 
+            && request.Content is not null
+            && request.Content.Headers.Any())
+        {
+            parameters ??= new List<KeyValuePair<string, object?>>();
 
             foreach (var (key, value) in request.Content.Headers)
             {
