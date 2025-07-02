@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net.Http.Headers;
+using System.Text;
 using Microsoft.Extensions.Logging;
 
 namespace HttpClient.Logger.Custom;
@@ -12,7 +13,6 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
     private readonly HttpClientLoggerHandlerOptions _options;
     private readonly TimeProvider _timeProvider;
     private readonly ILogger _logger;
-    private const string Redacted = "[Redacted]";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HttpClientLoggerHandler"/> class.
@@ -69,67 +69,48 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="request"/> is null.</exception>  
     private void LogRequestPropertiesAndHeaders(HttpRequestMessage request)
     {
-        List<KeyValuePair<string, object?>>? parameters = null;
+        var parameters = new List<KeyValuePair<string, object?>>();
 
         if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestProtocol))
         {
-            parameters ??= new List<KeyValuePair<string, object?>>();
             parameters.Add(new("Protocol", $"HTTP/{request.Version}"));
         }
 
         if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestMethod))
         {
-            parameters ??= new List<KeyValuePair<string, object?>>();
             parameters.Add(new(nameof(request.Method), request.Method));
         }
 
-        if (request.RequestUri is not null && request.RequestUri.IsAbsoluteUri)
+        if (request.RequestUri is { IsAbsoluteUri: true } uri)
         {
             if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestScheme))
             {
-                parameters ??= new List<KeyValuePair<string, object?>>();
-                parameters.Add(new(nameof(request.RequestUri.Scheme), request.RequestUri.Scheme));
+                parameters.Add(new(nameof(uri.Scheme), uri.Scheme));
             }
 
             if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestHost))
             {
-                parameters ??= new List<KeyValuePair<string, object?>>();
-                parameters.Add(new("Host", $"{request.RequestUri.Host}:{request.RequestUri.Port}"));
+                parameters.Add(new("Host", $"{uri.Host}:{uri.Port}"));
             }
 
             if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestAbsolutePath))
             {
-                parameters ??= new List<KeyValuePair<string, object?>>();
-                parameters.Add(new(nameof(request.RequestUri.AbsolutePath), request.RequestUri.AbsolutePath));
+                parameters.Add(new(nameof(uri.AbsolutePath), uri.AbsolutePath));
             }
 
             if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestQuery))
             {
-                parameters ??= new List<KeyValuePair<string, object?>>();
-                parameters.Add(new(nameof(request.RequestUri.Query), request.RequestUri.Query));
+                parameters.Add(new(nameof(uri.Query), uri.Query));
             }
         }
 
         if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestHeaders) 
-            && request.Content is not null
-            && request.Content.Headers.Any())
+            && request.Content is not null)
         {
-            parameters ??= new List<KeyValuePair<string, object?>>();
-
-            foreach (var (key, value) in request.Content.Headers)
-            {
-                if (!_options.RequestHeaders.Contains(key))
-                {
-                    parameters!.Add(new(key, Redacted));
-
-                    continue;
-                }
-
-                parameters!.Add(new(key, string.Join(',', value)));
-            }
+            AddAllowedOrRedactedHeaders(request.Content.Headers, parameters, _options.RequestHeaders);
         }
 
-        if (parameters?.Count > 0)
+        if (parameters.Count > 0)
         {
             var httpRequestLog = new HttpLog(parameters, "Request");
             _logger.LogInformationRequestLog(httpRequestLog);
@@ -187,35 +168,19 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="response"/> is null.</exception>  
     private void LogResponsePropertiesAndHeaders(HttpResponseMessage response)
     {
-        List<KeyValuePair<string, object?>>? parameters = null;
+        var parameters = new List<KeyValuePair<string, object?>>();
 
         if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.ResponseStatusCode))
         {
-            parameters ??= new List<KeyValuePair<string, object?>>();
             parameters.Add(new(nameof(response.StatusCode), (int)response.StatusCode));
         }
 
         if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.ResponseHeaders))
         {
-            if (response.Content.Headers.Any())
-            {
-                parameters ??= new List<KeyValuePair<string, object?>>();
-            }
-
-            foreach (var (key, value) in response.Content.Headers)
-            {
-                if (!_options.ResponseHeaders.Contains(key))
-                {
-                    parameters!.Add(new(key, Redacted));
-
-                    continue;
-                }
-
-                parameters!.Add(new(key, string.Join(',', value)));
-            }
+            AddAllowedOrRedactedHeaders(response.Content.Headers, parameters, _options.ResponseHeaders);
         }
 
-        if (parameters?.Count > 0)
+        if (parameters.Count > 0)
         {
             var httpResponseLog = new HttpLog(parameters, "Response");
             _logger.LogInformationResponseLog(httpResponseLog);
@@ -315,6 +280,29 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
         {
             _logger.LogDebugDecodeFailure(ex);
             return "<Decoder failure>";
+        }
+    }
+
+    /// <summary>
+    /// Adds HTTP headers to the parameter list, redacting those not included in the allowed headers set.
+    /// </summary>
+    /// <param name="headers">The HTTP content headers to process.</param>
+    /// <param name="parameters">The list of parameters to which header key-value pairs will be added.</param>
+    /// <param name="allowedHeaders">A set of allowed header names. Headers not in this set will be redacted.</param>
+    private void AddAllowedOrRedactedHeaders(HttpContentHeaders headers, List<KeyValuePair<string, object?>> parameters, ISet<string> allowedHeaders)
+    {
+        const string Redacted = "[Redacted]";
+
+        foreach (var (key, value) in headers)
+        {
+            if (!allowedHeaders.Contains(key))
+            {
+                parameters!.Add(new(key, Redacted));
+            }
+            else
+            {
+                parameters!.Add(new(key, string.Join(',', value)));
+            }
         }
     }
 }
