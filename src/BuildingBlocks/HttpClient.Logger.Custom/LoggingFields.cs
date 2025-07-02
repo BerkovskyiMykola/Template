@@ -5,7 +5,7 @@
 /// request and response are logged.
 /// </summary>
 [Flags]
-public enum HttpClientLoggingFields : long
+public enum LoggingFields : long
 {
     /// <summary>
     /// No logging.
@@ -69,7 +69,7 @@ public enum HttpClientLoggingFields : long
     /// <summary>
     /// Flag for logging the HTTP Request <see cref="HttpRequestMessage.Content.Headers"/>.
     /// Headers are redacted by default with the character '[Redacted]' unless specified in
-    /// the <see cref="HttpClientLoggerHandlerOptions.RequestHeaders"/>.
+    /// the <see cref="LoggerHandlerOptions.RequestHeaders"/>.
     /// <para>
     /// For example:
     /// Connection: keep-alive
@@ -80,7 +80,7 @@ public enum HttpClientLoggingFields : long
 
     /// <summary>
     /// Flag for logging the HTTP Request <see cref="HttpRequestMessage.Content"/>.
-    /// Logging the request body up to <see cref="HttpClientLoggerHandlerOptions.RequestBodyLogLimit"/>.
+    /// Logging the request body up to <see cref="LoggerHandlerOptions.RequestBodyLogLimit"/>.
     /// </summary>
     RequestBody = 128,
 
@@ -97,7 +97,7 @@ public enum HttpClientLoggingFields : long
     /// Flag for logging the HTTP Response <see cref="HttpResponseMessage.Content.Headers"/>.
     /// <para>
     /// Headers are redacted by default with the character '[Redacted]' unless specified in
-    /// the <see cref="HttpClientLoggerHandlerOptions.ResponseHeaders"/>.
+    /// the <see cref="LoggerHandlerOptions.ResponseHeaders"/>.
     /// </para>
     /// <para>
     /// For example:
@@ -109,7 +109,7 @@ public enum HttpClientLoggingFields : long
 
     /// <summary>
     /// Flag for logging the HTTP Response <see cref="HttpResponseMessage.Content"/>.
-    /// Logging the response body up to <see cref="HttpClientLoggerHandlerOptions.ResponseBodyLogLimit"/>.
+    /// Logging the response body up to <see cref="LoggerHandlerOptions.ResponseBodyLogLimit"/>.
     /// </summary>
     ResponseBody = 1024,
 
@@ -144,7 +144,7 @@ public enum HttpClientLoggingFields : long
     /// <summary>
     /// Flag for logging the entire HTTP Request.
     /// Includes <see cref="RequestPropertiesAndHeaders"/> and <see cref="RequestBody"/>.
-    /// Logging the request body up to <see cref="HttpClientLoggerHandlerOptions.RequestBodyLogLimit"/>.
+    /// Logging the request body up to <see cref="LoggerHandlerOptions.RequestBodyLogLimit"/>.
     /// </summary>
     /// <remarks>
     /// The HTTP Request <see cref="HttpRequestMessage.RequestUri.Query"/> is not included with this flag as it may contain private information.
@@ -155,15 +155,15 @@ public enum HttpClientLoggingFields : long
     /// <summary>
     /// Flag for logging the entire HTTP Response.
     /// Includes <see cref="ResponsePropertiesAndHeaders"/> and <see cref="ResponseBody"/>.
-    /// Logging the request body up to <see cref="HttpClientLoggerHandlerOptions.ResponseBodyLogLimit"/>.
+    /// Logging the request body up to <see cref="LoggerHandlerOptions.ResponseBodyLogLimit"/>.
     /// </summary>
     Response = ResponsePropertiesAndHeaders | ResponseBody,
 
     /// <summary>
     /// Flag for logging both the HTTP Request and Response.
     /// Includes <see cref="Request"/>, <see cref="Response"/>, and <see cref="Duration"/>.
-    /// Logging the request and response body up to the <see cref="HttpClientLoggerHandlerOptions.RequestBodyLogLimit"/>
-    /// and <see cref="HttpClientLoggerHandlerOptions.ResponseBodyLogLimit"/>.
+    /// Logging the request and response body up to the <see cref="LoggerHandlerOptions.RequestBodyLogLimit"/>
+    /// and <see cref="LoggerHandlerOptions.ResponseBodyLogLimit"/>.
     /// </summary>
     /// <remarks>
     /// The HTTP Request <see cref="HttpRequestMessage.RequestUri.Query"/> is not included with this flag as it may contain private information.

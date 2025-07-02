@@ -8,20 +8,20 @@ namespace HttpClient.Logger.Custom;
 /// A <see cref="DelegatingHandler"/> implementation that logs HTTP request and response details
 /// according to configured logging options.
 /// </summary>
-internal sealed class HttpClientLoggerHandler : DelegatingHandler
+internal sealed class LoggerHandler : DelegatingHandler
 {
-    private readonly HttpClientLoggerHandlerOptions _options;
+    private readonly LoggerHandlerOptions _options;
     private readonly TimeProvider _timeProvider;
     private readonly ILogger _logger;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="HttpClientLoggerHandler"/> class.
+    /// Initializes a new instance of the <see cref="LoggerHandler"/> class.
     /// </summary>
     /// <param name="options">The options controlling which parts of the request/response are logged.</param>
     /// <param name="timeProvider">The time provider used to measure request duration.</param>
     /// <param name="logger">The logger used for logging messages.</param>
-    public HttpClientLoggerHandler(
-        HttpClientLoggerHandlerOptions options,
+    public LoggerHandler(
+        LoggerHandlerOptions options,
         TimeProvider timeProvider,
         ILogger logger)
     {
@@ -38,7 +38,7 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
     /// <returns>The HTTP response message.</returns>
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (!_logger.IsEnabled(LogLevel.Information) || _options.LoggingFields == HttpClientLoggingFields.None)
+        if (!_logger.IsEnabled(LogLevel.Information) || _options.LoggingFields == LoggingFields.None)
         {
             return await base.SendAsync(request, cancellationToken);
         }
@@ -68,40 +68,40 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
     {
         var parameters = new List<KeyValuePair<string, object?>>();
 
-        if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestProtocol))
+        if (_options.LoggingFields.HasFlag(LoggingFields.RequestProtocol))
         {
             parameters.Add(new("Protocol", $"HTTP/{request.Version}"));
         }
 
-        if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestMethod))
+        if (_options.LoggingFields.HasFlag(LoggingFields.RequestMethod))
         {
             parameters.Add(new(nameof(request.Method), request.Method));
         }
 
         if (request.RequestUri is { IsAbsoluteUri: true } uri)
         {
-            if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestScheme))
+            if (_options.LoggingFields.HasFlag(LoggingFields.RequestScheme))
             {
                 parameters.Add(new(nameof(uri.Scheme), uri.Scheme));
             }
 
-            if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestHost))
+            if (_options.LoggingFields.HasFlag(LoggingFields.RequestHost))
             {
                 parameters.Add(new("Host", $"{uri.Host}:{uri.Port}"));
             }
 
-            if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestAbsolutePath))
+            if (_options.LoggingFields.HasFlag(LoggingFields.RequestAbsolutePath))
             {
                 parameters.Add(new(nameof(uri.AbsolutePath), uri.AbsolutePath));
             }
 
-            if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestQuery))
+            if (_options.LoggingFields.HasFlag(LoggingFields.RequestQuery))
             {
                 parameters.Add(new(nameof(uri.Query), uri.Query));
             }
         }
 
-        if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestHeaders) 
+        if (_options.LoggingFields.HasFlag(LoggingFields.RequestHeaders) 
             && request.Content is not null)
         {
             AddAllowedOrRedactedHeaders(request.Content.Headers, parameters, _options.RequestHeaders);
@@ -121,7 +121,7 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
     private async Task LogRequestBodyAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (!_options.LoggingFields.HasFlag(HttpClientLoggingFields.RequestBody))
+        if (!_options.LoggingFields.HasFlag(LoggingFields.RequestBody))
         {
             return;
         }
@@ -165,12 +165,12 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
     {
         var parameters = new List<KeyValuePair<string, object?>>();
 
-        if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.ResponseStatusCode))
+        if (_options.LoggingFields.HasFlag(LoggingFields.ResponseStatusCode))
         {
             parameters.Add(new(nameof(response.StatusCode), (int)response.StatusCode));
         }
 
-        if (_options.LoggingFields.HasFlag(HttpClientLoggingFields.ResponseHeaders))
+        if (_options.LoggingFields.HasFlag(LoggingFields.ResponseHeaders))
         {
             AddAllowedOrRedactedHeaders(response.Content.Headers, parameters, _options.ResponseHeaders);
         }
@@ -189,7 +189,7 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
     private async Task LogResponseBodyAsync(HttpResponseMessage response, CancellationToken cancellationToken)
     {
-        if (!_options.LoggingFields.HasFlag(HttpClientLoggingFields.ResponseBody))
+        if (!_options.LoggingFields.HasFlag(LoggingFields.ResponseBody))
         {
             return;
         }
@@ -231,7 +231,7 @@ internal sealed class HttpClientLoggerHandler : DelegatingHandler
     /// <param name="startTimestamp">The start timestamp of the request as provided by <see cref="TimeProvider"/>.</param>
     private void LogDuration(long startTimestamp)
     {
-        if (!_options.LoggingFields.HasFlag(HttpClientLoggingFields.Duration))
+        if (!_options.LoggingFields.HasFlag(LoggingFields.Duration))
         {
             return;
         }

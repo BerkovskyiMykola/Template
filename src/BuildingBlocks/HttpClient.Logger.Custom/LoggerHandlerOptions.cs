@@ -3,14 +3,14 @@
 namespace HttpClient.Logger.Custom;
 
 /// <summary>
-/// Options for the <see cref="HttpClientLoggerHandler"/>.
+/// Options for the <see cref="LoggerHandler"/>.
 /// </summary>
-public sealed record HttpClientLoggerHandlerOptions
+public sealed record LoggerHandlerOptions
 {
     /// <summary>
     /// Fields to log for the Request and Response.
     /// </summary>
-    public HttpClientLoggingFields LoggingFields { get; set; } = HttpClientLoggingFields.None;
+    public LoggingFields LoggingFields { get; set; } = LoggingFields.None;
 
     /// <summary>
     /// Request header values that are allowed to be logged.

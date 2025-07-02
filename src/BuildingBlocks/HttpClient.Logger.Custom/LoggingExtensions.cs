@@ -5,7 +5,7 @@ namespace HttpClient.Logger.Custom;
 /// <summary>
 /// Provides extension methods for logging HTTP client request and response information.
 /// </summary>
-internal static partial class HttpClientLoggingExtensions
+internal static partial class LoggingExtensions
 {
     /// <summary>
     /// Logs HTTP request information using a custom <see cref="HttpLog"/> object.

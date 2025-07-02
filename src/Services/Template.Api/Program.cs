@@ -25,7 +25,7 @@ builder.Services.AddHttpClient(httpClientName)
     .RemoveAllLoggers()
     .AddCustomLogger(config =>
     {
-        var loggingFields = builder.Configuration.GetSection($"HttpClientLogging:{httpClientName}:LoggingFields").Get<HttpClientLoggingFields>();
+        var loggingFields = builder.Configuration.GetSection($"HttpClientLogging:{httpClientName}:LoggingFields").Get<LoggingFields>();
         var requestHeaders = builder.Configuration.GetSection($"HttpClientLogging:{httpClientName}:RequestHeaders").Get<string[]>() ?? [];
         var responseHeaders = builder.Configuration.GetSection($"HttpClientLogging:{httpClientName}:ResponseHeaders").Get<string[]>() ?? [];
         var textContentTypes = builder.Configuration.GetSection($"HttpClientLogging:{httpClientName}:TextContentTypes").Get<TextContentTypeOptions[]>() ?? [];
