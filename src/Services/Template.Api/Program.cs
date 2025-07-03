@@ -48,7 +48,8 @@ builder.Services.AddHttpClient(httpClientName)
 
         config.RequestBodyLogLimit = requestBodyLogLimit;
         config.ResponseBodyLogLimit = responseBodyLogLimit;
-    });
+    })
+    .AddStandardResilienceHandler();
 
 var app = builder.Build();
 
