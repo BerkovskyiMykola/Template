@@ -23,7 +23,7 @@ builder.Services.AddSingleton(TimeProvider.System);
 const string httpClientName = "TestTrace";
 builder.Services.AddHttpClient(httpClientName)
     .RemoveAllLoggers()
-    .AddCustomLogger(config =>
+    .AddCustomLoggerHandler(config =>
     {
         var loggingFields = builder.Configuration.GetSection($"HttpClientLogging:{httpClientName}:LoggingFields").Get<LoggingFields>();
         var requestHeaders = builder.Configuration.GetSection($"HttpClientLogging:{httpClientName}:RequestHeaders").Get<string[]>() ?? [];

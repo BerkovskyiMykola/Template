@@ -10,14 +10,14 @@ namespace HttpClient.Logger.Custom;
 public static class HttpClientBuilderExtentions
 {
     /// <summary>
-    /// Configures the HttpClient to add a custom logger.
+    /// Configures the HttpClient to add a custom logger handler.
     /// </summary>
     /// <param name="builder">The <see cref="IHttpClientBuilder"/> to configure.</param>
     /// <param name="configure">An action to configure <see cref="LoggerHandlerOptions"/>.</param>
     /// <returns>The configured <see cref="IHttpClientBuilder"/>.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="builder"/> or <paramref name="configure"/> is null.</exception>  
     /// <exception cref="InvalidOperationException">Thrown when the resulting <see cref="IHttpClientBuilder"/> is <c>null</c>.</exception>
-    public static IHttpClientBuilder AddCustomLogger(
+    public static IHttpClientBuilder AddCustomLoggerHandler(
         this IHttpClientBuilder builder,
         Action<LoggerHandlerOptions> configure)
     {
