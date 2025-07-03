@@ -135,12 +135,7 @@ internal sealed class LoggerHandler : DelegatingHandler
             return;
         }
 
-        var mediaType = requestContentTypeHeader.MediaType;
-        var charSet = requestContentTypeHeader.CharSet ?? DefaultEncoding.BodyName;
-
-        var matchedType = _options.TextContentTypes.FirstOrDefault(x =>
-            x.MatchesMediaType(mediaType) &&
-            string.Equals(x.Charset.Value ?? DefaultEncoding.BodyName, charSet, StringComparison.OrdinalIgnoreCase));
+        var matchedType = MatchTextContentType(requestContentTypeHeader.MediaType, requestContentTypeHeader.CharSet);
 
         if (matchedType is null)
         {
@@ -149,7 +144,7 @@ internal sealed class LoggerHandler : DelegatingHandler
             return;
         }
 
-        var bodyString = await ReadContentAsStringOrDefaultAsync(request.Content, matchedType.Encoding ?? DefaultEncoding, _options.RequestBodyLogLimit, cancellationToken);
+        var bodyString = await ReadContentAsStringOrDefaultAsync(request.Content, matchedType.Encoding, _options.RequestBodyLogLimit, cancellationToken);
 
         if (bodyString is null)
         {
@@ -203,12 +198,7 @@ internal sealed class LoggerHandler : DelegatingHandler
             return;
         }
 
-        var mediaType = responseContentTypeHeader.MediaType;
-        var charSet = responseContentTypeHeader.CharSet ?? DefaultEncoding.BodyName;
-
-        var matchedType = _options.TextContentTypes.FirstOrDefault(x =>
-            x.MatchesMediaType(mediaType) &&
-            string.Equals(x.Charset.Value ?? DefaultEncoding.BodyName, charSet, StringComparison.OrdinalIgnoreCase));
+        var matchedType = MatchTextContentType(responseContentTypeHeader.MediaType, responseContentTypeHeader.CharSet);
 
         if (matchedType is null)
         {
@@ -217,7 +207,7 @@ internal sealed class LoggerHandler : DelegatingHandler
             return;
         }
 
-        var bodyString = await ReadContentAsStringOrDefaultAsync(response.Content, matchedType.Encoding ?? DefaultEncoding, _options.ResponseBodyLogLimit, cancellationToken);
+        var bodyString = await ReadContentAsStringOrDefaultAsync(response.Content, matchedType.Encoding, _options.ResponseBodyLogLimit, cancellationToken);
 
         if (bodyString is null)
         {
@@ -240,6 +230,31 @@ internal sealed class LoggerHandler : DelegatingHandler
 
         _logger.LogInformationDuration(_timeProvider.GetElapsedTime(startTimestamp).TotalMilliseconds);
     }
+
+    /// <summary>
+    /// Matches the provided media type and charset against known text content types.
+    /// </summary>
+    /// <param name="mediaType">The media type to match (e.g., "text/plain").</param>
+    /// <param name="charset">The optional charset (e.g., "utf-8"). If null, a <see cref="DefaultEncoding"/> is used.</param>
+    /// <returns>
+    /// A <see cref="TextContentTypeMatch"/> instance if a matching content type is found; otherwise, <c>null</c>.
+    /// </returns>
+    private TextContentTypeMatch? MatchTextContentType(string mediaType, string? charset)
+    {
+        var matchedType = _options.TextContentTypes.FirstOrDefault(x =>
+            x.MatchesMediaType(mediaType) &&
+            string.Equals(x.Charset.Value ?? DefaultEncoding.BodyName, charset ?? DefaultEncoding.BodyName, StringComparison.OrdinalIgnoreCase));
+
+        if (matchedType is null)
+        {
+            return null;
+        }
+
+        return new TextContentTypeMatch(
+            matchedType.Encoding ?? DefaultEncoding);
+    }
+
+    private record TextContentTypeMatch(Encoding Encoding);
 
     /// <summary>
     /// Reads the HTTP content as a string using the provided encoding and respecting the log limit.
