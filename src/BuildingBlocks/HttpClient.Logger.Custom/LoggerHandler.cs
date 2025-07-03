@@ -10,6 +10,8 @@ namespace HttpClient.Logger.Custom;
 /// </summary>
 internal sealed class LoggerHandler : DelegatingHandler
 {
+    private readonly static Encoding DefaultEncoding = Encoding.UTF8;
+
     private readonly LoggerHandlerOptions _options;
     private readonly TimeProvider _timeProvider;
     private readonly ILogger _logger;
@@ -126,7 +128,7 @@ internal sealed class LoggerHandler : DelegatingHandler
             return;
         }
 
-        if (request.Content?.Headers.ContentType is not { MediaType: not null, CharSet: not null } requestContentTypeHeader)
+        if (request.Content?.Headers.ContentType is not { MediaType: not null } requestContentTypeHeader)
         {
             _logger.LogDebugRequestNoMediaType();
 
@@ -134,20 +136,20 @@ internal sealed class LoggerHandler : DelegatingHandler
         }
 
         var mediaType = requestContentTypeHeader.MediaType;
-        var charSet = requestContentTypeHeader.CharSet;
+        var charSet = requestContentTypeHeader.CharSet ?? DefaultEncoding.BodyName;
 
         var matchedType = _options.TextContentTypes.FirstOrDefault(x =>
             x.MatchesMediaType(mediaType) &&
-            string.Equals(x.Charset.Value, charSet, StringComparison.OrdinalIgnoreCase));
+            string.Equals(x.Charset.Value ?? DefaultEncoding.BodyName, charSet, StringComparison.OrdinalIgnoreCase));
 
-        if (matchedType is null || matchedType.Encoding is null)
+        if (matchedType is null)
         {
             _logger.LogDebugUnrecognizedRequestMediaType();
 
             return;
         }
 
-        var bodyString = await ReadContentAsStringOrDefaultAsync(request.Content, matchedType.Encoding, _options.RequestBodyLogLimit, cancellationToken);
+        var bodyString = await ReadContentAsStringOrDefaultAsync(request.Content, matchedType.Encoding ?? DefaultEncoding, _options.RequestBodyLogLimit, cancellationToken);
 
         if (bodyString is null)
         {
@@ -194,7 +196,7 @@ internal sealed class LoggerHandler : DelegatingHandler
             return;
         }
 
-        if (response.Content.Headers.ContentType is not { MediaType: not null, CharSet: not null } responseContentTypeHeader)
+        if (response.Content.Headers.ContentType is not { MediaType: not null } responseContentTypeHeader)
         {
             _logger.LogDebugResponseNoMediaType();
 
@@ -202,20 +204,20 @@ internal sealed class LoggerHandler : DelegatingHandler
         }
 
         var mediaType = responseContentTypeHeader.MediaType;
-        var charSet = responseContentTypeHeader.CharSet;
+        var charSet = responseContentTypeHeader.CharSet ?? DefaultEncoding.BodyName;
 
         var matchedType = _options.TextContentTypes.FirstOrDefault(x =>
             x.MatchesMediaType(mediaType) &&
-            string.Equals(x.Charset.Value, charSet, StringComparison.OrdinalIgnoreCase));
+            string.Equals(x.Charset.Value ?? DefaultEncoding.BodyName, charSet, StringComparison.OrdinalIgnoreCase));
 
-        if (matchedType is null || matchedType.Encoding is null)
+        if (matchedType is null)
         {
             _logger.LogDebugUnrecognizedResponseMediaType();
 
             return;
         }
 
-        var bodyString = await ReadContentAsStringOrDefaultAsync(response.Content, matchedType.Encoding, _options.ResponseBodyLogLimit, cancellationToken);
+        var bodyString = await ReadContentAsStringOrDefaultAsync(response.Content, matchedType.Encoding ?? DefaultEncoding, _options.ResponseBodyLogLimit, cancellationToken);
 
         if (bodyString is null)
         {
