@@ -5,9 +5,9 @@ using OpenTelemetry.Trace;
 namespace Template.Api.Common.OpenTelemetry;
 
 /// <summary>  
-/// Provides extension methods for OpenTelemetry in the application.  
-/// </summary>  
-internal static class OpenTelemetryExtensions
+/// Provides extension methods for configuring and adding OpenTelemetry services in the application. 
+/// </summary>
+internal static class ServiceCollectionExtensions
 {
     /// <summary>  
     /// Adds and configures OpenTelemetry for the application.  

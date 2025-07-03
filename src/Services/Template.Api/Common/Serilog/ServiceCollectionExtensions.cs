@@ -3,9 +3,9 @@
 namespace Template.Api.Common.Serilog;
 
 /// <summary>  
-/// Provides extension methods for Serilog in the application.  
-/// </summary>  
-internal static class SerilogExtensions
+/// Provides extension methods for configuring and adding Serilog services in the application. 
+/// </summary>
+internal static class ServiceCollectionExtensions
 {
     /// <summary>  
     /// Adds and configures Serilog logging for the application.  

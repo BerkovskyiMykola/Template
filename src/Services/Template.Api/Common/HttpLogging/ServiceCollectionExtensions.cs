@@ -4,9 +4,9 @@ using System.Text;
 namespace Template.Api.Common.HttpLogging;
 
 /// <summary>  
-/// Provides extension methods for HTTP logging in the application.  
-/// </summary>  
-internal static class HttpLoggingExtensions
+/// Provides extension methods for configuring and adding HTTP logging services in the application. 
+/// </summary>
+internal static class ServiceCollectionExtensions
 {
     /// <summary>  
     /// Adds and configures HTTP logging services based on the provided configuration.  

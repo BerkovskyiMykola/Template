@@ -1,9 +1,9 @@
 ﻿namespace Template.Api.Common.Logging;
 
 /// <summary>
-/// Provides helper methods for logging.
+/// Provides extension methods for logging.
 /// </summary>
-internal static partial class LoggingHelper
+internal static partial class LoggingExtensions
 {
     /// <summary>
     /// Logs an informational message with the specified context.
