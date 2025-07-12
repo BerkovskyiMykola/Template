@@ -1,4 +1,5 @@
-﻿using OpenTelemetry.Metrics;
+﻿using OpenTelemetry.Exporter;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
@@ -18,8 +19,8 @@ internal static class ServiceCollectionExtensions
     /// Thrown if <paramref name="services"/>, <paramref name="configuration"/> or <paramref name="environment"/> is null.
     /// </exception> 
     public static IServiceCollection AddConfiguredOpenTelemetry(
-        this IServiceCollection services, 
-        IConfiguration configuration, 
+        this IServiceCollection services,
+        IConfiguration configuration,
         IHostEnvironment environment)
     {
         services.AddOpenTelemetry()
@@ -38,9 +39,9 @@ internal static class ServiceCollectionExtensions
             })
             .WithMetrics(config =>
             {
-                var metricsAddRuntimeInstrumentation = configuration.GetRequiredSection("OpenTelemetry:Metrics:AddRuntimeInstrumentation").Get<bool>();
-                var metricsAddHttpClientInstrumentation = configuration.GetRequiredSection("OpenTelemetry:Metrics:AddHttpClientInstrumentation").Get<bool>();
-                var metricsAddAspNetCoreInstrumentation = configuration.GetRequiredSection("OpenTelemetry:Metrics:AddAspNetCoreInstrumentation").Get<bool>();
+                var metricsAddRuntimeInstrumentation = configuration.GetSection("OpenTelemetry:Metrics:AddRuntimeInstrumentation").Get<bool>();
+                var metricsAddHttpClientInstrumentation = configuration.GetSection("OpenTelemetry:Metrics:AddHttpClientInstrumentation").Get<bool>();
+                var metricsAddAspNetCoreInstrumentation = configuration.GetSection("OpenTelemetry:Metrics:AddAspNetCoreInstrumentation").Get<bool>();
 
                 if (metricsAddRuntimeInstrumentation)
                 {
@@ -57,18 +58,26 @@ internal static class ServiceCollectionExtensions
                     config.AddAspNetCoreInstrumentation();
                 }
 
-                var otlpEndpoint = configuration["OpenTelemetry:Exporters:Otlp:Endpoint"];
+                var otlpExporter = configuration.GetSection($"OpenTelemetry:Exporters:Otlp:Metrics");
 
-                if (otlpEndpoint is not null)
+                if (otlpExporter.Exists())
                 {
-                    config.AddOtlpExporter(x => x.Endpoint = new Uri(otlpEndpoint));
+                    config.AddOtlpExporter(x =>
+                    {
+                        x.Endpoint = new Uri(otlpExporter["Endpoint"]!);
+                        x.Protocol = otlpExporter.GetSection("Protocol").Get<OtlpExportProtocol>();
+                        x.Headers = string.Join(
+                            ",",
+                            (otlpExporter.GetSection("Headers").Get<Dictionary<string, string>>() ?? new Dictionary<string, string>()).Select(x => $"{x.Key}={x.Value}")
+                        );
+                    });
                 }
             })
             .WithTracing(config =>
             {
-                var tracingAddHttpClientInstrumentation = configuration.GetRequiredSection("OpenTelemetry:Tracing:AddHttpClientInstrumentation").Get<bool>();
-                var tracingAddAspNetCoreInstrumentation = configuration.GetRequiredSection("OpenTelemetry:Tracing:AddAspNetCoreInstrumentation").Get<bool>();
-                var tracingAddEntityFrameworkCoreInstrumentation = configuration.GetRequiredSection("OpenTelemetry:Tracing:AddEntityFrameworkCoreInstrumentation").Get<bool>();
+                var tracingAddHttpClientInstrumentation = configuration.GetSection("OpenTelemetry:Tracing:AddHttpClientInstrumentation").Get<bool>();
+                var tracingAddAspNetCoreInstrumentation = configuration.GetSection("OpenTelemetry:Tracing:AddAspNetCoreInstrumentation").Get<bool>();
+                var tracingAddEntityFrameworkCoreInstrumentation = configuration.GetSection("OpenTelemetry:Tracing:AddEntityFrameworkCoreInstrumentation").Get<bool>();
 
                 if (environment.IsDevelopment())
                 {
@@ -90,11 +99,19 @@ internal static class ServiceCollectionExtensions
                     config.AddEntityFrameworkCoreInstrumentation();
                 }
 
-                var otlpEndpoint = configuration["OpenTelemetry:Exporters:Otlp:Endpoint"];
+                var otlpExporter = configuration.GetSection($"OpenTelemetry:Exporters:Otlp:Tracing");
 
-                if (otlpEndpoint is not null)
+                if (otlpExporter.Exists())
                 {
-                    config.AddOtlpExporter(x => x.Endpoint = new Uri(otlpEndpoint));
+                    config.AddOtlpExporter(x =>
+                    {
+                        x.Endpoint = new Uri(otlpExporter["Endpoint"]!);
+                        x.Protocol = otlpExporter.GetSection("Protocol").Get<OtlpExportProtocol>();
+                        x.Headers = string.Join(
+                            ",",
+                            (otlpExporter.GetSection("Headers").Get<Dictionary<string, string>>() ?? new Dictionary<string, string>()).Select(x => $"{x.Key}={x.Value}")
+                        );
+                    });
                 }
             });
 
