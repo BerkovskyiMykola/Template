@@ -39,21 +39,21 @@ internal static class ServiceCollectionExtensions
             })
             .WithMetrics(config =>
             {
-                var metricsAddRuntimeInstrumentation = configuration.GetSection("OpenTelemetry:Metrics:AddRuntimeInstrumentation").Get<bool>();
-                var metricsAddHttpClientInstrumentation = configuration.GetSection("OpenTelemetry:Metrics:AddHttpClientInstrumentation").Get<bool>();
-                var metricsAddAspNetCoreInstrumentation = configuration.GetSection("OpenTelemetry:Metrics:AddAspNetCoreInstrumentation").Get<bool>();
+                var addRuntimeInstrumentation = configuration.GetSection("OpenTelemetry:Metrics:AddRuntimeInstrumentation").Get<bool>();
+                var addHttpClientInstrumentation = configuration.GetSection("OpenTelemetry:Metrics:AddHttpClientInstrumentation").Get<bool>();
+                var addAspNetCoreInstrumentation = configuration.GetSection("OpenTelemetry:Metrics:AddAspNetCoreInstrumentation").Get<bool>();
 
-                if (metricsAddRuntimeInstrumentation)
+                if (addRuntimeInstrumentation)
                 {
                     config.AddRuntimeInstrumentation();
                 }
 
-                if (metricsAddHttpClientInstrumentation)
+                if (addHttpClientInstrumentation)
                 {
                     config.AddHttpClientInstrumentation();
                 }
 
-                if (metricsAddAspNetCoreInstrumentation)
+                if (addAspNetCoreInstrumentation)
                 {
                     config.AddAspNetCoreInstrumentation();
                 }
@@ -75,28 +75,34 @@ internal static class ServiceCollectionExtensions
             })
             .WithTracing(config =>
             {
-                var tracingAddHttpClientInstrumentation = configuration.GetSection("OpenTelemetry:Tracing:AddHttpClientInstrumentation").Get<bool>();
-                var tracingAddAspNetCoreInstrumentation = configuration.GetSection("OpenTelemetry:Tracing:AddAspNetCoreInstrumentation").Get<bool>();
-                var tracingAddEntityFrameworkCoreInstrumentation = configuration.GetSection("OpenTelemetry:Tracing:AddEntityFrameworkCoreInstrumentation").Get<bool>();
+                var addHttpClientInstrumentation = configuration.GetSection("OpenTelemetry:Tracing:AddHttpClientInstrumentation").Get<bool>();
+                var addAspNetCoreInstrumentation = configuration.GetSection("OpenTelemetry:Tracing:AddAspNetCoreInstrumentation").Get<bool>();
+                var addEntityFrameworkCoreInstrumentation = configuration.GetSection("OpenTelemetry:Tracing:AddEntityFrameworkCoreInstrumentation").Get<bool>();
+                var addWorkersInstrumentation = configuration.GetSection("OpenTelemetry:Tracing:AddWorkersInstrumentation").Get<bool>();
 
                 if (environment.IsDevelopment())
                 {
                     config.SetSampler<AlwaysOnSampler>();
                 }
 
-                if (tracingAddHttpClientInstrumentation)
+                if (addHttpClientInstrumentation)
                 {
                     config.AddHttpClientInstrumentation();
                 }
 
-                if (tracingAddAspNetCoreInstrumentation)
+                if (addAspNetCoreInstrumentation)
                 {
                     config.AddAspNetCoreInstrumentation();
                 }
 
-                if (tracingAddEntityFrameworkCoreInstrumentation)
+                if (addEntityFrameworkCoreInstrumentation)
                 {
                     config.AddEntityFrameworkCoreInstrumentation();
+                }
+
+                if (addWorkersInstrumentation)
+                {
+                    config.AddSource(Workers.Constants.ActivitySource.Name);
                 }
 
                 var otlpExporter = configuration.GetSection($"OpenTelemetry:Exporters:Otlp:Tracing");

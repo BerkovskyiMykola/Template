@@ -5,6 +5,7 @@ using Template.Api.Common.HttpLogging;
 using Template.Api.Common.Logging;
 using Template.Api.Common.OpenTelemetry;
 using Template.Api.Common.Serilog;
+using Template.Api.Workers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +51,8 @@ builder.Services.AddHttpClient(httpClientName)
         config.ResponseBodyLogLimit = responseBodyLogLimit;
     })
     .AddStandardResilienceHandler();
+
+builder.Services.AddHostedService<TestTraceWorker>();
 
 var app = builder.Build();
 
