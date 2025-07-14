@@ -5,29 +5,22 @@ namespace Template.Api.Workers;
 /// <summary>
 /// Background service that periodically sends a trace request to an external API and logs the result.
 /// </summary>
-internal sealed class TestTraceWorker : BackgroundService
+/// <param name="httpClientFactory">The HTTP client factory used to create HTTP clients.</param>
+/// <param name="configuration">The application configuration.</param>
+/// <param name="logger">The logger instance.</param>
+internal sealed class TestTraceWorker(
+    IHttpClientFactory httpClientFactory, 
+    IConfiguration configuration, 
+    ILogger<TestTraceWorker> logger) : BackgroundService
 {
     /// <summary>
     /// The interval between each execution of the background task.
     /// </summary>
     private readonly TimeSpan _executionInterval = TimeSpan.FromSeconds(30);
 
-    private readonly IHttpClientFactory _httpClientFactory;
-    private readonly IConfiguration _configuration;
-    private readonly ILogger<TestTraceWorker> _logger;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TestTraceWorker"/> class.
-    /// </summary>
-    /// <param name="httpClientFactory">The HTTP client factory used to create HTTP clients.</param>
-    /// <param name="configuration">The application configuration.</param>
-    /// <param name="logger">The logger instance.</param>
-    public TestTraceWorker(IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<TestTraceWorker> logger)
-    {
-        _httpClientFactory = httpClientFactory;
-        _configuration = configuration;
-        _logger = logger;
-    }
+    private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
+    private readonly IConfiguration _configuration = configuration;
+    private readonly ILogger<TestTraceWorker> _logger = logger;
 
     /// <summary>
     /// Executes the background service, periodically invoking the <see cref="DoWork"/> method until cancellation is requested.

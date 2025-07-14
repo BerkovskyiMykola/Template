@@ -6,27 +6,20 @@ namespace HttpClient.Logger.Custom;
 /// <summary>
 /// Represents a structured HTTP log with a title and a collection of key-value pairs.
 /// </summary>
-internal sealed class HttpLog : IReadOnlyList<KeyValuePair<string, object?>>
+/// <param name="keyValues">The key-value pairs to be logged.</param>
+/// <param name="title">The title of the log entry.</param>
+internal sealed class HttpLog(
+    List<KeyValuePair<string, object?>> keyValues, 
+    string title) : IReadOnlyList<KeyValuePair<string, object?>>
 {
-    private readonly List<KeyValuePair<string, object?>> _keyValues;
-    private readonly string _title;
+    private readonly List<KeyValuePair<string, object?>> _keyValues = keyValues;
+    private readonly string _title = title;
     private string? _cachedToString;
 
     /// <summary>
     /// A callback function used for logging, which invokes <see cref="ToString"/> on the provided <see cref="HttpLog"/> state.
     /// </summary>
     internal static readonly Func<object, Exception?, string> Callback = (state, exception) => ((HttpLog)state).ToString();
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="HttpLog"/> class.
-    /// </summary>
-    /// <param name="keyValues">The key-value pairs to be logged.</param>
-    /// <param name="title">The title of the log entry.</param>
-    public HttpLog(List<KeyValuePair<string, object?>> keyValues, string title)
-    {
-        _keyValues = keyValues;
-        _title = title;
-    }
 
     /// <summary>
     /// Gets the key-value pair at the specified index.

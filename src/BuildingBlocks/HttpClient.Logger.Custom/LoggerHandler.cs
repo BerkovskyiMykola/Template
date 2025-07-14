@@ -8,29 +8,19 @@ namespace HttpClient.Logger.Custom;
 /// A <see cref="DelegatingHandler"/> implementation that logs HTTP request and response details
 /// according to configured logging options.
 /// </summary>
-internal sealed class LoggerHandler : DelegatingHandler
+/// <param name="options">The options controlling which parts of the request/response are logged.</param>
+/// <param name="timeProvider">The time provider used to measure request duration.</param>
+/// <param name="logger">The logger used for logging messages.</param>
+internal sealed class LoggerHandler(
+    LoggerHandlerOptions options,
+    TimeProvider timeProvider,
+    ILogger logger) : DelegatingHandler
 {
-    private readonly static Encoding DefaultEncoding = Encoding.UTF8;
+    private readonly static Encoding _defaultEncoding = Encoding.UTF8;
 
-    private readonly LoggerHandlerOptions _options;
-    private readonly TimeProvider _timeProvider;
-    private readonly ILogger _logger;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LoggerHandler"/> class.
-    /// </summary>
-    /// <param name="options">The options controlling which parts of the request/response are logged.</param>
-    /// <param name="timeProvider">The time provider used to measure request duration.</param>
-    /// <param name="logger">The logger used for logging messages.</param>
-    public LoggerHandler(
-        LoggerHandlerOptions options,
-        TimeProvider timeProvider,
-        ILogger logger)
-    {
-        _options = options;
-        _timeProvider = timeProvider;
-        _logger = logger;
-    }
+    private readonly LoggerHandlerOptions _options = options;
+    private readonly TimeProvider _timeProvider = timeProvider;
+    private readonly ILogger _logger = logger;
 
     /// <summary>
     /// Sends an HTTP request asynchronously and logs the request and response based on the configured options.
@@ -235,7 +225,7 @@ internal sealed class LoggerHandler : DelegatingHandler
     /// Matches the provided media type and charset against known text content types.
     /// </summary>
     /// <param name="mediaType">The media type to match (e.g., "text/plain").</param>
-    /// <param name="charset">The optional charset (e.g., "utf-8"). If null, a <see cref="DefaultEncoding"/> is used.</param>
+    /// <param name="charset">The optional charset (e.g., "utf-8"). If null, a <see cref="_defaultEncoding"/> is used.</param>
     /// <returns>
     /// A <see cref="TextContentTypeMatch"/> instance if a matching content type is found; otherwise, <c>null</c>.
     /// </returns>
@@ -243,7 +233,7 @@ internal sealed class LoggerHandler : DelegatingHandler
     {
         var matchedType = _options.TextContentTypes.FirstOrDefault(x =>
             x.MatchesMediaType(mediaType) &&
-            string.Equals(x.Charset.Value ?? DefaultEncoding.BodyName, charset ?? DefaultEncoding.BodyName, StringComparison.OrdinalIgnoreCase));
+            string.Equals(x.Charset.Value ?? _defaultEncoding.BodyName, charset ?? _defaultEncoding.BodyName, StringComparison.OrdinalIgnoreCase));
 
         if (matchedType is null)
         {
@@ -251,7 +241,7 @@ internal sealed class LoggerHandler : DelegatingHandler
         }
 
         return new TextContentTypeMatch(
-            matchedType.Encoding ?? DefaultEncoding);
+            matchedType.Encoding ?? _defaultEncoding);
     }
 
     private record TextContentTypeMatch(Encoding Encoding);
