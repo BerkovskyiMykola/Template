@@ -10,5 +10,5 @@ internal static class Constants
     /// <summary>
     /// The <see cref="System.Diagnostics.ActivitySource"/> used for tracing activities within worker services.
     /// </summary>
-    public static readonly ActivitySource ActivitySource = new ActivitySource("Workers");
+    public static ActivitySource ActivitySource { get; } = new ActivitySource("Workers");
 }
