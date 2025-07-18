@@ -267,11 +267,11 @@ internal sealed class LoggerHandler(
         {
             return null;
         }
-
+        
         var bufferSize = (int)Math.Min(stream.Length, logLimit);
         var buffer = new byte[bufferSize];
 
-        var bytesRead = await stream.ReadAsync(buffer.AsMemory(0, bufferSize), cancellationToken);
+        var bytesRead = await stream.ReadAsync(buffer, cancellationToken);
 
         try
         {
