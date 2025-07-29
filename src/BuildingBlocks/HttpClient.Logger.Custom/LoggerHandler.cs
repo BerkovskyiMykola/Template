@@ -101,7 +101,7 @@ internal sealed class LoggerHandler(
 
         if (parameters.Count > 0)
         {
-            var httpRequestLog = new HttpLog(parameters, "Request");
+            var httpRequestLog = new HttpLog(parameters, "Request to send");
             _logger.LogInformationRequestLog(httpRequestLog);
         }
     }

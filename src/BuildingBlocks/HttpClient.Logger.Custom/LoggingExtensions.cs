@@ -36,7 +36,7 @@ internal static partial class LoggingExtensions
     /// </summary>
     /// <param name="logger">The logger instance.</param>
     /// <param name="body">The request body content.</param>
-    [LoggerMessage(3, LogLevel.Information, "RequestBody: {Body}", EventName = "HttpClientRequestBody")]
+    [LoggerMessage(3, LogLevel.Information, "RequestBody to send: {Body}", EventName = "HttpClientRequestBody")]
     public static partial void LogInformationRequestBody(this ILogger logger, string body);
 
     /// <summary>
@@ -51,35 +51,35 @@ internal static partial class LoggingExtensions
     /// Logs a decode failure when converting the response body.
     /// </summary>
     /// <param name="logger">The logger instance.</param>
-    [LoggerMessage(5, LogLevel.Debug, "Decode failure while converting body.", EventName = "HttpClientDecodeFailure")]
+    [LoggerMessage(5, LogLevel.Debug, "Decode failure while converting body", EventName = "HttpClientDecodeFailure")]
     public static partial void LogDebugDecodeFailure(this ILogger logger, Exception ex);
 
     /// <summary>
     /// Logs a warning for unrecognized media type in request.
     /// </summary>
     /// <param name="logger">The logger instance.</param>
-    [LoggerMessage(6, LogLevel.Debug, "Unrecognized Content-Type for request body.", EventName = "HttpClientUnrecognizedRequestMediaType")]
+    [LoggerMessage(6, LogLevel.Debug, "Unrecognized Content-Type for request body to send", EventName = "HttpClientUnrecognizedRequestMediaType")]
     public static partial void LogDebugUnrecognizedRequestMediaType(this ILogger logger);
 
     /// <summary>
     /// Logs a warning for unrecognized media type in response.
     /// </summary>
     /// <param name="logger">The logger instance.</param>
-    [LoggerMessage(7, LogLevel.Debug, "Unrecognized Content-Type for response body.", EventName = "HttpClientUnrecognizedResponseMediaType")]
+    [LoggerMessage(7, LogLevel.Debug, "Unrecognized Content-Type for response body", EventName = "HttpClientUnrecognizedResponseMediaType")]
     public static partial void LogDebugUnrecognizedResponseMediaType(this ILogger logger);
 
     /// <summary>
     /// Logs a warning when no media type header is found for request.
     /// </summary>
     /// <param name="logger">The logger instance.</param>
-    [LoggerMessage(8, LogLevel.Debug, "No Content-Type header for request body.", EventName = "HttpClientRequestNoMediaType")]
+    [LoggerMessage(8, LogLevel.Debug, "No Content-Type header for request body to send", EventName = "HttpClientRequestNoMediaType")]
     public static partial void LogDebugRequestNoMediaType(this ILogger logger);
 
     /// <summary>
     /// Logs a warning when no media type header is found for response.
     /// </summary>
     /// <param name="logger">The logger instance.</param>
-    [LoggerMessage(9, LogLevel.Debug, "No Content-Type header for response body.", EventName = "HttpClientResponseNoMediaType")]
+    [LoggerMessage(9, LogLevel.Debug, "No Content-Type header for response body", EventName = "HttpClientResponseNoMediaType")]
     public static partial void LogDebugResponseNoMediaType(this ILogger logger);
 
     /// <summary>

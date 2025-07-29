@@ -81,7 +81,7 @@ internal sealed class TestTraceWorker(
             activity?.SetStatus(ActivityStatusCode.Error);
             activity?.SetTag("error.type", ex.GetType().FullName);
 
-            _logger.LogError(ex, "An unhandled exception occurred while processing the current iteration.");
+            _logger.LogError(ex, "An unhandled exception occurred while processing the current iteration");
         }
     }
 }
