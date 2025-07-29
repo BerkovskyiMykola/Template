@@ -1,4 +1,5 @@
-﻿using OpenTelemetry.Exporter;
+﻿using Microsoft.Extensions.Options;
+using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -15,9 +16,6 @@ internal static class ServiceCollectionExtensions
     /// </summary>  
     /// <param name="services">The <see cref="IServiceCollection"/> to add OpenTelemetry to.</param>  
     /// <returns>The <see cref="IServiceCollection"/> with OpenTelemetry configured.</returns>  
-    /// <exception cref="ArgumentNullException">
-    /// Thrown if <paramref name="services"/>, <paramref name="configuration"/> or <paramref name="environment"/> is null.
-    /// </exception> 
     public static IServiceCollection AddConfiguredOpenTelemetry(
         this IServiceCollection services,
         IConfiguration configuration,
@@ -66,10 +64,12 @@ internal static class ServiceCollectionExtensions
                     {
                         x.Endpoint = new Uri(otlpExporter["Endpoint"]!);
                         x.Protocol = otlpExporter.GetSection("Protocol").Get<OtlpExportProtocol>();
-                        x.Headers = string.Join(
-                            ",",
-                            (otlpExporter.GetSection("Headers").Get<Dictionary<string, string>>() ?? new Dictionary<string, string>()).Select(x => $"{x.Key}={x.Value}")
-                        );
+
+                        var headers = otlpExporter.GetSection("Headers").Get<Dictionary<string, string>>();
+                        if (headers is { Count: > 0 })
+                        {
+                            x.Headers = string.Join(",", headers.Select(x => $"{x.Key}={x.Value}"));
+                        }
                     });
                 }
             })
@@ -113,10 +113,12 @@ internal static class ServiceCollectionExtensions
                     {
                         x.Endpoint = new Uri(otlpExporter["Endpoint"]!);
                         x.Protocol = otlpExporter.GetSection("Protocol").Get<OtlpExportProtocol>();
-                        x.Headers = string.Join(
-                            ",",
-                            (otlpExporter.GetSection("Headers").Get<Dictionary<string, string>>() ?? new Dictionary<string, string>()).Select(x => $"{x.Key}={x.Value}")
-                        );
+
+                        var headers = otlpExporter.GetSection("Headers").Get<Dictionary<string, string>>();
+                        if (headers is { Count: > 0 })
+                        {
+                            x.Headers = string.Join(",", headers.Select(x => $"{x.Key}={x.Value}"));
+                        }
                     });
                 }
             });

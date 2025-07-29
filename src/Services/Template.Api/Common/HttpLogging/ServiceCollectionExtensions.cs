@@ -14,7 +14,6 @@ internal static class ServiceCollectionExtensions
     /// <param name="services">The <see cref="IServiceCollection"/> to add the HTTP logging to.</param>  
     /// <param name="configuration">The <see cref="IConfiguration"/> containing HTTP logging settings.</param>  
     /// <returns>The <see cref="IServiceCollection"/> with HTTP logging configured.</returns>  
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="services"/> or <paramref name="configuration"/> is null.</exception>  
     public static IServiceCollection AddConfiguredHttpLogging(
         this IServiceCollection services,
         IConfiguration configuration)
@@ -48,7 +47,7 @@ internal static class ServiceCollectionExtensions
 
     private sealed record TextContentTypeOptions
     {
-        public string MediaType { get; init; } = string.Empty;
-        public string Encoding { get; init; } = string.Empty;
+        public required string MediaType { get; init; }
+        public required string Encoding { get; init; }
     }
 }

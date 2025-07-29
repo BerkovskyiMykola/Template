@@ -16,7 +16,7 @@ internal sealed class TestTraceWorker(
     /// <summary>
     /// The interval between each execution of the background task.
     /// </summary>
-    private readonly TimeSpan _executionInterval = TimeSpan.FromSeconds(30);
+    private readonly TimeSpan _executionInterval = TimeSpan.FromSeconds(10);
 
     private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
     private readonly IConfiguration _configuration = configuration;
@@ -55,7 +55,6 @@ internal sealed class TestTraceWorker(
         using var activity = Constants.ActivitySource.StartActivity($"{nameof(Workers)}.{nameof(TestTraceWorker)}", ActivityKind.Internal);
 
         activity?.SetTag("background.service.name", nameof(TestTraceWorker));
-        activity?.SetTag("background.service.task", "Send trace request to external API");
         activity?.SetTag("background.service.interval", _executionInterval.ToString());
 
         try

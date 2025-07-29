@@ -12,7 +12,6 @@ internal static class ServiceCollectionExtensions
     /// </summary>  
     /// <param name="services">The <see cref="IServiceCollection"/> to add Serilog to.</param>  
     /// <returns>The <see cref="IServiceCollection"/> with Serilog configured.</returns>  
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="services"/> is null.</exception>  
     public static IServiceCollection AddConfiguredSerilog(this IServiceCollection services)
     {
         services.AddSerilog((sp, config) =>
