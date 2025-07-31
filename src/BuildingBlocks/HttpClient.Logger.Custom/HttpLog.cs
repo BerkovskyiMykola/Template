@@ -8,7 +8,7 @@ namespace HttpClient.Logger.Custom;
 /// </summary>
 /// <param name="keyValues">The key-value pairs to be logged.</param>
 /// <param name="title">The title of the log entry.</param>
-internal sealed class HttpLog(
+internal abstract class HttpLog(
     List<KeyValuePair<string, object?>> keyValues, 
     string title) : IReadOnlyList<KeyValuePair<string, object?>>
 {
@@ -93,5 +93,35 @@ internal sealed class HttpLog(
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
+    }
+}
+
+/// <summary>
+/// Represents a log entry for an HTTP request that is about to be sent.
+/// </summary>
+internal sealed class HttpRequestToSendLog : HttpLog
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HttpRequestToSendLog"/> class.
+    /// </summary>
+    /// <param name="keyValues">The key-value pairs to be logged.</param>
+    public HttpRequestToSendLog(List<KeyValuePair<string, object?>> keyValues)
+        : base(keyValues, "Request to send")
+    {
+    }
+}
+
+/// <summary>
+/// Represents a log entry for an HTTP response.
+/// </summary>
+internal sealed class HttpResponseLog : HttpLog
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HttpResponseLog"/> class.
+    /// </summary>
+    /// <param name="keyValues">The key-value pairs to be logged.</param>
+    public HttpResponseLog(List<KeyValuePair<string, object?>> keyValues)
+        : base(keyValues, "Response")
+    {
     }
 }

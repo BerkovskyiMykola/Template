@@ -8,36 +8,36 @@ namespace HttpClient.Logger.Custom;
 internal static partial class LoggingExtensions
 {
     /// <summary>
-    /// Logs HTTP request information using a custom <see cref="HttpLog"/> object.
+    /// Logs HTTP request to send information using a <see cref="HttpRequestToSendLog"/> object.
     /// </summary>
     /// <param name="logger">The logger instance.</param>
-    /// <param name="requestLog">The HTTP request log details.</param>
-    public static void LogInformationRequestLog(this ILogger logger, HttpLog requestLog) => logger.Log(
+    /// <param name="log">The HTTP request to send log details.</param>
+    public static void LogInformationRequestLogToSend(this ILogger logger, HttpRequestToSendLog log) => logger.Log(
         LogLevel.Information,
-        new EventId(1, "HttpClientRequestLog"),
-        requestLog,
+        new EventId(1, "HttpClientRequestLogToSend"),
+        log,
         exception: null,
         formatter: HttpLog.Callback);
 
     /// <summary>
-    /// Logs HTTP response information using a custom <see cref="HttpLog"/> object.
+    /// Logs HTTP response information using a <see cref="HttpResponseLog"/> object.
     /// </summary>
     /// <param name="logger">The logger instance.</param>
-    /// <param name="responseLog">The HTTP response log details.</param>
-    public static void LogInformationResponseLog(this ILogger logger, HttpLog responseLog) => logger.Log(
+    /// <param name="log">The HTTP response log details.</param>
+    public static void LogInformationResponseLog(this ILogger logger, HttpResponseLog log) => logger.Log(
         LogLevel.Information,
         new EventId(2, "HttpClientResponseLog"),
-        responseLog,
+        log,
         exception: null,
         formatter: HttpLog.Callback);
 
     /// <summary>
-    /// Logs the HTTP request body and a status message.
+    /// Logs the HTTP request body to send and a status message.
     /// </summary>
     /// <param name="logger">The logger instance.</param>
     /// <param name="body">The request body content.</param>
-    [LoggerMessage(3, LogLevel.Information, "RequestBody to send: {Body}", EventName = "HttpClientRequestBody")]
-    public static partial void LogInformationRequestBody(this ILogger logger, string body);
+    [LoggerMessage(3, LogLevel.Information, "RequestBody to send: {Body}", EventName = "HttpClientRequestBodyToSend")]
+    public static partial void LogInformationRequestBodyToSend(this ILogger logger, string body);
 
     /// <summary>
     /// Logs the HTTP response body.
@@ -55,11 +55,11 @@ internal static partial class LoggingExtensions
     public static partial void LogDebugDecodeFailure(this ILogger logger, Exception ex);
 
     /// <summary>
-    /// Logs a warning for unrecognized media type in request.
+    /// Logs a warning for unrecognized media type in request to send.
     /// </summary>
     /// <param name="logger">The logger instance.</param>
-    [LoggerMessage(6, LogLevel.Debug, "Unrecognized Content-Type for request body to send", EventName = "HttpClientUnrecognizedRequestMediaType")]
-    public static partial void LogDebugUnrecognizedRequestMediaType(this ILogger logger);
+    [LoggerMessage(6, LogLevel.Debug, "Unrecognized Content-Type for request body to send", EventName = "HttpClientUnrecognizedRequestToSendMediaType")]
+    public static partial void LogDebugUnrecognizedRequestToSendMediaType(this ILogger logger);
 
     /// <summary>
     /// Logs a warning for unrecognized media type in response.
@@ -69,11 +69,11 @@ internal static partial class LoggingExtensions
     public static partial void LogDebugUnrecognizedResponseMediaType(this ILogger logger);
 
     /// <summary>
-    /// Logs a warning when no media type header is found for request.
+    /// Logs a warning when no media type header is found for request to send.
     /// </summary>
     /// <param name="logger">The logger instance.</param>
-    [LoggerMessage(8, LogLevel.Debug, "No Content-Type header for request body to send", EventName = "HttpClientRequestNoMediaType")]
-    public static partial void LogDebugRequestNoMediaType(this ILogger logger);
+    [LoggerMessage(8, LogLevel.Debug, "No Content-Type header for request body to send", EventName = "HttpClientRequestToSendNoMediaType")]
+    public static partial void LogDebugRequestToSendNoMediaType(this ILogger logger);
 
     /// <summary>
     /// Logs a warning when no media type header is found for response.

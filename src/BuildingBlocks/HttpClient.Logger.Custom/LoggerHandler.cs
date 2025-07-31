@@ -37,9 +37,9 @@ internal sealed class LoggerHandler(
 
         var startTimestamp = _timeProvider.GetTimestamp();
 
-        LogRequestPropertiesAndHeaders(request);
+        LogRequestPropertiesAndHeadersToSend(request);
 
-        await LogRequestBodyAsync(request, cancellationToken);
+        await LogRequestBodyToSendAsync(request, cancellationToken);
 
         var response = await base.SendAsync(request, cancellationToken);
 
@@ -53,10 +53,10 @@ internal sealed class LoggerHandler(
     }
 
     /// <summary>
-    /// Logs the HTTP request properties and headers based on the configured logging fields.
+    /// Logs the HTTP request properties and headers to send based on the configured logging fields.
     /// </summary>
     /// <param name="request">The HTTP request message.</param>
-    private void LogRequestPropertiesAndHeaders(HttpRequestMessage request)
+    private void LogRequestPropertiesAndHeadersToSend(HttpRequestMessage request)
     {
         var parameters = new List<KeyValuePair<string, object?>>();
 
@@ -101,17 +101,17 @@ internal sealed class LoggerHandler(
 
         if (parameters.Count > 0)
         {
-            var httpRequestLog = new HttpLog(parameters, "Request to send");
-            _logger.LogInformationRequestLog(httpRequestLog);
+            var httpRequestLog = new HttpRequestToSendLog(parameters);
+            _logger.LogInformationRequestLogToSend(httpRequestLog);
         }
     }
 
     /// <summary>
-    /// Logs the HTTP request body if the logging options allow it.
+    /// Logs the HTTP request body to send if the logging options allow it.
     /// </summary>
     /// <param name="request">The HTTP request message.</param>
     /// <param name="cancellationToken">A cancellation token to cancel the operation.</param>
-    private async Task LogRequestBodyAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    private async Task LogRequestBodyToSendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         if (!_options.LoggingFields.HasFlag(LoggingFields.RequestBody))
         {
@@ -120,7 +120,7 @@ internal sealed class LoggerHandler(
 
         if (request.Content?.Headers.ContentType is not { MediaType: not null } requestContentTypeHeader)
         {
-            _logger.LogDebugRequestNoMediaType();
+            _logger.LogDebugRequestToSendNoMediaType();
 
             return;
         }
@@ -129,7 +129,7 @@ internal sealed class LoggerHandler(
 
         if (matchedType is null)
         {
-            _logger.LogDebugUnrecognizedRequestMediaType();
+            _logger.LogDebugUnrecognizedRequestToSendMediaType();
 
             return;
         }
@@ -141,7 +141,7 @@ internal sealed class LoggerHandler(
             return;
         }
 
-        _logger.LogInformationRequestBody(bodyString);
+        _logger.LogInformationRequestBodyToSend(bodyString);
     }
 
     /// <summary>
@@ -164,7 +164,7 @@ internal sealed class LoggerHandler(
 
         if (parameters.Count > 0)
         {
-            var httpResponseLog = new HttpLog(parameters, "Response");
+            var httpResponseLog = new HttpResponseLog(parameters);
             _logger.LogInformationResponseLog(httpResponseLog);
         }
     }
