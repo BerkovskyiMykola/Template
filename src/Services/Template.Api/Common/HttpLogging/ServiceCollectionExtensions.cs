@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.HttpLogging;
-using System.Text;
+﻿using System.Text;
+using Microsoft.AspNetCore.HttpLogging;
 
 namespace Template.Api.Common.HttpLogging;
 
@@ -9,9 +9,9 @@ namespace Template.Api.Common.HttpLogging;
 internal static class ServiceCollectionExtensions
 {
     /// <summary>  
-    /// Adds and configures HTTP logging services based on the provided configuration.  
+    /// Adds and configures HTTP logging services based on the provided configuration to the <paramref name="services"/>.  
     /// </summary>  
-    /// <param name="services">The <see cref="IServiceCollection"/> to add the HTTP logging to.</param>  
+    /// <param name="services">The <see cref="IServiceCollection"/> to add the configured HTTP logging to.</param>  
     /// <param name="configuration">The <see cref="IConfiguration"/> containing HTTP logging settings.</param>  
     /// <returns>The <see cref="IServiceCollection"/> with HTTP logging configured.</returns>  
     public static IServiceCollection AddConfiguredHttpLogging(
@@ -21,22 +21,22 @@ internal static class ServiceCollectionExtensions
         services.AddHttpLogging(config =>
         {
             var loggingFields = configuration.GetSection("HttpLogging:LoggingFields").Get<HttpLoggingFields>();
-            var requestHeaders = configuration.GetSection("HttpLogging:RequestHeaders").Get<string[]>() ?? [];
-            var responseHeaders = configuration.GetSection("HttpLogging:ResponseHeaders").Get<string[]>() ?? [];
-            var textContentTypes = configuration.GetSection("HttpLogging:TextContentTypes").Get<TextContentTypeOptions[]>() ?? [];
+            var allowedRequestHeaders = configuration.GetSection("HttpLogging:AllowedRequestHeaders").Get<string[]>() ?? [];
+            var allowedResponseHeaders = configuration.GetSection("HttpLogging:AllowedResponseHeaders").Get<string[]>() ?? [];
+            var allowedTextMediaTypes = configuration.GetSection("HttpLogging:AllowedTextMediaTypes").Get<TextMediaTypeOptions[]>() ?? [];
             var requestBodyLogLimit = configuration.GetSection("HttpLogging:RequestBodyLogLimit").Get<int>();
             var responseBodyLogLimit = configuration.GetSection("HttpLogging:ResponseBodyLogLimit").Get<int>();
 
             config.LoggingFields = loggingFields;
 
             config.RequestHeaders.Clear();
-            foreach (var header in requestHeaders) config.RequestHeaders.Add(header);
+            foreach (var header in allowedRequestHeaders) config.RequestHeaders.Add(header);
 
             config.ResponseHeaders.Clear();
-            foreach (var header in responseHeaders) config.ResponseHeaders.Add(header);
+            foreach (var header in allowedResponseHeaders) config.ResponseHeaders.Add(header);
 
             config.MediaTypeOptions.Clear();
-            foreach (var textContentType in textContentTypes) config.MediaTypeOptions.AddText(textContentType.MediaType, Encoding.GetEncoding(textContentType.Encoding));
+            foreach (var textContentType in allowedTextMediaTypes) config.MediaTypeOptions.AddText(textContentType.ContentType, Encoding.GetEncoding(textContentType.Encoding));
 
             config.RequestBodyLogLimit = requestBodyLogLimit;
             config.ResponseBodyLogLimit = responseBodyLogLimit;
@@ -45,9 +45,19 @@ internal static class ServiceCollectionExtensions
         return services;
     }
 
-    private sealed record TextContentTypeOptions
+    /// <summary>
+    /// Represents options for a text-based media type, including its content type and encoding.
+    /// </summary>
+    private sealed record TextMediaTypeOptions
     {
-        public required string MediaType { get; init; }
+        /// <summary>
+        /// Gets the content type of the text media (e.g., "application/json", "text/plain").
+        /// </summary>
+        public required string ContentType { get; init; }
+
+        /// <summary>
+        /// Gets the encoding name used for the text media (e.g., "utf-8", "ascii").
+        /// </summary>
         public required string Encoding { get; init; }
     }
 }

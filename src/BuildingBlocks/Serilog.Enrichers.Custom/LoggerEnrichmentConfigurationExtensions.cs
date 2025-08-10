@@ -3,19 +3,19 @@
 namespace Serilog.Enrichers.Custom;
 
 /// <summary>
-/// Provides extension methods for configuring custom enrichers in Serilog.
+/// Provides extension methods for configuring the <see cref="LoggerEnrichmentConfiguration"/>.
 /// </summary>
 public static class LoggerEnrichmentConfigurationExtensions
 {
     /// <summary>
-    /// Adds a UserId enricher to the logger configuration.
+    /// Adds a <see cref="UserIdEnricher"/> to the <paramref name="configuration"/>.
     /// </summary>
-    /// <param name="config">The logger enrichment configuration.</param>
-    /// <returns>The updated logger configuration.</returns>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="config"/> is null.</exception>  
-    /// <exception cref="InvalidOperationException">Thrown when the resulting logger configuration is <c>null</c>.</exception>
-    public static LoggerConfiguration WithUserId(this LoggerEnrichmentConfiguration config)
+    /// <param name="configuration">The <see cref="LoggerEnrichmentConfiguration"/> to which a <see cref="UserIdEnricher"/> will be added.</param>
+    /// <returns>The <see cref="LoggerConfiguration"/> that includes a <see cref="UserIdEnricher"/>.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="configuration"/> is null.</exception>  
+    /// <exception cref="InvalidOperationException">Thrown when a resulting <see cref="LoggerConfiguration"/> is null.</exception>
+    public static LoggerConfiguration WithUserId(this LoggerEnrichmentConfiguration configuration)
     {
-        return config.With<UserIdEnricher>();
+        return configuration.With<UserIdEnricher>();
     }
 }

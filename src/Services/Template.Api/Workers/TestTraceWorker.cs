@@ -9,8 +9,8 @@ namespace Template.Api.Workers;
 /// <param name="configuration">The application configuration.</param>
 /// <param name="logger">The logger instance.</param>
 internal sealed class TestTraceWorker(
-    IHttpClientFactory httpClientFactory, 
-    IConfiguration configuration, 
+    IHttpClientFactory httpClientFactory,
+    IConfiguration configuration,
     ILogger<TestTraceWorker> logger) : BackgroundService
 {
     /// <summary>
@@ -31,7 +31,7 @@ internal sealed class TestTraceWorker(
     {
         _logger.LogInformation($"{nameof(TestTraceWorker)} running");
 
-        using PeriodicTimer timer = new PeriodicTimer(_executionInterval);
+        using PeriodicTimer timer = new(_executionInterval);
 
         try
         {
@@ -59,7 +59,7 @@ internal sealed class TestTraceWorker(
 
         try
         {
-            var client = _httpClientFactory.CreateClient("TestTrace");
+            var client = _httpClientFactory.CreateClient(Common.HttpClients.ServiceCollectionExtensions.TestTraceNamedHttpClient);
             var response = await client.PostAsJsonAsync($"{_configuration["ApiBaseAddress"]}/test-trace?test=test", new RequestBody
             {
                 Name = "Trace Name"

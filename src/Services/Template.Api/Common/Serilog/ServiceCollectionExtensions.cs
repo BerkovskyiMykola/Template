@@ -8,9 +8,9 @@ namespace Template.Api.Common.Serilog;
 internal static class ServiceCollectionExtensions
 {
     /// <summary>  
-    /// Adds and configures Serilog logging for the application.  
+    /// Adds and configures Serilog logging to the <paramref name="services"/>.  
     /// </summary>  
-    /// <param name="services">The <see cref="IServiceCollection"/> to add Serilog to.</param>  
+    /// <param name="services">The <see cref="IServiceCollection"/> to add configured Serilog to.</param>  
     /// <returns>The <see cref="IServiceCollection"/> with Serilog configured.</returns>  
     public static IServiceCollection AddConfiguredSerilog(this IServiceCollection services)
     {
