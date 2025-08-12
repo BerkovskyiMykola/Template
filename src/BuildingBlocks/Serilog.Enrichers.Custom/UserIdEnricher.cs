@@ -35,21 +35,15 @@ internal sealed class UserIdEnricher : ILogEventEnricher
     /// </exception>  
     public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
     {
-        var httpContext = _httpContextAccessor.HttpContext;
+        var userIdOrDefault = _httpContextAccessor.HttpContext?
+            .User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (httpContext is null)
+        if (string.IsNullOrWhiteSpace(userIdOrDefault))
         {
             return;
         }
 
-        var userId = httpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (string.IsNullOrWhiteSpace(userId))
-        {
-            return;
-        }
-
-        var property = propertyFactory.CreateProperty("UserId", userId);
-        logEvent.AddPropertyIfAbsent(property);
+        logEvent.AddPropertyIfAbsent(
+            propertyFactory.CreateProperty("UserId", userIdOrDefault));
     }
 }
