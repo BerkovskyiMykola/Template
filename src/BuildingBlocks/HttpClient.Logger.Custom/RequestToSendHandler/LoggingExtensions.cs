@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace HttpClient.Logger.Custom.RequestToSendLoggerHandler;
+namespace HttpClient.Logger.Custom.RequestToSendHandler;
 
 /// <summary>
 /// Provides extension methods for logging <see cref="HttpRequestMessage"/>.

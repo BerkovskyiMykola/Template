@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace HttpClient.Logger.Custom.DurationLoggerHandler;
+namespace HttpClient.Logger.Custom.DurationHandler;
 
 /// <summary>
 /// Provides extension methods for logging <see cref="System.Net.Http.HttpClient"/> operation duration information.

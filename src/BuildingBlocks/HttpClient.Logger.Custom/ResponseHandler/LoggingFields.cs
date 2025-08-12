@@ -1,4 +1,4 @@
-﻿namespace HttpClient.Logger.Custom.ResponseLoggerHandler;
+﻿namespace HttpClient.Logger.Custom.ResponseHandler;
 
 /// <summary>
 /// Flags used to control which parts of the

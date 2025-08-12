@@ -35,10 +35,10 @@ internal static class ServiceCollectionExtensions
 
         var requestLoggingFields = configuration
             .GetSection($"HttpClients:{TestTraceNamedHttpClient}:Logging:RequestLoggingFields")
-            .Get<HttpClient.Logger.Custom.RequestToSendLoggerHandler.LoggingFields>();
+            .Get<HttpClient.Logger.Custom.RequestToSendHandler.LoggingFields>();
         var responseloggingFields = configuration
             .GetSection($"HttpClients:{TestTraceNamedHttpClient}:Logging:ResponseLoggingFields")
-            .Get<HttpClient.Logger.Custom.ResponseLoggerHandler.LoggingFields>();
+            .Get<HttpClient.Logger.Custom.ResponseHandler.LoggingFields>();
         var allowedRequestHeaders = configuration.GetSection($"HttpClients:{TestTraceNamedHttpClient}:Logging:AllowedRequestHeaders").Get<string[]>() ?? [];
         var allowedResponseHeaders = configuration.GetSection($"HttpClients:{TestTraceNamedHttpClient}:Logging:AllowedResponseHeaders").Get<string[]>() ?? [];
         var allowedTextMediaTypes = configuration.GetSection($"HttpClients:{TestTraceNamedHttpClient}:Logging:AllowedTextMediaTypes").Get<TextMediaTypeOptions[]>() ?? [];

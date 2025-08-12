@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 
-namespace HttpClient.Logger.Custom.DurationLoggerHandler;
+namespace HttpClient.Logger.Custom.DurationHandler;
 
 /// <summary>
 /// A <see cref="DelegatingHandler"/> implementation that logs the <see cref="System.Net.Http.HttpClient"/> operation duration.

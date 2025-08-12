@@ -1,4 +1,4 @@
-﻿namespace HttpClient.Logger.Custom.RequestToSendLoggerHandler;
+﻿namespace HttpClient.Logger.Custom.RequestToSendHandler;
 
 /// <summary>
 /// Options for the <see cref="Handler"/>.
