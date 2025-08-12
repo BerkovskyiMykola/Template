@@ -29,13 +29,6 @@ app.UseHttpLogging();
 
 app.MapGet("/", async (IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<Program> logger) =>
 {
-    logger.LogInformationSomething(
-        "This is a log message from the root endpoint");
-
-    logger.LogErrorSomething(
-        "This is an error message from the root endpoint",
-        new InvalidOperationException("This is an error message from the root endpoint."));
-
     var client = httpClientFactory.CreateClient(Template.Api.Common.HttpClients.ServiceCollectionExtensions.TestTraceNamedHttpClient);
     var response = await client.PostAsJsonAsync($"{configuration["ApiBaseAddress"]}/test-trace?test=test", new RequestBody
     {
