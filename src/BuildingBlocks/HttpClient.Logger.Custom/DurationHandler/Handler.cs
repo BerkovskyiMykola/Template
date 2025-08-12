@@ -19,13 +19,15 @@ internal class Handler(ILogger logger) : DelegatingHandler
     /// <returns>A <see cref="Task{TResult}"/> that represents the asynchronous operation, containing the <see cref="HttpResponseMessage"/>.</returns>
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var durationStopwatch = Stopwatch.StartNew();
+        var stopwatch = new Stopwatch();
+
+        stopwatch.Start();
 
         var response = await base.SendAsync(request, cancellationToken);
 
-        durationStopwatch.Stop();
+        stopwatch.Stop();
 
-        _logger.LogDurationAsInformation(durationStopwatch.ElapsedMilliseconds);
+        _logger.LogDurationAsInformation(stopwatch.ElapsedMilliseconds);
 
         return response;
     }
