@@ -14,7 +14,7 @@ internal static class ServiceCollectionExtensions
     public const string TestTraceNamedHttpClient = "TestTrace";
 
     /// <summary>  
-    /// Adds and configures <see cref="System.Net.Http.HttpClient"/> service, using the <see cref="TestTraceNamedHttpClient"/> name, based on the provided configuration to the <paramref name="services"/>.  
+    /// Adds and configures <see cref="System.Net.Http.HttpClient"/> service, using the <see cref="TestTraceNamedHttpClient"/> name, based on the <paramref name="configuration"/>, to the <paramref name="services"/>.  
     /// </summary>  
     /// <param name="services">The <see cref="IServiceCollection"/> to add the configured <see cref="System.Net.Http.HttpClient"/> service to.</param>  
     /// <param name="configuration">The <see cref="IConfiguration"/> containing <see cref="System.Net.Http.HttpClient"/> service settings.</param>  
@@ -36,7 +36,7 @@ internal static class ServiceCollectionExtensions
         var requestLoggingFields = configuration
             .GetSection($"HttpClients:{TestTraceNamedHttpClient}:Logging:RequestLoggingFields")
             .Get<HttpClient.Logger.Custom.RequestToSendHandler.LoggingFields>();
-        var responseloggingFields = configuration
+        var responseLoggingFields = configuration
             .GetSection($"HttpClients:{TestTraceNamedHttpClient}:Logging:ResponseLoggingFields")
             .Get<HttpClient.Logger.Custom.ResponseHandler.LoggingFields>();
         var allowedRequestHeaders = configuration.GetSection($"HttpClients:{TestTraceNamedHttpClient}:Logging:AllowedRequestHeaders").Get<string[]>() ?? [];
@@ -48,7 +48,7 @@ internal static class ServiceCollectionExtensions
         builder
             .AddResponseLoggerHandler(config =>
             {
-                config.LoggingFields = responseloggingFields;
+                config.LoggingFields = responseLoggingFields;
 
                 foreach (var header in allowedResponseHeaders) config.AllowedHeaders.Add(header);
 

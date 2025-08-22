@@ -9,7 +9,7 @@ namespace Template.Api.Common.HttpLogging;
 internal static class ServiceCollectionExtensions
 {
     /// <summary>  
-    /// Adds and configures HTTP logging services based on the provided configuration to the <paramref name="services"/>.  
+    /// Adds and configures HTTP logging services, based on the <paramref name="configuration"/>, to the <paramref name="services"/>.  
     /// </summary>  
     /// <param name="services">The <see cref="IServiceCollection"/> to add the configured HTTP logging to.</param>  
     /// <param name="configuration">The <see cref="IConfiguration"/> containing HTTP logging settings.</param>  

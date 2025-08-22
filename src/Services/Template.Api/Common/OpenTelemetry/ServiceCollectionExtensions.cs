@@ -11,9 +11,11 @@ namespace Template.Api.Common.OpenTelemetry;
 internal static class ServiceCollectionExtensions
 {
     /// <summary>  
-    /// Adds and configures OpenTelemetry to the <paramref name="services"/>.  
+    /// Adds and configures OpenTelemetry, based on the <paramref name="configuration"/>, to the <paramref name="services"/>.  
     /// </summary>  
     /// <param name="services">The <see cref="IServiceCollection"/> to add configured OpenTelemetry to.</param>  
+    /// <param name="configuration">The <see cref="IConfiguration"/> containing OpenTelemetry service settings.</param>  
+    /// <param name="environment">The <see cref="IHostEnvironment"/> to configure OpenTelemetry depending on the environment.</param>
     /// <returns>The <see cref="IServiceCollection"/> with OpenTelemetry configured.</returns>  
     public static IServiceCollection AddConfiguredOpenTelemetry(
         this IServiceCollection services,
