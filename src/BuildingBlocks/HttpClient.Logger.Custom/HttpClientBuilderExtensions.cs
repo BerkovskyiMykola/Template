@@ -7,7 +7,7 @@ namespace HttpClient.Logger.Custom;
 /// <summary>
 /// Extension methods for configuring logging in <see cref="System.Net.Http.HttpClient"/>.
 /// </summary>
-public static class HttpClientBuilderExtentions
+public static class HttpClientBuilderExtensions
 {
     /// <summary>
     /// Adds a duration logger handler to the <see cref="System.Net.Http.HttpClient"/>
