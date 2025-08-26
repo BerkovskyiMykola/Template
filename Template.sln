@@ -17,6 +17,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Api", "src\Service
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpClient.Logger.Custom", "src\BuildingBlocks\HttpClient.Logger.Custom\HttpClient.Logger.Custom.csproj", "{CF68C75C-EAC9-4A34-99A2-06BCB394C03E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,5 +56,8 @@ Global
 		{0887E3C2-B173-4A90-A1F4-7415E51D369F} = {247DAA14-BAEE-402F-83E9-807DB4988E35}
 		{26161C06-4F6E-4C9C-A58C-0E458C644ED0} = {2FA5489D-9883-47F8-AF17-CAEAAB2476F4}
 		{CF68C75C-EAC9-4A34-99A2-06BCB394C03E} = {247DAA14-BAEE-402F-83E9-807DB4988E35}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {669FB930-2916-44B4-8EC2-5D681821F3F0}
 	EndGlobalSection
 EndGlobal
