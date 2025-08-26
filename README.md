@@ -10,13 +10,12 @@ This project uses **[NullGuard](https://github.com/Fody/NullGuard)** to automati
 
 ## Observability
 
-Observability in this project is implemented using structured logging and context-aware enrichment to provide deep insights into system behavior.
+Observability in this project is implemented using structured logging, distributed tracing, and telemetry data to provide deep insights into system behavior and performance.
 
 ### Logging
 
 - **[Serilog](https://serilog.net/)** is used as the primary logging framework.
 - Logs are written in a structured format, making them suitable for filtering, searching, and analysis.
-- **[Seq](https://datalust.co/seq)** is used as the centralized log storage and querying system (only for development reasons).
 - The logging pipeline is enhanced with custom enrichers and supports contextual logging per request.
 
 #### Custom Enrichers
@@ -51,3 +50,21 @@ This project supports configurable HTTP request and response logging using ASP.N
 - Useful for debugging, auditing, and traffic analysis.
 
 > This functionality is optional and can be enabled or fine-tuned via configuration depending on the environment and sensitivity of data.
+
+### Distributed Tracing and Metrics
+
+To enhance observability beyond logs, this project uses **[OpenTelemetry](https://opentelemetry.io/)** to capture distributed traces and application metrics.
+
+- **`Tracing`** is enabled for incoming HTTP requests, outgoing HTTP clients, and other operations.
+- **`Metrics`** such as request duration, exception count, and system-level statistics (CPU, memory) are captured and exported.
+- **`OTLP (OpenTelemetry Protocol)`** is supported for exporting telemetry to systems like Jaeger, Zipkin, Grafana, or Azure Monitor.
+
+### Development Support with .NET Aspire
+
+For local development and testing, this project optionally supports **[.NET Aspire](https://github.com/dotnet/aspire)** — an opinionated, cloud-ready stack for building observable and composable distributed applications.
+
+- Aspire provides a developer dashboard for real-time inspection of logs, traces, and metrics.
+- It simplifies the local setup of OpenTelemetry and related tooling.
+- Ideal for testing observability scenarios without deploying to production infrastructure.
+
+> Aspire is optional and can be used to accelerate development workflows, especially when working with multiple services.

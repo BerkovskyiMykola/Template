@@ -3,13 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Api", "Template.Api\Template.Api.csproj", "{CCA52041-9016-4227-AC2F-0CCA631BA0DA}"
-EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{88D13D12-415A-4EE3-84D0-1520811F3AF8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{8AD22927-1DB3-441E-95F4-F824CF1495ED}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A88748E3-32F0-49BB-9BAC-BF664FDF3C94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Enrichers.Custom", "Utils\Serilog.Enrichers.Custom\Serilog.Enrichers.Custom.csproj", "{28F6E4B7-8859-4039-832C-9731BD5AF92D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{247DAA14-BAEE-402F-83E9-807DB4988E35}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{2FA5489D-9883-47F8-AF17-CAEAAB2476F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serilog.Enrichers.Custom", "src\BuildingBlocks\Serilog.Enrichers.Custom\Serilog.Enrichers.Custom.csproj", "{0887E3C2-B173-4A90-A1F4-7415E51D369F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Api", "src\Services\Template.Api\Template.Api.csproj", "{26161C06-4F6E-4C9C-A58C-0E458C644ED0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpClient.Logger.Custom", "src\BuildingBlocks\HttpClient.Logger.Custom\HttpClient.Logger.Custom.csproj", "{CF68C75C-EAC9-4A34-99A2-06BCB394C03E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,23 +23,31 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CCA52041-9016-4227-AC2F-0CCA631BA0DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CCA52041-9016-4227-AC2F-0CCA631BA0DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CCA52041-9016-4227-AC2F-0CCA631BA0DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CCA52041-9016-4227-AC2F-0CCA631BA0DA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{88D13D12-415A-4EE3-84D0-1520811F3AF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{88D13D12-415A-4EE3-84D0-1520811F3AF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88D13D12-415A-4EE3-84D0-1520811F3AF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88D13D12-415A-4EE3-84D0-1520811F3AF8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{28F6E4B7-8859-4039-832C-9731BD5AF92D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{28F6E4B7-8859-4039-832C-9731BD5AF92D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{28F6E4B7-8859-4039-832C-9731BD5AF92D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{28F6E4B7-8859-4039-832C-9731BD5AF92D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0887E3C2-B173-4A90-A1F4-7415E51D369F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0887E3C2-B173-4A90-A1F4-7415E51D369F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0887E3C2-B173-4A90-A1F4-7415E51D369F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0887E3C2-B173-4A90-A1F4-7415E51D369F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26161C06-4F6E-4C9C-A58C-0E458C644ED0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26161C06-4F6E-4C9C-A58C-0E458C644ED0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26161C06-4F6E-4C9C-A58C-0E458C644ED0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26161C06-4F6E-4C9C-A58C-0E458C644ED0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF68C75C-EAC9-4A34-99A2-06BCB394C03E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF68C75C-EAC9-4A34-99A2-06BCB394C03E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF68C75C-EAC9-4A34-99A2-06BCB394C03E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF68C75C-EAC9-4A34-99A2-06BCB394C03E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{28F6E4B7-8859-4039-832C-9731BD5AF92D} = {8AD22927-1DB3-441E-95F4-F824CF1495ED}
+		{247DAA14-BAEE-402F-83E9-807DB4988E35} = {A88748E3-32F0-49BB-9BAC-BF664FDF3C94}
+		{2FA5489D-9883-47F8-AF17-CAEAAB2476F4} = {A88748E3-32F0-49BB-9BAC-BF664FDF3C94}
+		{0887E3C2-B173-4A90-A1F4-7415E51D369F} = {247DAA14-BAEE-402F-83E9-807DB4988E35}
+		{26161C06-4F6E-4C9C-A58C-0E458C644ED0} = {2FA5489D-9883-47F8-AF17-CAEAAB2476F4}
+		{CF68C75C-EAC9-4A34-99A2-06BCB394C03E} = {247DAA14-BAEE-402F-83E9-807DB4988E35}
 	EndGlobalSection
 EndGlobal
