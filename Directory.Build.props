@@ -1,14 +1,16 @@
 ﻿<Project>
   <PropertyGroup>
 	<TargetFramework>net9.0</TargetFramework>
+	<LangVersion>latest</LangVersion>
 	<ImplicitUsings>enable</ImplicitUsings>
 	<Nullable>enable</Nullable>
-	<AnalysisLevel>latest</AnalysisLevel>
 	  
+	<AnalysisLevel>latest</AnalysisLevel>
 	<AnalysisMode>All</AnalysisMode>
 	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	<CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
 	<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+	<EnableNETAnalyzers>true</EnableNETAnalyzers>
 	  
 	<FodyWeaversPath>$(MSBuildThisFileDirectory)FodyWeavers.xml</FodyWeaversPath>
   </PropertyGroup>
