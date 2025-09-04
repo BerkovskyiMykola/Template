@@ -4,13 +4,13 @@
 	<ImplicitUsings>enable</ImplicitUsings>
 	<Nullable>enable</Nullable>
 	<AnalysisLevel>latest</AnalysisLevel>
+	  
 	<AnalysisMode>All</AnalysisMode>
-	<!--
-	Uncomment after configuring editorconfig
 	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	<CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
 	<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-	-->
+	  
+	<FodyWeaversPath>$(MSBuildThisFileDirectory)FodyWeavers.xml</FodyWeaversPath>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(MSBuildProjectExtension)' != '.dcproj'">
@@ -18,8 +18,12 @@
 	  <PrivateAssets>all</PrivateAssets>
 	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>
-	<PackageReference Include="NullGuard.Fody" />
-	<PackageReference Include="ConfigureAwait.Fody" />
-	<None Include="$(MSBuildThisFileDirectory)FodyWeavers.xml" Link="FodyWeavers.xml" />
+	  
+	<PackageReference Include="NullGuard.Fody">
+	  <PrivateAssets>all</PrivateAssets>
+	</PackageReference>
+	<PackageReference Include="ConfigureAwait.Fody">
+	  <PrivateAssets>all</PrivateAssets>
+	</PackageReference>
   </ItemGroup>
 </Project>
