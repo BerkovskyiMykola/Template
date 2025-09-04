@@ -19,5 +19,6 @@
 	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>
 	<PackageReference Include="NullGuard.Fody" />
+	<None Include="$(MSBuildThisFileDirectory)FodyWeavers.xml" Link="FodyWeavers.xml" />
   </ItemGroup>
 </Project>
