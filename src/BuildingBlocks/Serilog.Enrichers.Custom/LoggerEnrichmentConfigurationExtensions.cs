@@ -14,8 +14,5 @@ public static class LoggerEnrichmentConfigurationExtensions
     /// <returns>The <see cref="LoggerConfiguration"/> that includes a <see cref="UserIdEnricher"/>.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="configuration"/> is null.</exception>  
     /// <exception cref="InvalidOperationException">Thrown when a resulting <see cref="LoggerConfiguration"/> is null.</exception>
-    public static LoggerConfiguration WithUserId(this LoggerEnrichmentConfiguration configuration)
-    {
-        return configuration.With<UserIdEnricher>();
-    }
+    public static LoggerConfiguration WithUserId(this LoggerEnrichmentConfiguration configuration) => configuration.With<UserIdEnricher>();
 }
