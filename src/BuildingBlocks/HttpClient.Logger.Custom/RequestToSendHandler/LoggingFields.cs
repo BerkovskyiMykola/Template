@@ -69,7 +69,7 @@ public enum LoggingFields : long
     /// <summary>
     /// Flag for logging the <see cref="HttpRequestMessage.Headers"/>.
     /// <see cref="HttpRequestMessage.Headers"/> are redacted by default with the character '[Redacted]' unless specified in
-    /// the <see cref="Options.AllowedHeaders"/>.
+    /// the <see cref="HandlerOptions.AllowedHeaders"/>.
     /// <para>
     /// For example:
     /// Connection: keep-alive
@@ -80,7 +80,7 @@ public enum LoggingFields : long
 
     /// <summary>
     /// Flag for logging the <see cref="HttpRequestMessage.Content"/>.
-    /// Logging the <see cref="HttpRequestMessage.Content"/> up to <see cref="Options.BodyLogLimit"/>.
+    /// Logging the <see cref="HttpRequestMessage.Content"/> up to <see cref="HandlerOptions.BodyLogLimit"/>.
     /// </summary>
     Body = 128,
 
@@ -108,7 +108,7 @@ public enum LoggingFields : long
     /// <summary>
     /// Flag for logging the entire <see cref="HttpRequestMessage"/>.
     /// Includes <see cref="PropertiesAndHeaders"/> and <see cref="Body"/>.
-    /// Logging the <see cref="HttpRequestMessage.Content"/> up to <see cref="Options.BodyLogLimit"/>.
+    /// Logging the <see cref="HttpRequestMessage.Content"/> up to <see cref="HandlerOptions.BodyLogLimit"/>.
     /// </summary>
     /// <remarks>
     /// The <see cref="HttpRequestMessage.RequestUri"/> <c>Query</c> (See <see cref="Uri.Query"/>) is not included with this flag as it may contain private information.

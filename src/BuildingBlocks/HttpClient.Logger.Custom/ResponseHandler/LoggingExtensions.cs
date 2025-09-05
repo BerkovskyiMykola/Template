@@ -7,12 +7,13 @@ namespace HttpClient.Logger.Custom.ResponseHandler;
 /// </summary>
 internal static partial class LoggingExtensions
 {
-    public static void LogResponseLogAsInformation(this ILogger logger, IReadOnlyList<KeyValuePair<string, object?>> log) => logger.Log(
-        LogLevel.Information,
-        new EventId(1, "HttpClientResponseLog"),
-        log,
-        exception: null,
-        formatter: (log, exception) => Helper.FormatLog("Response", log));
+    public static void LogResponseLogAsInformation(this ILogger logger, IReadOnlyList<KeyValuePair<string, object?>> log) 
+        => logger.Log(
+            LogLevel.Information,
+            new EventId(1, "HttpClientResponseLog"),
+            log,
+            exception: null,
+            formatter: (log, exception) => Helper.FormatLog("Response", log));
 
     [LoggerMessage(2, LogLevel.Information, "ResponseBody: {Body}", EventName = "HttpClientResponseBody")]
     public static partial void LogResponseBodyAsInformation(this ILogger logger, string body);

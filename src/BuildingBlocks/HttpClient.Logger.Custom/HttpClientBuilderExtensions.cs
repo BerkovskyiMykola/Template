@@ -19,14 +19,12 @@ public static class HttpClientBuilderExtensions
     public static IHttpClientBuilder AddDurationLoggerHandler(
         this IHttpClientBuilder builder)
     {
-        builder.AddHttpMessageHandler(sp =>
+        return builder.AddHttpMessageHandler(sp =>
         {
-            var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
-            var logger = loggerFactory.CreateLogger($"System.Net.Http.HttpClient.{builder.Name}.DurationLoggerHandler");
+            ILoggerFactory loggerFactory = sp.GetRequiredService<ILoggerFactory>();
+            ILogger logger = loggerFactory.CreateLogger($"System.Net.Http.HttpClient.{builder.Name}.DurationLoggerHandler");
             return new DurationHandler.Handler(logger);
         });
-
-        return builder;
     }
 
     /// <summary>
@@ -39,19 +37,17 @@ public static class HttpClientBuilderExtensions
     /// <exception cref="InvalidOperationException">Thrown when the resulting <see cref="IHttpClientBuilder"/> is <c>null</c>.</exception>
     public static IHttpClientBuilder AddRequestToSendLoggerHandler(
         this IHttpClientBuilder builder,
-        Action<RequestToSendHandler.Options> configure)
+        Action<RequestToSendHandler.HandlerOptions> configure)
     {
-        builder.Services.Configure(builder.Name, configure);
+        _ = builder.Services.Configure(builder.Name, configure);
 
-        builder.AddHttpMessageHandler(sp =>
+        return builder.AddHttpMessageHandler(sp =>
         {
-            var optionsFactory = sp.GetRequiredService<IOptionsFactory<RequestToSendHandler.Options>>();
-            var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
-            var logger = loggerFactory.CreateLogger($"System.Net.Http.HttpClient.{builder.Name}.RequestToSendLoggerHandler");
+            IOptionsFactory<RequestToSendHandler.HandlerOptions> optionsFactory = sp.GetRequiredService<IOptionsFactory<RequestToSendHandler.HandlerOptions>>();
+            ILoggerFactory loggerFactory = sp.GetRequiredService<ILoggerFactory>();
+            ILogger logger = loggerFactory.CreateLogger($"System.Net.Http.HttpClient.{builder.Name}.RequestToSendLoggerHandler");
             return new RequestToSendHandler.Handler(optionsFactory.Create(builder.Name), logger);
         });
-
-        return builder;
     }
 
     /// <summary>
@@ -64,18 +60,16 @@ public static class HttpClientBuilderExtensions
     /// <exception cref="InvalidOperationException">Thrown when the resulting <see cref="IHttpClientBuilder"/> is <c>null</c>.</exception>
     public static IHttpClientBuilder AddResponseLoggerHandler(
         this IHttpClientBuilder builder,
-        Action<ResponseHandler.Options> configure)
+        Action<ResponseHandler.HandlerOptions> configure)
     {
-        builder.Services.Configure(builder.Name, configure);
+        _ = builder.Services.Configure(builder.Name, configure);
 
-        builder.AddHttpMessageHandler(sp =>
+        return builder.AddHttpMessageHandler(sp =>
         {
-            var optionsFactory = sp.GetRequiredService<IOptionsFactory<ResponseHandler.Options>>();
-            var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
-            var logger = loggerFactory.CreateLogger($"System.Net.Http.HttpClient.{builder.Name}.ResponseLoggerHandler");
+            IOptionsFactory<ResponseHandler.HandlerOptions> optionsFactory = sp.GetRequiredService<IOptionsFactory<ResponseHandler.HandlerOptions>>();
+            ILoggerFactory loggerFactory = sp.GetRequiredService<ILoggerFactory>();
+            ILogger logger = loggerFactory.CreateLogger($"System.Net.Http.HttpClient.{builder.Name}.ResponseLoggerHandler");
             return new ResponseHandler.Handler(optionsFactory.Create(builder.Name), logger);
         });
-
-        return builder;
     }
 }

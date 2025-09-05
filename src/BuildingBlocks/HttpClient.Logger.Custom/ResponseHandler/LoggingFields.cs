@@ -25,7 +25,7 @@ public enum LoggingFields : long
     /// Flag for logging the <see cref="HttpResponseMessage.Headers"/>.
     /// <para>
     /// <see cref="HttpResponseMessage.Headers"/> are redacted by default with the character '[Redacted]' unless specified in
-    /// the <see cref="Options.AllowedHeaders"/>.
+    /// the <see cref="HandlerOptions.AllowedHeaders"/>.
     /// </para>
     /// <para>
     /// For example:
@@ -37,7 +37,7 @@ public enum LoggingFields : long
 
     /// <summary>
     /// Flag for logging the <see cref="HttpResponseMessage.Content"/>.
-    /// Logging the <see cref="HttpResponseMessage.Content"/> up to <see cref="Options.BodyLogLimit"/>.
+    /// Logging the <see cref="HttpResponseMessage.Content"/> up to <see cref="HandlerOptions.BodyLogLimit"/>.
     /// </summary>
     Body = 4,
 
@@ -50,7 +50,7 @@ public enum LoggingFields : long
     /// <summary>
     /// Flag for logging the entire <see cref="HttpResponseMessage"/>.
     /// Includes <see cref="PropertiesAndHeaders"/> and <see cref="Body"/>.
-    /// Logging the <see cref="HttpResponseMessage.Content"/> up to <see cref="Options.BodyLogLimit"/>.
+    /// Logging the <see cref="HttpResponseMessage.Content"/> up to <see cref="HandlerOptions.BodyLogLimit"/>.
     /// </summary>
     All = PropertiesAndHeaders | Body
 }

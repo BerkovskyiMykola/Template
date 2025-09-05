@@ -34,7 +34,7 @@ internal static class Helper
     {
         const string Redacted = "[Redacted]";
 
-        foreach (var (key, value) in headers)
+        foreach ((var key, IEnumerable<string> value) in headers)
         {
             if (!allowedHeaders.Contains(key))
             {
@@ -63,7 +63,7 @@ internal static class Helper
     public static string FormatLog(string title, IReadOnlyList<KeyValuePair<string, object?>> log)
     {
         // Use 2kb as a rough average size for request/response headers
-        var builder = new ValueStringBuilder(2 * 1024);
+        using var builder = new ValueStringBuilder(2 * 1024);
         var count = log.Count;
         builder.Append(title);
         builder.Append(":");
@@ -71,7 +71,7 @@ internal static class Helper
 
         for (var i = 0; i < count - 1; i++)
         {
-            var kvp = log[i];
+            KeyValuePair<string, object?> kvp = log[i];
             builder.Append(kvp.Key);
             builder.Append(": ");
             builder.Append(kvp.Value?.ToString());
@@ -80,7 +80,7 @@ internal static class Helper
 
         if (count > 0)
         {
-            var kvp = log[count - 1];
+            KeyValuePair<string, object?> kvp = log[count - 1];
             builder.Append(kvp.Key);
             builder.Append(": ");
             builder.Append(kvp.Value?.ToString());
@@ -123,9 +123,9 @@ internal static class Helper
     {
         await content.LoadIntoBufferAsync(cancellationToken);
 
-        using var stream = await content.ReadAsStreamAsync(cancellationToken);
+        using Stream stream = await content.ReadAsStreamAsync(cancellationToken);
 
-        if (stream.Length == 0)
+        if (stream.Length is 0)
         {
             return null;
         }
@@ -179,18 +179,18 @@ internal static class Helper
 
         if (mediaTypes.Count is 0 ||
             string.IsNullOrWhiteSpace(contentType) ||
-            !Microsoft.Net.Http.Headers.MediaTypeHeaderValue.TryParse(contentType, out var mediaType))
+            !Microsoft.Net.Http.Headers.MediaTypeHeaderValue.TryParse(contentType, out Microsoft.Net.Http.Headers.MediaTypeHeaderValue? mediaType))
         {
             return false;
         }
 
-        foreach (var state in mediaTypes)
+        foreach (MediaTypeState state in mediaTypes)
         {
-            var type = state.MediaTypeHeaderValue;
+            Microsoft.Net.Http.Headers.MediaTypeHeaderValue type = state.MediaTypeHeaderValue;
             if (type.MatchesMediaType(mediaType.MediaType))
             {
                 encoding = mediaType.Encoding;
-                if (encoding == null)
+                if (encoding is null)
                 {
                     // No encoding specified, use the default.
                     encoding = state.Encoding;
@@ -217,6 +217,7 @@ internal static class Helper
     }
 
     //Copied from System.Text
+    #pragma warning disable
     private ref struct ValueStringBuilder
     {
         private char[]? _arrayToReturnToPool;
@@ -521,4 +522,5 @@ internal static class Helper
             }
         }
     }
+    #pragma warning restore
 }

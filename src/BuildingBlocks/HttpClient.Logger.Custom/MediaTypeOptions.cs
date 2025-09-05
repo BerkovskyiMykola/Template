@@ -9,14 +9,9 @@ namespace HttpClient.Logger.Custom;
 public sealed class MediaTypeOptions
 {
     /// <summary>
-    /// The list of configured <see cref="MediaTypeState"/> instances.
-    /// </summary>
-    private readonly List<MediaTypeState> _mediaTypeStates = [];
-
-    /// <summary>
     /// Gets the list of configured <see cref="MediaTypeState"/> instances.
     /// </summary>
-    internal List<MediaTypeState> MediaTypeStates => _mediaTypeStates;
+    internal List<MediaTypeState> MediaTypeStates { get; } = [];
 
     /// <summary>
     /// Adds a <paramref name="mediaType"/> to be used for logging as text.
@@ -27,7 +22,7 @@ public sealed class MediaTypeOptions
     {
         mediaType.Encoding ??= Encoding.UTF8;
 
-        _mediaTypeStates.Add(new MediaTypeState(mediaType, mediaType.Encoding));
+        MediaTypeStates.Add(new MediaTypeState(mediaType, mediaType.Encoding));
     }
 
     /// <summary>
@@ -38,10 +33,7 @@ public sealed class MediaTypeOptions
     /// </remarks>
     /// <param name="contentType">The content type to add.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="contentType"/> is null.</exception>  
-    public void AddText(string contentType)
-    {
-        AddText(MediaTypeHeaderValue.Parse(contentType));
-    }
+    public void AddText(string contentType) => AddText(MediaTypeHeaderValue.Parse(contentType));
 
     /// <summary>
     /// Adds a <paramref name="contentType"/> to be used for logging as text with a specific <paramref name="encoding"/>.
@@ -59,10 +51,7 @@ public sealed class MediaTypeOptions
     /// <summary>
     /// Clears all media types.
     /// </summary>
-    public void Clear()
-    {
-        _mediaTypeStates.Clear();
-    }
+    public void Clear() => MediaTypeStates.Clear();
 
     /// <summary>
     /// Represents the state of a <see cref="Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/>, including its <see cref="System.Text.Encoding"/>.
@@ -73,7 +62,7 @@ public sealed class MediaTypeOptions
     /// <param name="Encoding">
     /// The <see cref="System.Text.Encoding"/> to use for content of this media type.
     /// </param>
-    internal record MediaTypeState(
+    internal sealed record MediaTypeState(
         MediaTypeHeaderValue MediaTypeHeaderValue, 
         Encoding Encoding);
 }

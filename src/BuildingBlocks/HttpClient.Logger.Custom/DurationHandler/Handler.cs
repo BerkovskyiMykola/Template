@@ -7,7 +7,7 @@ namespace HttpClient.Logger.Custom.DurationHandler;
 /// A <see cref="DelegatingHandler"/> implementation that logs the <see cref="System.Net.Http.HttpClient"/> operation duration.
 /// </summary>
 /// <param name="logger">The <see cref="ILogger"/> used for logging <see cref="System.Net.Http.HttpClient"/> operation duration information.</param>
-internal class Handler(ILogger logger) : DelegatingHandler
+internal sealed class Handler(ILogger logger) : DelegatingHandler
 {
     private readonly ILogger _logger = logger;
 
@@ -21,7 +21,7 @@ internal class Handler(ILogger logger) : DelegatingHandler
     {
         var stopwatch = Stopwatch.StartNew();
 
-        var response = await base.SendAsync(request, cancellationToken);
+        HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
 
         stopwatch.Stop();
 

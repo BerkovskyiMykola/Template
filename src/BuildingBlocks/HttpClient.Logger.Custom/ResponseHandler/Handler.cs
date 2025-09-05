@@ -1,22 +1,23 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Text;
+using Microsoft.Extensions.Logging;
 
 namespace HttpClient.Logger.Custom.ResponseHandler;
 
 /// <summary>
 /// A <see cref="DelegatingHandler"/> implementation that logs <see cref="HttpResponseMessage"/>
-/// according to configured <see cref="Options"/>.
+/// according to configured <see cref="HandlerOptions"/>.
 /// </summary>
 /// <param name="options">The options controlling which parts of the <see cref="HttpResponseMessage"/> are logged.</param>
 /// <param name="logger">The logger used for logging <see cref="HttpResponseMessage"/> according to configured <paramref name="options"/>.</param>
 internal sealed class Handler(
-    Options options,
+    HandlerOptions options,
     ILogger logger) : DelegatingHandler
 {
-    private readonly Options _options = options;
+    private readonly HandlerOptions _options = options;
     private readonly ILogger _logger = logger;
 
     /// <summary>
-    /// Sends an <paramref name="request"/> asynchronously and logs the <see cref="HttpResponseMessage"/> based on the configured <see cref="Options"/>.
+    /// Sends an <paramref name="request"/> asynchronously and logs the <see cref="HttpResponseMessage"/> based on the configured <see cref="HandlerOptions"/>.
     /// </summary>
     /// <param name="request">The <see cref="HttpRequestMessage"/> to send.</param>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
@@ -28,7 +29,7 @@ internal sealed class Handler(
             return await base.SendAsync(request, cancellationToken);
         }
 
-        var response = await base.SendAsync(request, cancellationToken);
+        HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
 
         LogResponsePropertiesAndHeaders(response);
 
@@ -38,9 +39,9 @@ internal sealed class Handler(
     }
 
     /// <summary>
-    /// Logs the <see cref="HttpResponseMessage"/> properties and headers based on the configured <see cref="Options"/>.
+    /// Logs the <see cref="HttpResponseMessage"/> properties and headers based on the configured <see cref="HandlerOptions"/>.
     /// </summary>
-    /// <param name="response">The <see cref="HttpResponseMessage"/> whose properties and headers will be logged if allowed by the <see cref="Options"/>.</param>
+    /// <param name="response">The <see cref="HttpResponseMessage"/> whose properties and headers will be logged if allowed by the <see cref="HandlerOptions"/>.</param>
     private void LogResponsePropertiesAndHeaders(HttpResponseMessage response)
     {
         var log = new List<KeyValuePair<string, object?>>();
@@ -62,9 +63,9 @@ internal sealed class Handler(
     }
 
     /// <summary>
-    /// Logs the <see cref="HttpResponseMessage.Content"/> if the <see cref="Options"/> allow it.
+    /// Logs the <see cref="HttpResponseMessage.Content"/> if the <see cref="HandlerOptions"/> allow it.
     /// </summary>
-    /// <param name="response">The <see cref="HttpResponseMessage"/> whose <see cref="HttpResponseMessage.Content"/> will be logged if allowed by the <see cref="Options"/>.</param>
+    /// <param name="response">The <see cref="HttpResponseMessage"/> whose <see cref="HttpResponseMessage.Content"/> will be logged if allowed by the <see cref="HandlerOptions"/>.</param>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     private async Task LogResponseBodyAsync(HttpResponseMessage response, CancellationToken cancellationToken)
     {
@@ -83,7 +84,7 @@ internal sealed class Handler(
         if (!Helper.TryGetEncodingForMediaType(
             responseContentTypeHeader.ToString(),
             _options.AllowedMediaTypes.MediaTypeStates,
-            out var encoding))
+            out Encoding? encoding))
         {
             _logger.LogUnrecognizedResponseMediaTypeAsDebug();
 
