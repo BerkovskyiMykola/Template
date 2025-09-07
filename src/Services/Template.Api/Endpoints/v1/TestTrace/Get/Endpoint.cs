@@ -5,14 +5,14 @@ namespace Template.Api.Endpoints.v1.TestTrace.Get;
 
 internal sealed class Endpoint : IEndpoint
 {
-    public static void MapEndpoint(IEndpointRouteBuilder builder) => _ = builder.MapGet("/", HandleAsync);
+    public static void MapEndpoint(IEndpointRouteBuilder builder) => _ = builder.MapGet("api/v1/test-trace", HandleAsync);
 
     private static async Task<IResult> HandleAsync(
         [FromServices] IHttpClientFactory httpClientFactory,
         [FromServices] IConfiguration configuration)
     {
         System.Net.Http.HttpClient client = httpClientFactory.CreateClient(Common.HttpClients.ServiceCollectionExtensions.TestTraceNamedHttpClient);
-        HttpResponseMessage response = await client.PostAsJsonAsync($"{configuration["ApiBaseAddress"]}/test-trace?test=test", new
+        HttpResponseMessage response = await client.PostAsJsonAsync($"{configuration["ApiBaseAddress"]}/api/v1/test-trace?test=test", new
         {
             Name = "Trace Name"
         });

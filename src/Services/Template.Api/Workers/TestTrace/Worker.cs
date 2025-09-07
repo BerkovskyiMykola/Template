@@ -57,7 +57,7 @@ internal sealed class Worker(
         try
         {
             System.Net.Http.HttpClient client = _httpClientFactory.CreateClient(Common.HttpClients.ServiceCollectionExtensions.TestTraceNamedHttpClient);
-            HttpResponseMessage response = await client.PostAsJsonAsync($"{_configuration["ApiBaseAddress"]}/test-trace?test=test", new
+            HttpResponseMessage response = await client.PostAsJsonAsync($"{_configuration["ApiBaseAddress"]}/api/v1/test-trace?test=test", new
             {
                 Name = "Trace Name"
             });
