@@ -12,9 +12,6 @@ namespace Serilog.Enrichers.Custom;
 /// </summary>
 internal sealed class UserIdEnricher : ILogEventEnricher
 {
-    /// <summary>
-    /// Provides access to the current <see cref="HttpContext"/>.
-    /// </summary>
     private readonly HttpContextAccessor _httpContextAccessor = new();
 
     /// <summary>

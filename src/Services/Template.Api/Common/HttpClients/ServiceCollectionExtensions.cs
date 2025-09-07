@@ -23,36 +23,42 @@ internal static class ServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var builder = services.AddHttpClient(TestTraceNamedHttpClient)
+        IHttpClientBuilder builder = services.AddHttpClient(TestTraceNamedHttpClient)
             .RemoveAllLoggers();
 
         var enableDurationLogger = configuration.GetSection($"HttpClients:{TestTraceNamedHttpClient}:Logging:EnableDuration").Get<bool>();
 
         if (enableDurationLogger)
         {
-            builder.AddDurationLoggerHandler();
+            _ = builder.AddDurationLoggerHandler();
         }
 
-        var requestLoggingFields = configuration
+        HttpClient.Logger.Custom.RequestToSendHandler.LoggingFields requestLoggingFields = configuration
             .GetSection($"HttpClients:{TestTraceNamedHttpClient}:Logging:RequestLoggingFields")
             .Get<HttpClient.Logger.Custom.RequestToSendHandler.LoggingFields>();
-        var responseLoggingFields = configuration
+        HttpClient.Logger.Custom.ResponseHandler.LoggingFields responseLoggingFields = configuration
             .GetSection($"HttpClients:{TestTraceNamedHttpClient}:Logging:ResponseLoggingFields")
             .Get<HttpClient.Logger.Custom.ResponseHandler.LoggingFields>();
         var allowedRequestHeaders = configuration.GetSection($"HttpClients:{TestTraceNamedHttpClient}:Logging:AllowedRequestHeaders").Get<string[]>() ?? [];
         var allowedResponseHeaders = configuration.GetSection($"HttpClients:{TestTraceNamedHttpClient}:Logging:AllowedResponseHeaders").Get<string[]>() ?? [];
-        var allowedTextMediaTypes = configuration.GetSection($"HttpClients:{TestTraceNamedHttpClient}:Logging:AllowedTextMediaTypes").Get<TextMediaTypeOptions[]>() ?? [];
+        TextMediaTypeOptions[] allowedTextMediaTypes = configuration.GetSection($"HttpClients:{TestTraceNamedHttpClient}:Logging:AllowedTextMediaTypes").Get<TextMediaTypeOptions[]>() ?? [];
         var requestBodyLogLimit = configuration.GetSection($"HttpClients:{TestTraceNamedHttpClient}:Logging:RequestBodyLogLimit").Get<int>();
         var responseBodyLogLimit = configuration.GetSection($"HttpClients:{TestTraceNamedHttpClient}:Logging:ResponseBodyLogLimit").Get<int>();
 
-        builder
+        _ = builder
             .AddResponseLoggerHandler(config =>
             {
                 config.LoggingFields = responseLoggingFields;
 
-                foreach (var header in allowedResponseHeaders) config.AllowedHeaders.Add(header);
+                foreach (var header in allowedResponseHeaders)
+                {
+                    _ = config.AllowedHeaders.Add(header);
+                }
 
-                foreach (var textContentType in allowedTextMediaTypes) config.AllowedMediaTypes.AddText(textContentType.ContentType, Encoding.GetEncoding(textContentType.Encoding));
+                foreach (TextMediaTypeOptions textMediaType in allowedTextMediaTypes)
+                {
+                    config.AllowedMediaTypes.AddText(textMediaType.ContentType, Encoding.GetEncoding(textMediaType.Encoding));
+                }
 
                 config.BodyLogLimit = responseBodyLogLimit;
             })
@@ -60,9 +66,15 @@ internal static class ServiceCollectionExtensions
             {
                 config.LoggingFields = requestLoggingFields;
 
-                foreach (var header in allowedRequestHeaders) config.AllowedHeaders.Add(header);
+                foreach (var header in allowedRequestHeaders) 
+                { 
+                    _ = config.AllowedHeaders.Add(header); 
+                }
 
-                foreach (var textContentType in allowedTextMediaTypes) config.AllowedMediaTypes.AddText(textContentType.ContentType, Encoding.GetEncoding(textContentType.Encoding));
+                foreach (TextMediaTypeOptions textMediaType in allowedTextMediaTypes)
+                {
+                    config.AllowedMediaTypes.AddText(textMediaType.ContentType, Encoding.GetEncoding(textMediaType.Encoding));
+                }
 
                 config.BodyLogLimit = requestBodyLogLimit;
             })
@@ -74,16 +86,7 @@ internal static class ServiceCollectionExtensions
     /// <summary>
     /// Represents options for a text-based media type, including its content type and encoding.
     /// </summary>
-    private sealed record TextMediaTypeOptions
-    {
-        /// <summary>
-        /// Gets the content type of the text media (e.g., "application/json", "text/plain").
-        /// </summary>
-        public required string ContentType { get; init; }
-
-        /// <summary>
-        /// Gets the encoding name used for the text media (e.g., "utf-8", "ascii").
-        /// </summary>
-        public required string Encoding { get; init; }
-    }
+    /// <param name="ContentType">The content type of the text media (e.g., "application/json", "text/plain").</param>
+    /// <param name="Encoding">The encoding name used for the text media (e.g., "utf-8", "ascii").</param>
+    private sealed record TextMediaTypeOptions(string ContentType, string Encoding);
 }

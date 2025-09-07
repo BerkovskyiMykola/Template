@@ -22,13 +22,13 @@ internal static class ServiceCollectionExtensions
         IConfiguration configuration,
         IHostEnvironment environment)
     {
-        services.AddOpenTelemetry()
+        _ = services.AddOpenTelemetry()
             .ConfigureResource(config =>
             {
                 var serviceName = configuration["OpenTelemetry:ResourceAttributes:service.name"]!;
                 var serviceInstanceId = configuration["OpenTelemetry:ResourceAttributes:service.instance.id"];
 
-                config
+                _ = config
                     .AddService(
                         serviceName: serviceName,
                         autoGenerateServiceInstanceId: false,
@@ -44,29 +44,29 @@ internal static class ServiceCollectionExtensions
 
                 if (addRuntimeInstrumentation)
                 {
-                    config.AddRuntimeInstrumentation();
+                    _ = config.AddRuntimeInstrumentation();
                 }
 
                 if (addHttpClientInstrumentation)
                 {
-                    config.AddHttpClientInstrumentation();
+                    _ = config.AddHttpClientInstrumentation();
                 }
 
                 if (addAspNetCoreInstrumentation)
                 {
-                    config.AddAspNetCoreInstrumentation();
+                    _ = config.AddAspNetCoreInstrumentation();
                 }
 
-                var otlpExporter = configuration.GetSection("OpenTelemetry:Exporters:Otlp:Metrics");
+                IConfigurationSection otlpExporter = configuration.GetSection("OpenTelemetry:Exporters:Otlp:Metrics");
 
                 if (otlpExporter.Exists())
                 {
-                    config.AddOtlpExporter(x =>
+                    _ = config.AddOtlpExporter(x =>
                     {
                         x.Endpoint = new Uri(otlpExporter["Endpoint"]!);
                         x.Protocol = otlpExporter.GetSection("Protocol").Get<OtlpExportProtocol>();
 
-                        var headers = otlpExporter.GetSection("Headers").Get<Dictionary<string, string>>();
+                        Dictionary<string, string>? headers = otlpExporter.GetSection("Headers").Get<Dictionary<string, string>>();
                         if (headers is { Count: > 0 })
                         {
                             x.Headers = string.Join(",", headers.Select(y => $"{y.Key}={y.Value}"));
@@ -83,39 +83,39 @@ internal static class ServiceCollectionExtensions
 
                 if (environment.IsDevelopment())
                 {
-                    config.SetSampler<AlwaysOnSampler>();
+                    _ = config.SetSampler<AlwaysOnSampler>();
                 }
 
                 if (addHttpClientInstrumentation)
                 {
-                    config.AddHttpClientInstrumentation();
+                    _ = config.AddHttpClientInstrumentation();
                 }
 
                 if (addAspNetCoreInstrumentation)
                 {
-                    config.AddAspNetCoreInstrumentation();
+                    _ = config.AddAspNetCoreInstrumentation();
                 }
 
                 if (addEntityFrameworkCoreInstrumentation)
                 {
-                    config.AddEntityFrameworkCoreInstrumentation();
+                    _ = config.AddEntityFrameworkCoreInstrumentation();
                 }
 
                 if (addWorkersInstrumentation)
                 {
-                    config.AddSource(Workers.Constants.ActivitySource.Name);
+                    _ = config.AddSource(Constants.WorkersActivitySource.Name);
                 }
 
-                var otlpExporter = configuration.GetSection($"OpenTelemetry:Exporters:Otlp:Tracing");
+                IConfigurationSection otlpExporter = configuration.GetSection($"OpenTelemetry:Exporters:Otlp:Tracing");
 
                 if (otlpExporter.Exists())
                 {
-                    config.AddOtlpExporter(x =>
+                    _ = config.AddOtlpExporter(x =>
                     {
                         x.Endpoint = new Uri(otlpExporter["Endpoint"]!);
                         x.Protocol = otlpExporter.GetSection("Protocol").Get<OtlpExportProtocol>();
-                        
-                        var headers = otlpExporter.GetSection("Headers").Get<Dictionary<string, string>>();
+
+                        Dictionary<string, string>? headers = otlpExporter.GetSection("Headers").Get<Dictionary<string, string>>();
                         if (headers is { Count: > 0 })
                         {
                             x.Headers = string.Join(",", headers.Select(y => $"{y.Key}={y.Value}"));

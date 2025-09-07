@@ -11,9 +11,11 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+COPY ["Directory.Packages.props", "."]
+COPY ["Directory.Build.props", "."]
 COPY ["src/Services/Template.Api/Template.Api.csproj", "src/Services/Template.Api/"]
-COPY ["src/BuildingBlocks/Serilog.Enrichers.Custom/Serilog.Enrichers.Custom.csproj", "src/BuildingBlocks/Serilog.Enrichers.Custom/"]
 COPY ["src/BuildingBlocks/HttpClient.Logger.Custom/HttpClient.Logger.Custom.csproj", "src/BuildingBlocks/HttpClient.Logger.Custom/"]
+COPY ["src/BuildingBlocks/Serilog.Enrichers.Custom/Serilog.Enrichers.Custom.csproj", "src/BuildingBlocks/Serilog.Enrichers.Custom/"]
 RUN dotnet restore "./src/Services/Template.Api/Template.Api.csproj"
 COPY . .
 WORKDIR "/src/src/Services/Template.Api"

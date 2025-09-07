@@ -146,9 +146,6 @@ internal static class Helper
         }
     }
 
-    /// <summary>
-    /// A list of supported <see cref="Encoding"/>s for <see cref="HttpContent"/>.
-    /// </summary>
     private static readonly IReadOnlyList<Encoding> SupportedEncodings =
     [
         Encoding.UTF8,

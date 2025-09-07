@@ -14,12 +14,11 @@ internal static class ServiceCollectionExtensions
     /// <returns>The <see cref="IServiceCollection"/> with Serilog configured.</returns>  
     public static IServiceCollection AddConfiguredSerilog(this IServiceCollection services)
     {
-        services.AddSerilog((sp, config) =>
+        return services.AddSerilog((sp, config) =>
         {
-            config.ReadFrom.Configuration(sp.GetRequiredService<IConfiguration>());
-            config.ReadFrom.Services(sp);
+            _ = config
+                .ReadFrom.Configuration(sp.GetRequiredService<IConfiguration>())
+                .ReadFrom.Services(sp);
         });
-
-        return services;
     }
 }
