@@ -33,7 +33,12 @@ public sealed class MediaTypeOptions
     /// </remarks>
     /// <param name="contentType">The content type to add.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="contentType"/> is null.</exception>  
-    public void AddText(string contentType) => AddText(MediaTypeHeaderValue.Parse(contentType));
+    public void AddText(string contentType)
+    {
+        ArgumentNullException.ThrowIfNull(contentType);
+
+        AddText(MediaTypeHeaderValue.Parse(contentType));
+    }
 
     /// <summary>
     /// Adds a <paramref name="contentType"/> to be used for logging as text with a specific <paramref name="encoding"/>.
@@ -43,6 +48,9 @@ public sealed class MediaTypeOptions
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="contentType"/> or <paramref name="encoding"/> is null.</exception> 
     public void AddText(string contentType, Encoding encoding)
     {
+        ArgumentNullException.ThrowIfNull(contentType);
+        ArgumentNullException.ThrowIfNull(encoding);
+
         var mediaType = MediaTypeHeaderValue.Parse(contentType);
         mediaType.Encoding = encoding;
         AddText(mediaType);

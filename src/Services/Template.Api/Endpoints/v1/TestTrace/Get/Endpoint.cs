@@ -12,11 +12,15 @@ internal sealed class Endpoint : IEndpoint
         [FromServices] IConfiguration configuration)
     {
         System.Net.Http.HttpClient client = httpClientFactory.CreateClient(Common.HttpClients.ServiceCollectionExtensions.TestTraceNamedHttpClient);
-        HttpResponseMessage response = await client.PostAsJsonAsync($"{configuration["ApiBaseAddress"]}/api/v1/test-trace?test=test", new
-        {
-            Name = "Trace Name"
-        });
+        HttpResponseMessage response = await client
+            .PostAsJsonAsync(
+                $"{configuration["ApiBaseAddress"]}/api/v1/test-trace?test=test", 
+                new
+                {
+                    Name = "Trace Name"
+                })
+            .ConfigureAwait(false);
 
-        return Results.Ok($"Hello World! Test trace {await response.Content.ReadAsStringAsync()}");
+        return Results.Ok($"Hello World! Test trace {await response.Content.ReadAsStringAsync().ConfigureAwait(false)}");
     }
 }

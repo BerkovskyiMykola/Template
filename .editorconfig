@@ -285,14 +285,6 @@ dotnet_style_qualification_for_method = false:error
 dotnet_style_qualification_for_property = false:error
 dotnet_style_qualification_for_event = false:error
 
-# CA1062: Validate arguments of public methods
-# Handled by NullGuard.Fody
-dotnet_diagnostic.CA1062.severity = none
-
-# CA2007: Consider calling ConfigureAwait on the awaited task
-# Handled by ConfigureAwait.Fody
-dotnet_diagnostic.CA2007.severity = none
-
 # CA1812: Avoid uninstantiated internal classes
 # Many classes in modern apps are instantiated via reflection (e.g. DI),
 # not directly with 'new', so this rule can be safely suppressed.

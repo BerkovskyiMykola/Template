@@ -121,9 +121,9 @@ internal static class Helper
         ILogger logger,
         CancellationToken cancellationToken)
     {
-        await content.LoadIntoBufferAsync(cancellationToken);
+        await content.LoadIntoBufferAsync(cancellationToken).ConfigureAwait(false);
 
-        using Stream stream = await content.ReadAsStreamAsync(cancellationToken);
+        using Stream stream = await content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
 
         if (stream.Length is 0)
         {
@@ -133,7 +133,7 @@ internal static class Helper
         var bufferSize = (int)Math.Min(stream.Length, logLimit);
         var buffer = new byte[bufferSize];
 
-        var bytesRead = await stream.ReadAsync(buffer, cancellationToken);
+        var bytesRead = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false);
 
         try
         {

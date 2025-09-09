@@ -1,4 +1,0 @@
-﻿<Weavers>
-  <NullGuard IncludeDebugAssert="false" Mode="NullableReferenceTypes" />
-  <ConfigureAwait ContinueOnCapturedContext="false"/>
-</Weavers>

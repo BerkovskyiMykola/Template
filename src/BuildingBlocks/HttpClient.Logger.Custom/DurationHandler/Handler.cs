@@ -21,7 +21,7 @@ internal sealed class Handler(ILogger logger) : DelegatingHandler
     {
         var stopwatch = Stopwatch.StartNew();
 
-        HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
+        HttpResponseMessage response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
         stopwatch.Stop();
 

@@ -28,4 +28,4 @@ app.UseHttpLogging();
 
 app.MapEndpoints();
 
-await app.RunAsync();
+await app.RunAsync().ConfigureAwait(false);

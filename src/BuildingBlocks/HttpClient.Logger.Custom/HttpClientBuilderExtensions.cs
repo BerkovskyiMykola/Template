@@ -15,10 +15,11 @@ public static class HttpClientBuilderExtensions
     /// <param name="builder">The <see cref="IHttpClientBuilder"/> to which a duration logger handler will be added.</param>
     /// <returns>The configured <see cref="IHttpClientBuilder"/> that includes a duration logger handler.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="builder"/> is null.</exception>  
-    /// <exception cref="InvalidOperationException">Thrown when the resulting <see cref="IHttpClientBuilder"/> is <c>null</c>.</exception>
     public static IHttpClientBuilder AddDurationLoggerHandler(
         this IHttpClientBuilder builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         return builder.AddHttpMessageHandler(sp =>
         {
             ILoggerFactory loggerFactory = sp.GetRequiredService<ILoggerFactory>();
@@ -34,11 +35,12 @@ public static class HttpClientBuilderExtensions
     /// <returns>The configured <see cref="IHttpClientBuilder"/> that includes a request to send logger handler.</returns>
     /// <returns>The configured <see cref="IHttpClientBuilder"/>.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="builder"/> or <paramref name="configure"/> is null.</exception>  
-    /// <exception cref="InvalidOperationException">Thrown when the resulting <see cref="IHttpClientBuilder"/> is <c>null</c>.</exception>
     public static IHttpClientBuilder AddRequestToSendLoggerHandler(
         this IHttpClientBuilder builder,
         Action<RequestToSendHandler.HandlerOptions> configure)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+
         _ = builder.Services.Configure(builder.Name, configure);
 
         return builder.AddHttpMessageHandler(sp =>
@@ -57,11 +59,13 @@ public static class HttpClientBuilderExtensions
     /// <returns>The configured <see cref="IHttpClientBuilder"/> that includes a response logger handler.</returns>
     /// <returns>The configured <see cref="IHttpClientBuilder"/>.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="builder"/> or <paramref name="configure"/> is null.</exception>  
-    /// <exception cref="InvalidOperationException">Thrown when the resulting <see cref="IHttpClientBuilder"/> is <c>null</c>.</exception>
     public static IHttpClientBuilder AddResponseLoggerHandler(
         this IHttpClientBuilder builder,
         Action<ResponseHandler.HandlerOptions> configure)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(configure);
+
         _ = builder.Services.Configure(builder.Name, configure);
 
         return builder.AddHttpMessageHandler(sp =>

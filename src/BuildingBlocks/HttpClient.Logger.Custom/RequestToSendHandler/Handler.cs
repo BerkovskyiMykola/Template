@@ -26,14 +26,14 @@ internal sealed class Handler(
     {
         if (!_logger.IsEnabled(LogLevel.Information) || _options.LoggingFields is LoggingFields.None)
         {
-            return await base.SendAsync(request, cancellationToken);
+            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
         LogRequestPropertiesAndHeadersToSend(request);
 
-        await LogRequestBodyToSendAsync(request, cancellationToken);
+        await LogRequestBodyToSendAsync(request, cancellationToken).ConfigureAwait(false);
 
-        return await base.SendAsync(request, cancellationToken);
+        return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -117,7 +117,7 @@ internal sealed class Handler(
             return;
         }
 
-        var bodyString = await Helper.ReadContentAsStringOrDefaultAsync(request.Content, encoding, _options.BodyLogLimit, _logger, cancellationToken);
+        var bodyString = await Helper.ReadContentAsStringOrDefaultAsync(request.Content, encoding, _options.BodyLogLimit, _logger, cancellationToken).ConfigureAwait(false);
 
         if (bodyString is null)
         {

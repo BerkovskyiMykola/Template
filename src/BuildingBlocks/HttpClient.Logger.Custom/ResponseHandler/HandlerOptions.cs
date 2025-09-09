@@ -37,7 +37,6 @@ public sealed class HandlerOptions
     /// the header name will be logged with a redacted value.
     /// </para>
     /// </summary>
-    /// <exception cref="InvalidOperationException">Thrown if the getter is called when the value is null.</exception>
     public HashSet<string> AllowedHeaders { get; } = [];
 
     /// <summary>
@@ -47,7 +46,6 @@ public sealed class HandlerOptions
     /// the <see cref="HttpResponseMessage.Content"/> will not be logged.
     /// </para>
     /// </summary>
-    /// <exception cref="InvalidOperationException">Thrown if the getter is called when the value is null.</exception>
     public MediaTypeOptions AllowedMediaTypes { get; } = new();
 
     private int _bodyLogLimit;

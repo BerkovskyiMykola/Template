@@ -42,7 +42,6 @@ public sealed class HandlerOptions
     /// access controlled and the privacy impact assessed.
     /// </para>
     /// </summary>
-    /// <exception cref="InvalidOperationException">Thrown if the getter is called when the value is null.</exception>
     public HashSet<string> AllowedHeaders { get; } = [];
 
     /// <summary>
@@ -52,7 +51,6 @@ public sealed class HandlerOptions
     /// the <see cref="HttpRequestMessage.Content"/> will not be logged.
     /// </para>
     /// </summary>
-    /// <exception cref="InvalidOperationException">Thrown if the getter is called when the value is null.</exception>
     public MediaTypeOptions AllowedMediaTypes { get; } = new();
 
     private int _bodyLogLimit;

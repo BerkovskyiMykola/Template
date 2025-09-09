@@ -13,6 +13,10 @@ public static class LoggerEnrichmentConfigurationExtensions
     /// <param name="configuration">The <see cref="LoggerEnrichmentConfiguration"/> to which a <see cref="UserIdEnricher"/> will be added.</param>
     /// <returns>The <see cref="LoggerConfiguration"/> that includes a <see cref="UserIdEnricher"/>.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="configuration"/> is null.</exception>  
-    /// <exception cref="InvalidOperationException">Thrown when a resulting <see cref="LoggerConfiguration"/> is null.</exception>
-    public static LoggerConfiguration WithUserId(this LoggerEnrichmentConfiguration configuration) => configuration.With<UserIdEnricher>();
+    public static LoggerConfiguration WithUserId(this LoggerEnrichmentConfiguration configuration)
+    {
+        ArgumentNullException.ThrowIfNull(configuration);
+
+        return configuration.With<UserIdEnricher>();
+    }
 }

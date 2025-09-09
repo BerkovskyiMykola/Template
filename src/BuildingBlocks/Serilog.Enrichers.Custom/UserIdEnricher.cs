@@ -32,6 +32,9 @@ internal sealed class UserIdEnricher : ILogEventEnricher
     /// </exception>  
     public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
     {
+        ArgumentNullException.ThrowIfNull(logEvent);
+        ArgumentNullException.ThrowIfNull(propertyFactory);
+
         var userId = _httpContextAccessor.HttpContext?
             .User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
