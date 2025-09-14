@@ -1,4 +1,9 @@
-﻿using System.Text;
+﻿/*
+ * HttpClient.Logger.Custom
+ * Copyright (c) 2025-2025 Mykola Berkovskyi
+ */
+
+using System.Text;
 using Microsoft.Extensions.Logging;
 
 namespace HttpClient.Logger.Custom.ResponseHandler;
@@ -38,13 +43,9 @@ internal sealed class Handler(
         return response;
     }
 
-    /// <summary>
-    /// Logs the <see cref="HttpResponseMessage"/> properties and headers based on the configured <see cref="HandlerOptions"/>.
-    /// </summary>
-    /// <param name="response">The <see cref="HttpResponseMessage"/> whose properties and headers will be logged if allowed by the <see cref="HandlerOptions"/>.</param>
     private void LogResponsePropertiesAndHeaders(HttpResponseMessage response)
     {
-        var log = new List<KeyValuePair<string, object?>>();
+        List<LogField> log = [];
 
         if (_options.LoggingFields.HasFlag(LoggingFields.StatusCode))
         {
@@ -62,11 +63,6 @@ internal sealed class Handler(
         }
     }
 
-    /// <summary>
-    /// Logs the <see cref="HttpResponseMessage.Content"/> if the <see cref="HandlerOptions"/> allow it.
-    /// </summary>
-    /// <param name="response">The <see cref="HttpResponseMessage"/> whose <see cref="HttpResponseMessage.Content"/> will be logged if allowed by the <see cref="HandlerOptions"/>.</param>
-    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     private async Task LogResponseBodyAsync(HttpResponseMessage response, CancellationToken cancellationToken)
     {
         if (!_options.LoggingFields.HasFlag(LoggingFields.Body))
@@ -91,13 +87,13 @@ internal sealed class Handler(
             return;
         }
 
-        var bodyString = await Helper.ReadContentAsStringOrDefaultAsync(response.Content, encoding, _options.BodyLogLimit, _logger, cancellationToken).ConfigureAwait(false);
+        string? body = await Helper.ReadContentAsStringOrDefaultAsync(response.Content, encoding, _options.BodyLogLimit, _logger, cancellationToken).ConfigureAwait(false);
 
-        if (bodyString is null)
+        if (body is null)
         {
             return;
         }
 
-        _logger.LogResponseBodyAsInformation(bodyString);
+        _logger.LogResponseBodyAsInformation(body);
     }
 }

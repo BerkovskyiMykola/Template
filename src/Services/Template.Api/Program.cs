@@ -1,3 +1,8 @@
+/*
+ * Template.Api
+ * Copyright (c) 2025-2025 Mykola Berkovskyi
+ */
+
 using Template.Api.Common.Endpoints;
 using Template.Api.Common.HttpClients;
 using Template.Api.Common.HttpLogging;

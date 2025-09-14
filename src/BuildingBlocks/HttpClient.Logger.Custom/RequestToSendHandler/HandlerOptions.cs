@@ -1,4 +1,9 @@
-﻿namespace HttpClient.Logger.Custom.RequestToSendHandler;
+﻿/*
+ * HttpClient.Logger.Custom
+ * Copyright (c) 2025-2025 Mykola Berkovskyi
+ */
+
+namespace HttpClient.Logger.Custom.RequestToSendHandler;
 
 /// <summary>
 /// Options for the <see cref="Handler"/>.
@@ -18,7 +23,7 @@ public sealed class HandlerOptions
         get => _loggingFields;
         set
         {
-            if (!Enum.IsDefined(value))
+            if (!Helper.IsFlaggedEnumValid(value))
             {
                 throw new ArgumentOutOfRangeException(
                     nameof(value),

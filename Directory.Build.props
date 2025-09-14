@@ -18,5 +18,6 @@
 	  <PrivateAssets>all</PrivateAssets>
 	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>
+	<AdditionalFiles Include="$(MSBuildThisFileDirectory)SonarLint.xml" />
   </ItemGroup>
 </Project>

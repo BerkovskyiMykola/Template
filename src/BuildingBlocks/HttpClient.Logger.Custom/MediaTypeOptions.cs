@@ -1,4 +1,9 @@
-﻿using System.Text;
+﻿/*
+ * HttpClient.Logger.Custom
+ * Copyright (c) 2025-2025 Mykola Berkovskyi
+ */
+
+using System.Text;
 using Microsoft.Net.Http.Headers;
 
 namespace HttpClient.Logger.Custom;
@@ -8,21 +13,18 @@ namespace HttpClient.Logger.Custom;
 /// </summary>
 public sealed class MediaTypeOptions
 {
+    private readonly List<MediaTypeState> _mediaTypeStates = [];
+
     /// <summary>
     /// Gets the list of configured <see cref="MediaTypeState"/> instances.
     /// </summary>
-    internal List<MediaTypeState> MediaTypeStates { get; } = [];
+    internal IReadOnlyList<MediaTypeState> MediaTypeStates => _mediaTypeStates;
 
-    /// <summary>
-    /// Adds a <paramref name="mediaType"/> to be used for logging as text.
-    /// If the <see cref="MediaTypeHeaderValue.Encoding"/> is not specified, <see cref="Encoding.UTF8"/> will be used by default.
-    /// </summary>
-    /// <param name="mediaType">The <see cref="MediaTypeHeaderValue"/> to add.</param>
     private void AddText(MediaTypeHeaderValue mediaType)
     {
         mediaType.Encoding ??= Encoding.UTF8;
 
-        MediaTypeStates.Add(new MediaTypeState(mediaType, mediaType.Encoding));
+        _mediaTypeStates.Add(new MediaTypeState(mediaType, mediaType.Encoding));
     }
 
     /// <summary>
@@ -51,7 +53,7 @@ public sealed class MediaTypeOptions
         ArgumentNullException.ThrowIfNull(contentType);
         ArgumentNullException.ThrowIfNull(encoding);
 
-        var mediaType = MediaTypeHeaderValue.Parse(contentType);
+        MediaTypeHeaderValue mediaType = MediaTypeHeaderValue.Parse(contentType);
         mediaType.Encoding = encoding;
         AddText(mediaType);
     }
@@ -59,7 +61,7 @@ public sealed class MediaTypeOptions
     /// <summary>
     /// Clears all media types.
     /// </summary>
-    public void Clear() => MediaTypeStates.Clear();
+    public void Clear() => _mediaTypeStates.Clear();
 
     /// <summary>
     /// Represents the state of a <see cref="Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/>, including its <see cref="System.Text.Encoding"/>.

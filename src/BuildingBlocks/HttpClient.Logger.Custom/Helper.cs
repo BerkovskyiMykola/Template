@@ -1,4 +1,9 @@
-﻿using System.Buffers;
+﻿/*
+ * HttpClient.Logger.Custom
+ * Copyright (c) 2025-2025 Mykola Berkovskyi
+ */
+
+using System.Buffers;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Headers;
@@ -25,25 +30,18 @@ internal static class Helper
     /// The <see cref="HttpHeaders"/> to add into the <paramref name="log"/>, redacting those not included in the <paramref name="allowedHeaders"/>.
     /// </param>
     /// <param name="allowedHeaders">
-    /// A set of allowed header names. <paramref name="headers"/> not in this set will be redacted.
+    /// A collection of allowed header names. <paramref name="headers"/> not in this set will be redacted.
     /// </param>
-    public static void AddAllowedOrRedactedHeadersToLog(
-        ICollection<KeyValuePair<string, object?>> log,
+    internal static void AddAllowedOrRedactedHeadersToLog(
+        ICollection<LogField> log,
         HttpHeaders headers,
-        ISet<string> allowedHeaders)
+        ICollection<string> allowedHeaders)
     {
         const string Redacted = "[Redacted]";
 
-        foreach ((var key, IEnumerable<string> value) in headers)
+        foreach ((string key, IEnumerable<string> value) in headers)
         {
-            if (!allowedHeaders.Contains(key))
-            {
-                log.Add(new(key, Redacted));
-            }
-            else
-            {
-                log.Add(new(key, string.Join(',', value)));
-            }
+            log.Add(allowedHeaders.Contains(key) ? new(key, string.Join(',', value)) : new(key, Redacted));
         }
     }
 
@@ -60,30 +58,30 @@ internal static class Helper
     /// <returns>
     /// A formatted string that starts with the <paramref name="title"/>, followed by each key-value pair in <paramref name="log"/> on a new line.
     /// </returns>
-    public static string FormatLog(string title, IReadOnlyList<KeyValuePair<string, object?>> log)
+    internal static string FormatLog(string title, IReadOnlyList<LogField> log)
     {
         // Use 2kb as a rough average size for request/response headers
-        using var builder = new ValueStringBuilder(2 * 1024);
-        var count = log.Count;
+        using ValueStringBuilder builder = new(2 * 1024);
+        int count = log.Count;
         builder.Append(title);
         builder.Append(":");
         builder.Append(Environment.NewLine);
 
-        for (var i = 0; i < count - 1; i++)
+        for (int i = 0; i < count - 1; i++)
         {
-            KeyValuePair<string, object?> kvp = log[i];
-            builder.Append(kvp.Key);
+            LogField logField = log[i];
+            builder.Append(logField.Key);
             builder.Append(": ");
-            builder.Append(kvp.Value?.ToString());
+            builder.Append(logField.Value?.ToString());
             builder.Append(Environment.NewLine);
         }
 
         if (count > 0)
         {
-            KeyValuePair<string, object?> kvp = log[count - 1];
-            builder.Append(kvp.Key);
+            LogField logField = log[count - 1];
+            builder.Append(logField.Key);
             builder.Append(": ");
-            builder.Append(kvp.Value?.ToString());
+            builder.Append(logField.Value?.ToString());
         }
 
         return builder.ToString();
@@ -114,7 +112,7 @@ internal static class Helper
     /// If the <paramref name="content"/> is empty, returns <c>null</c>. 
     /// If decoding fails due to a <see cref="DecoderFallbackException"/>, returns the string <c>"&lt;Decoder failure&gt;"</c>.
     /// </returns>
-    public static async Task<string?> ReadContentAsStringOrDefaultAsync(
+    internal static async Task<string?> ReadContentAsStringOrDefaultAsync(
         HttpContent content,
         Encoding encoding,
         long logLimit,
@@ -130,10 +128,10 @@ internal static class Helper
             return null;
         }
 
-        var bufferSize = (int)Math.Min(stream.Length, logLimit);
-        var buffer = new byte[bufferSize];
+        int bufferSize = (int)Math.Min(stream.Length, logLimit);
+        byte[] buffer = new byte[bufferSize];
 
-        var bytesRead = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false);
+        int bytesRead = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false);
 
         try
         {
@@ -170,12 +168,12 @@ internal static class Helper
     /// <returns>
     /// <c>true</c> if a supported encoding is found for the specified <paramref name="contentType"/>; otherwise, <c>false</c>.
     /// </returns>
-    public static bool TryGetEncodingForMediaType(string? contentType, IReadOnlyList<MediaTypeState> mediaTypes, [NotNullWhen(true)] out Encoding? encoding)
+    internal static bool TryGetEncodingForMediaType(string? contentType, IReadOnlyCollection<MediaTypeState> mediaTypes, [NotNullWhen(true)] out Encoding? encoding)
     {
         encoding = null;
 
-        if (mediaTypes.Count is 0 ||
-            string.IsNullOrWhiteSpace(contentType) ||
+        if (string.IsNullOrWhiteSpace(contentType) ||
+            mediaTypes.Count is 0 ||
             !Microsoft.Net.Http.Headers.MediaTypeHeaderValue.TryParse(contentType, out Microsoft.Net.Http.Headers.MediaTypeHeaderValue? mediaType))
         {
             return false;
@@ -183,30 +181,63 @@ internal static class Helper
 
         foreach (MediaTypeState state in mediaTypes)
         {
-            Microsoft.Net.Http.Headers.MediaTypeHeaderValue type = state.MediaTypeHeaderValue;
-            if (type.MatchesMediaType(mediaType.MediaType))
+            if (!state.MediaTypeHeaderValue.MatchesMediaType(mediaType.MediaType))
             {
-                encoding = mediaType.Encoding;
-                if (encoding is null)
+                continue;
+            }
+
+            encoding = mediaType.Encoding;
+            if (encoding is null)
+            {
+                // No encoding specified, use the default.
+                encoding = state.Encoding;
+                return true;
+            }
+
+            // Only allow specific encodings.
+            for (int i = 0; i < SupportedEncodings.Count; i++)
+            {
+                if (string.Equals(encoding.WebName,
+                    SupportedEncodings[i].WebName,
+                    StringComparison.OrdinalIgnoreCase))
                 {
-                    // No encoding specified, use the default.
-                    encoding = state.Encoding;
+                    encoding = SupportedEncodings[i];
                     return true;
                 }
+            }
 
-                // Only allow specific encodings.
-                for (var i = 0; i < SupportedEncodings.Count; i++)
+            return false;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Determines whether the specified flagged enum <paramref name="value"/> is valid.
+    /// </summary>
+    /// <typeparam name="T">
+    /// The enum type to validate. Must be a struct and an <see cref="Enum"/>.
+    /// </typeparam>
+    /// <param name="value">
+    /// The flagged enum value to validate.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> if <paramref name="value"/> is a valid combination of defined enum values; otherwise, <c>false</c>.
+    /// </returns>
+    internal static bool IsFlaggedEnumValid<T>(T value) where T : struct, Enum
+    {
+        long longValue = Convert.ToInt64(value, null);
+        long mask = 0;
+        foreach (T enumValue in Enum.GetValues<T>())
+        {
+            long enumValueAsInt64 = Convert.ToInt64(enumValue, null);
+            if ((enumValueAsInt64 & longValue) == enumValueAsInt64)
+            {
+                mask |= enumValueAsInt64;
+                if (mask == longValue)
                 {
-                    if (string.Equals(encoding.WebName,
-                        SupportedEncodings[i].WebName,
-                        StringComparison.OrdinalIgnoreCase))
-                    {
-                        encoding = SupportedEncodings[i];
-                        return true;
-                    }
+                    return true;
                 }
-
-                break;
             }
         }
 
@@ -214,28 +245,28 @@ internal static class Helper
     }
 
     //Copied from System.Text
-    #pragma warning disable
+#pragma warning disable
     private ref struct ValueStringBuilder
     {
         private char[]? _arrayToReturnToPool;
         private Span<char> _chars;
         private int _pos;
 
-        public ValueStringBuilder(Span<char> initialBuffer)
+        internal ValueStringBuilder(Span<char> initialBuffer)
         {
             _arrayToReturnToPool = null;
             _chars = initialBuffer;
             _pos = 0;
         }
 
-        public ValueStringBuilder(int initialCapacity)
+        internal ValueStringBuilder(int initialCapacity)
         {
             _arrayToReturnToPool = ArrayPool<char>.Shared.Rent(initialCapacity);
             _chars = _arrayToReturnToPool;
             _pos = 0;
         }
 
-        public int Length
+        internal int Length
         {
             get => _pos;
             set
@@ -246,9 +277,9 @@ internal static class Helper
             }
         }
 
-        public int Capacity => _chars.Length;
+        internal int Capacity => _chars.Length;
 
-        public void EnsureCapacity(int capacity)
+        internal void EnsureCapacity(int capacity)
         {
             // This is not expected to be called this with negative capacity
             Debug.Assert(capacity >= 0);
@@ -264,7 +295,7 @@ internal static class Helper
         /// This overload is pattern matched in the C# 7.3+ compiler so you can omit
         /// the explicit method call, and write eg "fixed (char* c = builder)"
         /// </summary>
-        public ref char GetPinnableReference()
+        internal ref char GetPinnableReference()
         {
             return ref MemoryMarshal.GetReference(_chars);
         }
@@ -273,7 +304,7 @@ internal static class Helper
         /// Get a pinnable reference to the builder.
         /// </summary>
         /// <param name="terminate">Ensures that the builder has a null char after <see cref="Length"/></param>
-        public ref char GetPinnableReference(bool terminate)
+        internal ref char GetPinnableReference(bool terminate)
         {
             if (terminate)
             {
@@ -283,7 +314,7 @@ internal static class Helper
             return ref MemoryMarshal.GetReference(_chars);
         }
 
-        public ref char this[int index]
+        internal ref char this[int index]
         {
             get
             {
@@ -300,13 +331,13 @@ internal static class Helper
         }
 
         /// <summary>Returns the underlying storage of the builder.</summary>
-        public Span<char> RawChars => _chars;
+        internal Span<char> RawChars => _chars;
 
         /// <summary>
         /// Returns a span around the contents of the builder.
         /// </summary>
         /// <param name="terminate">Ensures that the builder has a null char after <see cref="Length"/></param>
-        public ReadOnlySpan<char> AsSpan(bool terminate)
+        internal ReadOnlySpan<char> AsSpan(bool terminate)
         {
             if (terminate)
             {
@@ -316,11 +347,11 @@ internal static class Helper
             return _chars.Slice(0, _pos);
         }
 
-        public ReadOnlySpan<char> AsSpan() => _chars.Slice(0, _pos);
-        public ReadOnlySpan<char> AsSpan(int start) => _chars.Slice(start, _pos - start);
-        public ReadOnlySpan<char> AsSpan(int start, int length) => _chars.Slice(start, length);
+        internal ReadOnlySpan<char> AsSpan() => _chars.Slice(0, _pos);
+        internal ReadOnlySpan<char> AsSpan(int start) => _chars.Slice(start, _pos - start);
+        internal ReadOnlySpan<char> AsSpan(int start, int length) => _chars.Slice(start, length);
 
-        public bool TryCopyTo(Span<char> destination, out int charsWritten)
+        internal bool TryCopyTo(Span<char> destination, out int charsWritten)
         {
             if (_chars.Slice(0, _pos).TryCopyTo(destination))
             {
@@ -336,7 +367,7 @@ internal static class Helper
             }
         }
 
-        public void Insert(int index, char value, int count)
+        internal void Insert(int index, char value, int count)
         {
             if (_pos > _chars.Length - count)
             {
@@ -349,7 +380,7 @@ internal static class Helper
             _pos += count;
         }
 
-        public void Insert(int index, string? s)
+        internal void Insert(int index, string? s)
         {
             if (s == null)
             {
@@ -374,7 +405,7 @@ internal static class Helper
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Append(char c)
+        internal void Append(char c)
         {
             int pos = _pos;
             Span<char> chars = _chars;
@@ -390,7 +421,7 @@ internal static class Helper
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Append(string? s)
+        internal void Append(string? s)
         {
             if (s == null)
             {
@@ -425,7 +456,7 @@ internal static class Helper
             _pos += s.Length;
         }
 
-        public void Append(char c, int count)
+        internal void Append(char c, int count)
         {
             if (_pos > _chars.Length - count)
             {
@@ -440,7 +471,7 @@ internal static class Helper
             _pos += count;
         }
 
-        public void Append(scoped ReadOnlySpan<char> value)
+        internal void Append(scoped ReadOnlySpan<char> value)
         {
             int pos = _pos;
             if (pos > _chars.Length - value.Length)
@@ -453,7 +484,7 @@ internal static class Helper
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Span<char> AppendSpan(int length)
+        internal Span<char> AppendSpan(int length)
         {
             int origPos = _pos;
             if (origPos > _chars.Length - length)
@@ -509,7 +540,7 @@ internal static class Helper
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Dispose()
+        internal void Dispose()
         {
             char[]? toReturn = _arrayToReturnToPool;
             this = default; // for safety, to avoid using pooled array if this instance is erroneously appended to again

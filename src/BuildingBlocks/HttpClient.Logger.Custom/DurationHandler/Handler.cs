@@ -1,4 +1,9 @@
-﻿using System.Diagnostics;
+﻿/*
+ * HttpClient.Logger.Custom
+ * Copyright (c) 2025-2025 Mykola Berkovskyi
+ */
+
+using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 
 namespace HttpClient.Logger.Custom.DurationHandler;
@@ -19,7 +24,7 @@ internal sealed class Handler(ILogger logger) : DelegatingHandler
     /// <returns>A <see cref="Task{TResult}"/> that represents the asynchronous operation, containing the <see cref="HttpResponseMessage"/>.</returns>
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        var stopwatch = Stopwatch.StartNew();
+        Stopwatch stopwatch = Stopwatch.StartNew();
 
         HttpResponseMessage response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 

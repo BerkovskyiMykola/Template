@@ -1,4 +1,9 @@
-﻿using System.Diagnostics;
+﻿/*
+ * Template.Api
+ * Copyright (c) 2025-2025 Mykola Berkovskyi
+ */
+
+using System.Diagnostics;
 using Template.Api.Common.OpenTelemetry;
 
 namespace Template.Api.Workers.TestTrace;
@@ -20,7 +25,7 @@ internal sealed class Worker(
     private readonly ILogger<Worker> _logger = logger;
 
     /// <summary>
-    /// Executes the worker, periodically invoking the <see cref="DoWork"/> method until <paramref name="stoppingToken"/> is requested.
+    /// Executes the worker, periodically sending a request to an internal endpoint (/test-trace) until <paramref name="stoppingToken"/> is requested.
     /// </summary>
     /// <param name="stoppingToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
@@ -28,13 +33,13 @@ internal sealed class Worker(
     {
         _logger.LogWorkerRunningAsInformation();
 
-        using var timer = new PeriodicTimer(_executionInterval);
+        using PeriodicTimer timer = new(_executionInterval);
 
         try
         {
             while (await timer.WaitForNextTickAsync(stoppingToken).ConfigureAwait(false))
             {
-                await DoWork().ConfigureAwait(false);
+                await DoWorkAsync().ConfigureAwait(false);
             }
         }
         catch (OperationCanceledException)
@@ -43,13 +48,9 @@ internal sealed class Worker(
         }
     }
 
-    /// <summary>
-    /// Performs the main work of the worker: sends a request to an internal endpoint (/test-trace).
-    /// </summary>
-    /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
-    private async Task DoWork()
+    private async Task DoWorkAsync()
     {
-        using Activity? activity = Constants.WorkersActivitySource.StartActivity("TestTraceWorker", ActivityKind.Internal);
+        using Activity? activity = Constants.WorkersActivitySource.StartActivity("TestTraceWorker");
 
         _ = activity?
             .SetTag("background.service.name", nameof(Worker))
@@ -68,7 +69,7 @@ internal sealed class Worker(
 
             _ = response.EnsureSuccessStatusCode();
         }
-        #pragma warning disable CA1031 // Do not catch general exception types
+        #pragma warning disable CA1031, S2221
         catch (Exception ex)
         {
             _ = activity?
@@ -77,6 +78,6 @@ internal sealed class Worker(
 
             _logger.LogWorkerIterationFailedAsError(ex);
         }
-        #pragma warning restore CA1031 // Do not catch general exception types
+        #pragma warning restore CA1031, S2221
     }
 }

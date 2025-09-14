@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿/*
+ * Template.Api
+ * Copyright (c) 2025-2025 Mykola Berkovskyi
+ */
+
+using Microsoft.AspNetCore.Mvc;
 using Template.Api.Common.Endpoints;
 
 namespace Template.Api.Endpoints.v1.TestTrace.Get;

@@ -1,11 +1,16 @@
-﻿namespace HttpClient.Logger.Custom.RequestToSendHandler;
+﻿/*
+ * HttpClient.Logger.Custom
+ * Copyright (c) 2025-2025 Mykola Berkovskyi
+ */
+
+namespace HttpClient.Logger.Custom.RequestToSendHandler;
 
 /// <summary>
 /// Flags used to control which parts of the
 /// <see cref="HttpRequestMessage"/> are logged.
 /// </summary>
 [Flags]
-public enum LoggingFields : long
+public enum LoggingFields
 {
     /// <summary>
     /// No logging.

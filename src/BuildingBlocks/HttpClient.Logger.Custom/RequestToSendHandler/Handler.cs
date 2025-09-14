@@ -1,4 +1,9 @@
-﻿using System.Text;
+﻿/*
+ * HttpClient.Logger.Custom
+ * Copyright (c) 2025-2025 Mykola Berkovskyi
+ */
+
+using System.Text;
 using Microsoft.Extensions.Logging;
 
 namespace HttpClient.Logger.Custom.RequestToSendHandler;
@@ -36,13 +41,9 @@ internal sealed class Handler(
         return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
     }
 
-    /// <summary>
-    /// Logs the <see cref="HttpRequestMessage"/> to send properties and headers based on the configured <see cref="HandlerOptions"/>.
-    /// </summary>
-    /// <param name="request">The <see cref="HttpRequestMessage"/> to send whose properties and headers will be logged if allowed by the <see cref="HandlerOptions"/>.</param>
     private void LogRequestPropertiesAndHeadersToSend(HttpRequestMessage request)
     {
-        var log = new List<KeyValuePair<string, object?>>();
+        List<LogField> log = [];
 
         if (_options.LoggingFields.HasFlag(LoggingFields.Protocol))
         {
@@ -88,11 +89,6 @@ internal sealed class Handler(
         }
     }
 
-    /// <summary>
-    /// Logs the <see cref="HttpRequestMessage.Content"/> to send if the <see cref="HandlerOptions"/> allow it.
-    /// </summary>
-    /// <param name="request">The <see cref="HttpRequestMessage"/> whose <see cref="HttpRequestMessage.Content"/> will be logged if allowed by the <see cref="HandlerOptions"/>.</param>
-    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     private async Task LogRequestBodyToSendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         if (!_options.LoggingFields.HasFlag(LoggingFields.Body))
@@ -100,7 +96,7 @@ internal sealed class Handler(
             return;
         }
 
-        if (request.Content?.Headers.ContentType is not { MediaType: not null } requestContentTypeHeader)
+        if (request.Content?.Headers.ContentType is not { MediaType: not null } сontentTypeHeader)
         {
             _logger.LogRequestToSendNoMediaTypeAsDebug();
 
@@ -108,7 +104,7 @@ internal sealed class Handler(
         }
 
         if (!Helper.TryGetEncodingForMediaType(
-            requestContentTypeHeader.ToString(),
+            сontentTypeHeader.ToString(),
             _options.AllowedMediaTypes.MediaTypeStates,
             out Encoding? encoding))
         {
@@ -117,13 +113,13 @@ internal sealed class Handler(
             return;
         }
 
-        var bodyString = await Helper.ReadContentAsStringOrDefaultAsync(request.Content, encoding, _options.BodyLogLimit, _logger, cancellationToken).ConfigureAwait(false);
+        string? body = await Helper.ReadContentAsStringOrDefaultAsync(request.Content, encoding, _options.BodyLogLimit, _logger, cancellationToken).ConfigureAwait(false);
 
-        if (bodyString is null)
+        if (body is null)
         {
             return;
         }
 
-        _logger.LogRequestBodyToSendAsInformation(bodyString);
+        _logger.LogRequestBodyToSendAsInformation(body);
     }
 }

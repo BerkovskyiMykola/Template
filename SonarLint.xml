@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AnalysisInput xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Rules>
+	<Rule>
+	  <Key>S1451</Key>
+	  <Parameters>
+		<Parameter>
+		  <Key>headerFormat</Key>
+		  <Value>\/\*\r?\n \* .+\r?\n \* Copyright \(c\) \d{4}-\d{4} Mykola Berkovskyi\r?\n \*\/</Value>
+		</Parameter>
+		<Parameter>
+		  <Key>isRegularExpression</Key>
+		  <Value>true</Value>
+		</Parameter>
+	  </Parameters>
+	</Rule>
+  </Rules>
+</AnalysisInput>

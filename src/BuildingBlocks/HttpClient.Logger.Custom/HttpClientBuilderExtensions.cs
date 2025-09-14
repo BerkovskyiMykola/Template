@@ -1,4 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿/*
+ * HttpClient.Logger.Custom
+ * Copyright (c) 2025-2025 Mykola Berkovskyi
+ */
+
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -32,8 +37,8 @@ public static class HttpClientBuilderExtensions
     /// Adds a request to send logger handler to the <see cref="System.Net.Http.HttpClient"/>
     /// </summary>
     /// <param name="builder">The <see cref="IHttpClientBuilder"/> to which a request to send logger handler will be added.</param>
+    /// <param name="configure">The <see cref="Action{ResponseHandler.HandlerOptions}"/> to configure <see cref="ResponseHandler.HandlerOptions"/> of a request to send logger handler.</param>
     /// <returns>The configured <see cref="IHttpClientBuilder"/> that includes a request to send logger handler.</returns>
-    /// <returns>The configured <see cref="IHttpClientBuilder"/>.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="builder"/> or <paramref name="configure"/> is null.</exception>  
     public static IHttpClientBuilder AddRequestToSendLoggerHandler(
         this IHttpClientBuilder builder,
@@ -56,8 +61,8 @@ public static class HttpClientBuilderExtensions
     /// Adds a response logger handler to the <see cref="System.Net.Http.HttpClient"/>.
     /// </summary>
     /// <param name="builder">The <see cref="IHttpClientBuilder"/> to which a response logger handler will be added.</param>
+    /// <param name="configure">The <see cref="Action{ResponseHandler.HandlerOptions}"/> to configure <see cref="ResponseHandler.HandlerOptions"/> of a response logger handler.</param>
     /// <returns>The configured <see cref="IHttpClientBuilder"/> that includes a response logger handler.</returns>
-    /// <returns>The configured <see cref="IHttpClientBuilder"/>.</returns>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="builder"/> or <paramref name="configure"/> is null.</exception>  
     public static IHttpClientBuilder AddResponseLoggerHandler(
         this IHttpClientBuilder builder,

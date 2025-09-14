@@ -1,4 +1,9 @@
-﻿using Template.Api.Endpoints.v1.TestTrace;
+﻿/*
+ * Template.Api
+ * Copyright (c) 2025-2025 Mykola Berkovskyi
+ */
+
+using Template.Api.Endpoints.v1.TestTrace;
 
 namespace Template.Api.Common.Endpoints;
 
@@ -12,11 +17,9 @@ internal static class EndpointRouteBuilderExtensions
     /// </summary>
     /// <param name="builder">The <see cref="IEndpointRouteBuilder"/> used to define HTTP endpoints.</param>
     /// <returns>The <see cref="IEndpointRouteBuilder"/> that includes all mapped endpoints.</returns>
-
-    public static IEndpointRouteBuilder MapEndpoints(this IEndpointRouteBuilder builder)
+    internal static IEndpointRouteBuilder MapEndpoints(this IEndpointRouteBuilder builder)
     {
-        _ = builder.MapTestTraceEndpoints();
-
-        return builder;
+        return builder
+            .MapTestTraceEndpoints();
     }
 }

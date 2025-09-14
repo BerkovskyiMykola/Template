@@ -1,4 +1,9 @@
-﻿using Serilog;
+﻿/*
+ * Template.Api
+ * Copyright (c) 2025-2025 Mykola Berkovskyi
+ */
+
+using Serilog;
 
 namespace Template.Api.Common.Serilog;
 
@@ -12,7 +17,7 @@ internal static class ServiceCollectionExtensions
     /// </summary>  
     /// <param name="services">The <see cref="IServiceCollection"/> to add configured Serilog to.</param>  
     /// <returns>The <see cref="IServiceCollection"/> with Serilog configured.</returns>  
-    public static IServiceCollection AddConfiguredSerilog(this IServiceCollection services)
+    internal static IServiceCollection AddConfiguredSerilog(this IServiceCollection services)
     {
         return services.AddSerilog((sp, config) =>
         {
