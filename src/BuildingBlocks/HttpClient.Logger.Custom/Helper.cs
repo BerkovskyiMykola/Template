@@ -133,18 +133,25 @@ internal static class Helper
         }
 
         int bufferSize = (int)Math.Min(stream.Length, logLimit);
-        byte[] buffer = new byte[bufferSize];
-
-        int bytesRead = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false);
+        byte[] buffer = ArrayPool<byte>.Shared.Rent(bufferSize);
 
         try
         {
-            return encoding.GetString(buffer, 0, bytesRead);
+            int bytesRead = await stream.ReadAsync(buffer.AsMemory(0, bufferSize), cancellationToken).ConfigureAwait(false);
+
+            try
+            {
+                return encoding.GetString(buffer, 0, bytesRead);
+            }
+            catch (DecoderFallbackException ex)
+            {
+                logger.LogBodyDecodeFailureAsDebug(ex);
+                return "<Decoder failure>";
+            }
         }
-        catch (DecoderFallbackException ex)
+        finally
         {
-            logger.LogBodyDecodeFailureAsDebug(ex);
-            return "<Decoder failure>";
+            ArrayPool<byte>.Shared.Return(buffer);
         }
     }
 
