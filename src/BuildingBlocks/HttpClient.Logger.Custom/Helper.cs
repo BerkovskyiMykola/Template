@@ -60,6 +60,10 @@ internal static class Helper
     /// </returns>
     internal static string FormatLog(string title, IReadOnlyList<LogField> log)
     {
+        // Currently using ValueStringBuilder (copied from System.Text).
+        // This can be replaced with StringBuilder from ObjectPool
+        // (see example: https://learn.microsoft.com/en-us/aspnet/core/performance/objectpool?view=aspnetcore-9.0).
+        // This avoids maintaining copied code and allows reusing StringBuilder instances via pooling.
         // Use 2kb as a rough average size for request/response headers
         using ValueStringBuilder builder = new(2 * 1024);
         int count = log.Count;
