@@ -10,6 +10,6 @@ namespace HttpClient.Logger.Custom;
 /// </summary>
 /// <param name="Key">The name of the log field.</param>
 /// <param name="Value">The value associated with the log field.</param>
-internal readonly record struct LogField(
+internal sealed record LogField(
     string Key,
     object? Value);
