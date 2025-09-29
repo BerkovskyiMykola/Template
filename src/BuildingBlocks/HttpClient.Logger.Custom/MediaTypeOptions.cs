@@ -3,6 +3,7 @@
  * Copyright (c) 2025-2025 Mykola Berkovskyi
  */
 
+using System.Collections.ObjectModel;
 using System.Text;
 using Microsoft.Net.Http.Headers;
 
@@ -13,12 +14,21 @@ namespace HttpClient.Logger.Custom;
 /// </summary>
 public sealed class MediaTypeOptions
 {
-    private readonly List<MediaTypeState> _mediaTypeStates = [];
+    private readonly List<MediaTypeState> _mediaTypeStates;
 
     /// <summary>
     /// Gets the list of configured <see cref="MediaTypeState"/> instances.
     /// </summary>
-    internal IReadOnlyList<MediaTypeState> MediaTypeStates => _mediaTypeStates;
+    internal ReadOnlyCollection<MediaTypeState> MediaTypeStates { get; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MediaTypeOptions"/> class.
+    /// </summary>
+    public MediaTypeOptions()
+    {
+        _mediaTypeStates = [];
+        MediaTypeStates = _mediaTypeStates.AsReadOnly();
+    }
 
     private void AddText(MediaTypeHeaderValue mediaType)
     {

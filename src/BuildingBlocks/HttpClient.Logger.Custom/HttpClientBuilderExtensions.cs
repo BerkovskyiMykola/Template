@@ -24,7 +24,7 @@ public static class HttpClientBuilderExtensions
         this IHttpClientBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
-
+        
         return builder.AddHttpMessageHandler(sp =>
         {
             ILoggerFactory loggerFactory = sp.GetRequiredService<ILoggerFactory>();

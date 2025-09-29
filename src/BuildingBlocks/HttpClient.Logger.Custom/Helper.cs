@@ -30,12 +30,12 @@ internal static class Helper
     /// The <see cref="HttpHeaders"/> to add into the <paramref name="log"/>, redacting those not included in the <paramref name="allowedHeaders"/>.
     /// </param>
     /// <param name="allowedHeaders">
-    /// A collection of allowed header names. <paramref name="headers"/> not in this set will be redacted.
+    /// A readonly set of allowed header names. <paramref name="headers"/> not in this set will be redacted.
     /// </param>
     internal static void AddAllowedOrRedactedHeadersToLog(
         ICollection<LogField> log,
         HttpHeaders headers,
-        ICollection<string> allowedHeaders)
+        IReadOnlySet<string> allowedHeaders)
     {
         const string Redacted = "[Redacted]";
 
