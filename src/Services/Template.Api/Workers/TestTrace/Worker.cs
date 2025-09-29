@@ -39,6 +39,27 @@ internal sealed class Worker(
         {
             while (await timer.WaitForNextTickAsync(stoppingToken).ConfigureAwait(false))
             {
+                using Activity? activity = Constants.WorkersActivitySource.StartActivity("TestTraceWorker");
+
+                _ = activity?
+                    .SetTag("background.service.name", nameof(Worker))
+                    .SetTag("background.service.interval", _executionInterval.ToString());
+
+                try
+                {
+                    await DoWorkAsync().ConfigureAwait(false);
+                }
+                #pragma warning disable CA1031, S2221
+                catch (Exception ex)
+                {
+                    _ = activity?
+                        .SetStatus(ActivityStatusCode.Error)
+                        .SetTag("error.type", ex.GetType().FullName);
+
+                    _logger.LogWorkerIterationFailedAsError(ex);
+                }
+                #pragma warning restore CA1031, S2221
+
                 await DoWorkAsync().ConfigureAwait(false);
             }
         }
@@ -50,34 +71,16 @@ internal sealed class Worker(
 
     private async Task DoWorkAsync()
     {
-        using Activity? activity = Constants.WorkersActivitySource.StartActivity("TestTraceWorker");
+        System.Net.Http.HttpClient client = _httpClientFactory.CreateClient(Common.HttpClients.ServiceCollectionExtensions.TestTraceNamedHttpClient);
+        HttpResponseMessage response = await client
+            .PostAsJsonAsync(
+                $"{_configuration["ApiBaseAddress"]}/api/v1/test-trace?test=test",
+                new
+                {
+                    Name = "Trace Name"
+                })
+            .ConfigureAwait(false);
 
-        _ = activity?
-            .SetTag("background.service.name", nameof(Worker))
-            .SetTag("background.service.interval", _executionInterval.ToString());
-        try
-        {
-            System.Net.Http.HttpClient client = _httpClientFactory.CreateClient(Common.HttpClients.ServiceCollectionExtensions.TestTraceNamedHttpClient);
-            HttpResponseMessage response = await client
-                .PostAsJsonAsync(
-                    $"{_configuration["ApiBaseAddress"]}/api/v1/test-trace?test=test", 
-                    new
-                    {
-                        Name = "Trace Name"
-                    })
-                .ConfigureAwait(false);
-
-            _ = response.EnsureSuccessStatusCode();
-        }
-        #pragma warning disable CA1031, S2221
-        catch (Exception ex)
-        {
-            _ = activity?
-                .SetStatus(ActivityStatusCode.Error)
-                .SetTag("error.type", ex.GetType().FullName);
-
-            _logger.LogWorkerIterationFailedAsError(ex);
-        }
-        #pragma warning restore CA1031, S2221
+        _ = response.EnsureSuccessStatusCode();
     }
 }
