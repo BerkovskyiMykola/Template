@@ -5,6 +5,7 @@
 
 using System.Text;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.ObjectPool;
 
 namespace HttpClient.Logger.Custom.ResponseHandler;
 
@@ -13,12 +14,15 @@ namespace HttpClient.Logger.Custom.ResponseHandler;
 /// according to configured <see cref="HandlerOptions"/>.
 /// </summary>
 /// <param name="options">The options controlling which parts of the <see cref="HttpResponseMessage"/> are logged.</param>
+/// <param name="objectPoolPooledLogFieldList">The object pool for <see cref="PooledLogFieldList"/> instances.</param>
 /// <param name="logger">The logger used for logging <see cref="HttpResponseMessage"/> according to configured <paramref name="options"/>.</param>
 internal sealed class Handler(
     HandlerOptions options,
+    ObjectPool<PooledLogFieldList> objectPoolPooledLogFieldList,
     ILogger logger) : DelegatingHandler
 {
     private readonly HandlerOptions _options = options;
+    private readonly ObjectPool<PooledLogFieldList> _objectPoolPooledLogFieldList = objectPoolPooledLogFieldList;
     private readonly ILogger _logger = logger;
 
     /// <summary>
@@ -45,21 +49,30 @@ internal sealed class Handler(
 
     private void LogResponsePropertiesAndHeaders(HttpResponseMessage response)
     {
-        List<LogField> log = [];
+        PooledLogFieldList pooledLogFieldList = _objectPoolPooledLogFieldList.Get();
 
-        if (_options.LoggingFields.HasFlag(LoggingFields.StatusCode))
+        List<LogField> log = pooledLogFieldList.Items;
+
+        try
         {
-            log.Add(new(nameof(response.StatusCode), (int)response.StatusCode));
+            if (_options.LoggingFields.HasFlag(LoggingFields.StatusCode))
+            {
+                log.Add(new(nameof(response.StatusCode), (int)response.StatusCode));
+            }
+
+            if (_options.LoggingFields.HasFlag(LoggingFields.Headers))
+            {
+                Helper.AddAllowedOrRedactedHeadersToLog(log, response.Headers, _options.AllowedHeaders);
+            }
+
+            if (log.Count > 0)
+            {
+                _logger.LogResponseLogAsInformation(log);
+            }
         }
-
-        if (_options.LoggingFields.HasFlag(LoggingFields.Headers))
+        finally
         {
-            Helper.AddAllowedOrRedactedHeadersToLog(log, response.Headers, _options.AllowedHeaders);
-        }
-
-        if (log.Count > 0)
-        {
-            _logger.LogResponseLogAsInformation(log);
+            _objectPoolPooledLogFieldList.Return(pooledLogFieldList);
         }
     }
 

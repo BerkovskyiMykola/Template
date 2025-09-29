@@ -5,6 +5,7 @@
 
 using System.Text;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.ObjectPool;
 
 namespace HttpClient.Logger.Custom.RequestToSendHandler;
 
@@ -13,12 +14,15 @@ namespace HttpClient.Logger.Custom.RequestToSendHandler;
 /// according to configured <see cref="HandlerOptions"/>.
 /// </summary>
 /// <param name="options">The options controlling which parts of the <see cref="HttpRequestMessage"/> are logged.</param>
+/// <param name="objectPoolPooledLogFieldList">The object pool for <see cref="PooledLogFieldList"/> instances.</param>
 /// <param name="logger">The logger used for logging <see cref="HttpRequestMessage"/> according to configured <paramref name="options"/>.</param>
 internal sealed class Handler(
     HandlerOptions options,
+    ObjectPool<PooledLogFieldList> objectPoolPooledLogFieldList,
     ILogger logger) : DelegatingHandler
 {
     private readonly HandlerOptions _options = options;
+    private readonly ObjectPool<PooledLogFieldList> _objectPoolPooledLogFieldList = objectPoolPooledLogFieldList;
     private readonly ILogger _logger = logger;
 
     /// <summary>
@@ -43,49 +47,58 @@ internal sealed class Handler(
 
     private void LogRequestPropertiesAndHeadersToSend(HttpRequestMessage request)
     {
-        List<LogField> log = [];
+        PooledLogFieldList pooledLogFieldList = _objectPoolPooledLogFieldList.Get();
 
-        if (_options.LoggingFields.HasFlag(LoggingFields.Protocol))
-        {
-            log.Add(new("Protocol", $"HTTP/{request.Version}"));
-        }
+        List<LogField> log = pooledLogFieldList.Items;
 
-        if (_options.LoggingFields.HasFlag(LoggingFields.Method))
+        try
         {
-            log.Add(new(nameof(request.Method), request.Method));
-        }
-
-        if (request.RequestUri is { IsAbsoluteUri: true } uri)
-        {
-            if (_options.LoggingFields.HasFlag(LoggingFields.Scheme))
+            if (_options.LoggingFields.HasFlag(LoggingFields.Protocol))
             {
-                log.Add(new(nameof(uri.Scheme), uri.Scheme));
+                log.Add(new("Protocol", $"HTTP/{request.Version}"));
             }
 
-            if (_options.LoggingFields.HasFlag(LoggingFields.Host))
+            if (_options.LoggingFields.HasFlag(LoggingFields.Method))
             {
-                log.Add(new("Host", $"{uri.Host}:{uri.Port}"));
+                log.Add(new(nameof(request.Method), request.Method));
             }
 
-            if (_options.LoggingFields.HasFlag(LoggingFields.AbsolutePath))
+            if (request.RequestUri is { IsAbsoluteUri: true } uri)
             {
-                log.Add(new(nameof(uri.AbsolutePath), uri.AbsolutePath));
+                if (_options.LoggingFields.HasFlag(LoggingFields.Scheme))
+                {
+                    log.Add(new(nameof(uri.Scheme), uri.Scheme));
+                }
+
+                if (_options.LoggingFields.HasFlag(LoggingFields.Host))
+                {
+                    log.Add(new("Host", $"{uri.Host}:{uri.Port}"));
+                }
+
+                if (_options.LoggingFields.HasFlag(LoggingFields.AbsolutePath))
+                {
+                    log.Add(new(nameof(uri.AbsolutePath), uri.AbsolutePath));
+                }
+
+                if (_options.LoggingFields.HasFlag(LoggingFields.Query))
+                {
+                    log.Add(new(nameof(uri.Query), uri.Query));
+                }
             }
 
-            if (_options.LoggingFields.HasFlag(LoggingFields.Query))
+            if (_options.LoggingFields.HasFlag(LoggingFields.Headers))
             {
-                log.Add(new(nameof(uri.Query), uri.Query));
+                Helper.AddAllowedOrRedactedHeadersToLog(log, request.Headers, _options.AllowedHeaders);
+            }
+
+            if (log.Count > 0)
+            {
+                _logger.LogRequestToSendLogAsInformation(log);
             }
         }
-
-        if (_options.LoggingFields.HasFlag(LoggingFields.Headers))
+        finally
         {
-            Helper.AddAllowedOrRedactedHeadersToLog(log, request.Headers, _options.AllowedHeaders);
-        }
-
-        if (log.Count > 0)
-        {
-            _logger.LogRequestToSendLogAsInformation(log);
+            _objectPoolPooledLogFieldList.Return(pooledLogFieldList);
         }
     }
 

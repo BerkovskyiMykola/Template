@@ -5,6 +5,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
 
 namespace HttpClient.Logger.Custom;
@@ -48,12 +49,15 @@ public static class HttpClientBuilderExtensions
 
         _ = builder.Services.Configure(builder.Name, configure);
 
+        _ = builder.Services.AddPooled<PooledLogFieldList>();
+
         return builder.AddHttpMessageHandler(sp =>
         {
             IOptionsFactory<RequestToSendHandler.HandlerOptions> optionsFactory = sp.GetRequiredService<IOptionsFactory<RequestToSendHandler.HandlerOptions>>();
+            ObjectPool<PooledLogFieldList> objectPoolPooledLogFieldList = sp.GetRequiredService<ObjectPool<PooledLogFieldList>>();
             ILoggerFactory loggerFactory = sp.GetRequiredService<ILoggerFactory>();
             ILogger logger = loggerFactory.CreateLogger($"System.Net.Http.HttpClient.{builder.Name}.RequestToSendLoggerHandler");
-            return new RequestToSendHandler.Handler(optionsFactory.Create(builder.Name), logger);
+            return new RequestToSendHandler.Handler(optionsFactory.Create(builder.Name), objectPoolPooledLogFieldList, logger);
         });
     }
 
@@ -73,12 +77,15 @@ public static class HttpClientBuilderExtensions
 
         _ = builder.Services.Configure(builder.Name, configure);
 
+        _ = builder.Services.AddPooled<PooledLogFieldList>();
+
         return builder.AddHttpMessageHandler(sp =>
         {
             IOptionsFactory<ResponseHandler.HandlerOptions> optionsFactory = sp.GetRequiredService<IOptionsFactory<ResponseHandler.HandlerOptions>>();
+            ObjectPool<PooledLogFieldList> objectPoolPooledLogFieldList = sp.GetRequiredService<ObjectPool<PooledLogFieldList>>();
             ILoggerFactory loggerFactory = sp.GetRequiredService<ILoggerFactory>();
             ILogger logger = loggerFactory.CreateLogger($"System.Net.Http.HttpClient.{builder.Name}.ResponseLoggerHandler");
-            return new ResponseHandler.Handler(optionsFactory.Create(builder.Name), logger);
+            return new ResponseHandler.Handler(optionsFactory.Create(builder.Name), objectPoolPooledLogFieldList, logger);
         });
     }
 }
