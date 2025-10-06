@@ -59,8 +59,6 @@ internal sealed class Worker(
                     _logger.LogWorkerIterationFailedAsError(ex);
                 }
                 #pragma warning restore CA1031, S2221
-
-                await DoWorkAsync().ConfigureAwait(false);
             }
         }
         catch (OperationCanceledException)
