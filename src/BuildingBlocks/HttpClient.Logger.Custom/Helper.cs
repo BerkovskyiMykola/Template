@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using static HttpClient.Logger.Custom.MediaTypeOptions;
+using LogField = System.Collections.Generic.KeyValuePair<string, object?>;
 
 namespace HttpClient.Logger.Custom;
 

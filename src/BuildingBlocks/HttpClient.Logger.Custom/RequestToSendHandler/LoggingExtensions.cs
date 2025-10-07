@@ -4,6 +4,7 @@
  */
 
 using Microsoft.Extensions.Logging;
+using LogField = System.Collections.Generic.KeyValuePair<string, object?>;
 
 namespace HttpClient.Logger.Custom.RequestToSendHandler;
 

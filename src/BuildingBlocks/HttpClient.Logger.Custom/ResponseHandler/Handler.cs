@@ -6,6 +6,7 @@
 using System.Text;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ObjectPool;
+using LogField = System.Collections.Generic.KeyValuePair<string, object?>;
 
 namespace HttpClient.Logger.Custom.ResponseHandler;
 
