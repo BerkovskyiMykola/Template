@@ -19,7 +19,7 @@ internal static class ServiceCollectionExtensions
     /// <returns>The <see cref="IServiceCollection"/> with Serilog configured.</returns>  
     internal static IServiceCollection AddConfiguredSerilog(this IServiceCollection services)
     {
-        return services.AddSerilog((sp, config) =>
+        return services.AddSerilog(static (sp, config) =>
         {
             _ = config
                 .ReadFrom.Configuration(sp.GetRequiredService<IConfiguration>())

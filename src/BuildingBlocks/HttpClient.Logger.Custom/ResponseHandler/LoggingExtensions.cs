@@ -20,7 +20,7 @@ internal static partial class LoggingExtensions
             new EventId(3001, "HttpClientResponseLog"),
             log,
             exception: null,
-            formatter: (log, _) => Helper.FormatLog("Response", log));
+            formatter: static (log, _) => Helper.FormatLog("Response", log));
 
     [LoggerMessage(3002, LogLevel.Information, "ResponseBody: {Body}", EventName = "HttpClientResponseBody")]
     internal static partial void LogResponseBodyAsInformation(this ILogger logger, string body);

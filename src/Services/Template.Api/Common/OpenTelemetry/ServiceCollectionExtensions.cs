@@ -45,14 +45,14 @@ internal static class ServiceCollectionExtensions
             {
                 RegisterInstrumentations(config, configuration, new Dictionary<string, Action<MeterProviderBuilder>>
                 {
-                    ["OpenTelemetry:Metrics:AddRuntimeInstrumentation"] = x => x.AddRuntimeInstrumentation(),
-                    ["OpenTelemetry:Metrics:AddHttpClientInstrumentation"] = x => x.AddHttpClientInstrumentation(),
-                    ["OpenTelemetry:Metrics:AddAspNetCoreInstrumentation"] = x => x.AddAspNetCoreInstrumentation()
+                    ["OpenTelemetry:Metrics:AddRuntimeInstrumentation"] = static x => x.AddRuntimeInstrumentation(),
+                    ["OpenTelemetry:Metrics:AddHttpClientInstrumentation"] = static x => x.AddHttpClientInstrumentation(),
+                    ["OpenTelemetry:Metrics:AddAspNetCoreInstrumentation"] = static x => x.AddAspNetCoreInstrumentation()
                 });
 
                 RegisterExporters(config, configuration, new Dictionary<string, Action<MeterProviderBuilder, IConfiguration>>
                 {
-                    ["OpenTelemetry:Exporters:Otlp:Metrics"] = (x, y) => x.AddOtlpExporter(z => ConfigureOtlpOptions(z, y))
+                    ["OpenTelemetry:Exporters:Otlp:Metrics"] = static (x, y) => x.AddOtlpExporter(z => ConfigureOtlpOptions(z, y))
                 });
             })
             .WithTracing(config =>
@@ -64,15 +64,15 @@ internal static class ServiceCollectionExtensions
 
                 RegisterInstrumentations(config, configuration, new Dictionary<string, Action<TracerProviderBuilder>>
                 {
-                    ["OpenTelemetry:Tracing:AddHttpClientInstrumentation"] = x => x.AddHttpClientInstrumentation(),
-                    ["OpenTelemetry:Tracing:AddAspNetCoreInstrumentation"] = x => x.AddAspNetCoreInstrumentation(),
-                    ["OpenTelemetry:Tracing:AddEntityFrameworkCoreInstrumentation"] = x => x.AddEntityFrameworkCoreInstrumentation(),
-                    ["OpenTelemetry:Tracing:AddWorkersInstrumentation"] = x => x.AddSource(Constants.WorkersActivitySource.Name)
+                    ["OpenTelemetry:Tracing:AddHttpClientInstrumentation"] = static x => x.AddHttpClientInstrumentation(),
+                    ["OpenTelemetry:Tracing:AddAspNetCoreInstrumentation"] = static x => x.AddAspNetCoreInstrumentation(),
+                    ["OpenTelemetry:Tracing:AddEntityFrameworkCoreInstrumentation"] = static x => x.AddEntityFrameworkCoreInstrumentation(),
+                    ["OpenTelemetry:Tracing:AddWorkersInstrumentation"] = static x => x.AddSource(Constants.WorkersActivitySource.Name)
                 });
 
                 RegisterExporters(config, configuration, new Dictionary<string, Action<TracerProviderBuilder, IConfiguration>>
                 {
-                    ["OpenTelemetry:Exporters:Otlp:Tracing"] = (x, y) => x.AddOtlpExporter(z => ConfigureOtlpOptions(z, y))
+                    ["OpenTelemetry:Exporters:Otlp:Tracing"] = static (x, y) => x.AddOtlpExporter(z => ConfigureOtlpOptions(z, y))
                 });
             });
 
@@ -116,7 +116,7 @@ internal static class ServiceCollectionExtensions
         Dictionary<string, string>? headers = configuration.GetSection("Headers").Get<Dictionary<string, string>>();
         if (headers is { Count: > 0 })
         {
-            options.Headers = string.Join(",", headers.Select(h => $"{h.Key}={h.Value}"));
+            options.Headers = string.Join(",", headers.Select(static h => $"{h.Key}={h.Value}"));
         }
     }
 }
