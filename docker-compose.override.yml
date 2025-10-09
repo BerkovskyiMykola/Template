@@ -9,9 +9,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
-      - OpenTelemetry__Exporters__Otlp__Metrics__Endpoint=http://aspire.dashboard:18889
-      - OpenTelemetry__Exporters__Otlp__Tracing__Endpoint=http://aspire.dashboard:18889
-      - Serilog__WriteTo__2__Args__endpoint=http://aspire.dashboard:18889
+      - OpenTelemetry__WithMetrics__Exporters__Otlp__Endpoint=http://aspire.dashboard:18889
+      - OpenTelemetry__WithTracing__Exporters__Otlp__Endpoint=http://aspire.dashboard:18889
+      - OpenTelemetry__WithLogging__Exporters__Otlp__Endpoint=http://aspire.dashboard:18889
       - ApiBaseAddress=http://template.api:8080
     ports:
       - 9001:8080

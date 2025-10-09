@@ -7,17 +7,12 @@ using Template.Api.Common.Endpoints;
 using Template.Api.Common.HttpClients;
 using Template.Api.Common.HttpLogging;
 using Template.Api.Common.OpenTelemetry;
-using Template.Api.Common.Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Logging.ClearProviders();
-
-builder.Services
-    .AddConfiguredSerilog()
-    .AddConfiguredOpenTelemetry(builder.Configuration, builder.Environment);
+builder.Services.AddConfiguredOpenTelemetry(builder.Configuration, builder.Environment);
 
 builder.Services.AddConfiguredHttpLogging(builder.Configuration);
 

@@ -113,7 +113,6 @@ public enum LoggingFields
     /// <summary>
     /// Flag for logging the entire <see cref="HttpRequestMessage"/>.
     /// Includes <see cref="PropertiesAndHeaders"/> and <see cref="Body"/>.
-    /// Logging the <see cref="HttpRequestMessage.Content"/> up to <see cref="HandlerOptions.BodyLogLimit"/>.
     /// </summary>
     /// <remarks>
     /// The <see cref="HttpRequestMessage.RequestUri"/> <c>Query</c> (See <see cref="Uri.Query"/>) is not included with this flag as it may contain private information.

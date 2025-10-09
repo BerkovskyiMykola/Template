@@ -34,16 +34,16 @@ internal sealed class Handler(
     /// <returns>A <see cref="Task{TResult}"/> that represents the asynchronous operation, containing the <see cref="HttpResponseMessage"/>.</returns>
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (!_logger.IsEnabled(LogLevel.Information) || _options.LoggingFields is LoggingFields.None)
-        {
-            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
-        }
+        bool shouldLog = _logger.IsEnabled(LogLevel.Information) && _options.LoggingFields is not LoggingFields.None;
 
         HttpResponseMessage response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 
-        LogResponsePropertiesAndHeaders(response);
+        if (shouldLog)
+        {
+            LogResponsePropertiesAndHeaders(response);
 
-        await LogResponseBodyAsync(response, cancellationToken).ConfigureAwait(false);
+            await LogResponseBodyAsync(response, cancellationToken).ConfigureAwait(false);
+        }
 
         return response;
     }

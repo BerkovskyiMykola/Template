@@ -8,15 +8,15 @@ using Template.Api.Endpoints.v1.TestTrace;
 namespace Template.Api.Common.Endpoints;
 
 /// <summary>
-/// Extension methods for mapping endpoints to the <see cref="IEndpointRouteBuilder"/>.
+/// Provides extension methods for mapping application-specific endpoints to an <see cref="IEndpointRouteBuilder"/>.
 /// </summary>
 internal static class EndpointRouteBuilderExtensions
 {
     /// <summary>
-    /// Maps all endpoints to the provided <see cref="IEndpointRouteBuilder"/>.
+    /// Maps all registered endpoints to the specified <see cref="IEndpointRouteBuilder"/>.
     /// </summary>
     /// <param name="builder">The <see cref="IEndpointRouteBuilder"/> used to define HTTP endpoints.</param>
-    /// <returns>The <see cref="IEndpointRouteBuilder"/> that includes all mapped endpoints.</returns>
+    /// <returns>The <see cref="IEndpointRouteBuilder"/> with all mapped endpoints.</returns>
     internal static IEndpointRouteBuilder MapEndpoints(this IEndpointRouteBuilder builder)
     {
         return builder

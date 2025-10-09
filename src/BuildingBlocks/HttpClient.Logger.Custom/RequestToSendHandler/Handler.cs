@@ -34,14 +34,14 @@ internal sealed class Handler(
     /// <returns>A <see cref="Task{TResult}"/> that represents the asynchronous operation, containing the <see cref="HttpResponseMessage"/>.</returns>
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (!_logger.IsEnabled(LogLevel.Information) || _options.LoggingFields is LoggingFields.None)
+        bool shouldLog = _logger.IsEnabled(LogLevel.Information) && _options.LoggingFields is not LoggingFields.None;
+
+        if (shouldLog)
         {
-            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            LogRequestPropertiesAndHeadersToSend(request);
+
+            await LogRequestBodyToSendAsync(request, cancellationToken).ConfigureAwait(false);
         }
-
-        LogRequestPropertiesAndHeadersToSend(request);
-
-        await LogRequestBodyToSendAsync(request, cancellationToken).ConfigureAwait(false);
 
         return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
     }
@@ -110,7 +110,7 @@ internal sealed class Handler(
             return;
         }
 
-        if (request.Content?.Headers.ContentType is not { MediaType: not null } сontentTypeHeader)
+        if (request.Content?.Headers.ContentType is not { MediaType: not null } requestContentTypeHeader)
         {
             _logger.LogRequestToSendNoMediaTypeAsDebug();
 
@@ -118,7 +118,7 @@ internal sealed class Handler(
         }
 
         if (!Helper.TryGetEncodingForMediaType(
-            сontentTypeHeader.ToString(),
+            requestContentTypeHeader.ToString(),
             _options.AllowedMediaTypes.MediaTypeStates,
             out Encoding? encoding))
         {

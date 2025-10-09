@@ -46,6 +46,7 @@ public static class HttpClientBuilderExtensions
         Action<RequestToSendHandler.HandlerOptions> configure)
     {
         ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(configure);
 
         _ = builder.Services.Configure(builder.Name, configure);
 

@@ -55,7 +55,6 @@ public enum LoggingFields
     /// <summary>
     /// Flag for logging the entire <see cref="HttpResponseMessage"/>.
     /// Includes <see cref="PropertiesAndHeaders"/> and <see cref="Body"/>.
-    /// Logging the <see cref="HttpResponseMessage.Content"/> up to <see cref="HandlerOptions.BodyLogLimit"/>.
     /// </summary>
     All = PropertiesAndHeaders | Body
 }

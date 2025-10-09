@@ -15,17 +15,11 @@
     <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Http" />
     <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" />
-    <PackageReference Include="Serilog.AspNetCore" />
-	<PackageReference Include="Serilog.Enrichers.Environment" />
-	<PackageReference Include="Serilog.Enrichers.Process" />
-	<PackageReference Include="Serilog.Enrichers.Thread" />
-	<PackageReference Include="Serilog.Sinks.OpenTelemetry" />
 	<PackageReference Include="Ulid" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\HttpClient.Logger.Custom\HttpClient.Logger.Custom.csproj" />
-    <ProjectReference Include="..\..\BuildingBlocks\Serilog.Enrichers.Custom\Serilog.Enrichers.Custom.csproj" />
   </ItemGroup>
 	
 </Project>

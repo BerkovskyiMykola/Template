@@ -14,24 +14,26 @@ namespace Template.Api.Common.HttpLogging;
 internal static class ServiceCollectionExtensions
 {
     /// <summary>  
-    /// Adds and configures HTTP logging services, based on the <paramref name="configuration"/>, to the <paramref name="services"/>.  
+    /// Adds and configures HTTP logging services, based on the provided <paramref name="configuration"/>, to the <paramref name="services"/>.  
     /// </summary>  
-    /// <param name="services">The <see cref="IServiceCollection"/> to add the configured HTTP logging to.</param>  
-    /// <param name="configuration">The <see cref="IConfiguration"/> containing HTTP logging settings.</param>  
-    /// <returns>The <see cref="IServiceCollection"/> with HTTP logging configured.</returns>  
+    /// <param name="services">The <see cref="IServiceCollection"/> to which HTTP logging services will be added.</param>  
+    /// <param name="configuration">The <see cref="IConfiguration"/> instance containing HTTP logging settings.</param>  
+    /// <returns>The <see cref="IServiceCollection"/> instance with HTTP logging configured.</returns>  
     internal static IServiceCollection AddConfiguredHttpLogging(
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        IConfigurationSection httpLoggingSection = configuration.GetSection("HttpLogging");
+
+        HttpLoggingFields loggingFields = httpLoggingSection.GetValue<HttpLoggingFields>("LoggingFields");
+        string[] allowedRequestHeaders = httpLoggingSection.GetSection("AllowedRequestHeaders").Get<string[]>() ?? [];
+        string[] allowedResponseHeaders = httpLoggingSection.GetSection("AllowedResponseHeaders").Get<string[]>() ?? [];
+        TextMediaTypeOptions[] allowedTextMediaTypes = httpLoggingSection.GetSection("AllowedTextMediaTypes").Get<TextMediaTypeOptions[]>() ?? [];
+        int requestBodyLogLimit = httpLoggingSection.GetValue<int>("RequestBodyLogLimit");
+        int responseBodyLogLimit = httpLoggingSection.GetValue<int>("ResponseBodyLogLimit");
+
         return services.AddHttpLogging(config =>
         {
-            HttpLoggingFields loggingFields = configuration.GetSection("HttpLogging:LoggingFields").Get<HttpLoggingFields>();
-            string[] allowedRequestHeaders = configuration.GetSection("HttpLogging:AllowedRequestHeaders").Get<string[]>() ?? [];
-            string[] allowedResponseHeaders = configuration.GetSection("HttpLogging:AllowedResponseHeaders").Get<string[]>() ?? [];
-            TextMediaTypeOptions[] allowedTextMediaTypes = configuration.GetSection("HttpLogging:AllowedTextMediaTypes").Get<TextMediaTypeOptions[]>() ?? [];
-            int requestBodyLogLimit = configuration.GetSection("HttpLogging:RequestBodyLogLimit").Get<int>();
-            int responseBodyLogLimit = configuration.GetSection("HttpLogging:ResponseBodyLogLimit").Get<int>();
-
             config.LoggingFields = loggingFields;
             
             config.RequestHeaders.Clear();

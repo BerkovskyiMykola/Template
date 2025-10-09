@@ -3,15 +3,19 @@
  * Copyright (c) 2025-2025 Mykola Berkovskyi
  */
 
+using OpenTelemetry;
 using OpenTelemetry.Exporter;
+using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
 namespace Template.Api.Common.OpenTelemetry;
 
+#pragma warning disable S3059
+
 /// <summary>  
-/// Provides extension methods for configuring and adding OpenTelemetry services in the application. 
+/// Provides extension methods for configuring and adding OpenTelemetry services to the application. 
 /// </summary>
 internal static class ServiceCollectionExtensions
 {
@@ -27,96 +31,172 @@ internal static class ServiceCollectionExtensions
         IConfiguration configuration,
         IHostEnvironment environment)
     {
-        _ = services.AddOpenTelemetry()
-            .ConfigureResource(config =>
-            {
-                string serviceName = configuration["OpenTelemetry:ResourceAttributes:service.name"]!;
-                string serviceInstanceId = configuration["OpenTelemetry:ResourceAttributes:service.instance.id"]!;
+        IConfigurationSection openTelemetrySection = configuration.GetSection("OpenTelemetry");
 
-                _ = config
-                    .AddService(
-                        serviceName: serviceName,
-                        autoGenerateServiceInstanceId: false,
-                        serviceInstanceId: serviceInstanceId)
-                    .AddEnvironmentVariableDetector()
-                    .AddTelemetrySdk();
-            })
-            .WithMetrics(config =>
-            {
-                RegisterInstrumentations(config, configuration, new Dictionary<string, Action<MeterProviderBuilder>>
-                {
-                    ["OpenTelemetry:Metrics:AddRuntimeInstrumentation"] = static x => x.AddRuntimeInstrumentation(),
-                    ["OpenTelemetry:Metrics:AddHttpClientInstrumentation"] = static x => x.AddHttpClientInstrumentation(),
-                    ["OpenTelemetry:Metrics:AddAspNetCoreInstrumentation"] = static x => x.AddAspNetCoreInstrumentation()
-                });
+        if (!openTelemetrySection.Exists())
+        {
+            return services;
+        }
 
-                RegisterExporters(config, configuration, new Dictionary<string, Action<MeterProviderBuilder, IConfiguration>>
-                {
-                    ["OpenTelemetry:Exporters:Otlp:Metrics"] = static (x, y) => x.AddOtlpExporter(z => ConfigureOtlpOptions(z, y))
-                });
-            })
-            .WithTracing(config =>
-            {
-                if (environment.IsDevelopment())
-                {
-                    _ = config.SetSampler<AlwaysOnSampler>();
-                }
+        string serviceName = openTelemetrySection.GetValue<string>("ResourceAttributes:service.name") ?? string.Empty;
+        string serviceInstanceId = openTelemetrySection.GetValue<string>("ResourceAttributes:service.instance.id") ?? string.Empty;
 
-                RegisterInstrumentations(config, configuration, new Dictionary<string, Action<TracerProviderBuilder>>
-                {
-                    ["OpenTelemetry:Tracing:AddHttpClientInstrumentation"] = static x => x.AddHttpClientInstrumentation(),
-                    ["OpenTelemetry:Tracing:AddAspNetCoreInstrumentation"] = static x => x.AddAspNetCoreInstrumentation(),
-                    ["OpenTelemetry:Tracing:AddEntityFrameworkCoreInstrumentation"] = static x => x.AddEntityFrameworkCoreInstrumentation(),
-                    ["OpenTelemetry:Tracing:AddWorkersInstrumentation"] = static x => x.AddSource(Constants.WorkersActivitySource.Name)
-                });
+        OpenTelemetryBuilder builder = services.AddOpenTelemetry()
+            .ConfigureResource(config => config
+                .AddService(
+                    serviceName: serviceName,
+                    autoGenerateServiceInstanceId: false,
+                    serviceInstanceId: serviceInstanceId)
+                .AddEnvironmentVariableDetector()
+                .AddTelemetrySdk());
 
-                RegisterExporters(config, configuration, new Dictionary<string, Action<TracerProviderBuilder, IConfiguration>>
-                {
-                    ["OpenTelemetry:Exporters:Otlp:Tracing"] = static (x, y) => x.AddOtlpExporter(z => ConfigureOtlpOptions(z, y))
-                });
-            });
+        ConfigureMetrics(builder, openTelemetrySection);
+        ConfigureTracing(builder, environment, openTelemetrySection);
+        ConfigureLogging(builder, openTelemetrySection);
 
         return services;
     }
 
-    private static void RegisterInstrumentations<TBuilder>(
-        TBuilder builder,
-        IConfiguration configuration,
-        IReadOnlyDictionary<string, Action<TBuilder>> registrations)
+    private static void ConfigureMetrics(OpenTelemetryBuilder builder, IConfiguration section)
     {
-        foreach ((string key, Action<TBuilder> value) in registrations)
+        IConfigurationSection metricsSection = section.GetSection("WithMetrics");
+
+        if (!metricsSection.Exists())
         {
-            if (configuration.GetValue<bool>(key))
+            return;
+        }
+
+        string[] instrumentations = metricsSection.GetSection("Instrumentations").Get<string[]>() ?? [];
+        MyOtlpExporterOptions? otlpExporterOptions = metricsSection.GetSection("Exporters:Otlp").Get<MyOtlpExporterOptions>();
+
+        _ = builder.WithMetrics(config =>
+        {
+            foreach (string instrumentation in instrumentations)
             {
-                value(builder);
+                switch (instrumentation)
+                {
+                    case "Runtime":
+                        {
+                            _ = config.AddRuntimeInstrumentation();
+                            break;
+                        }
+                    case "HttpClient":
+                        {
+                            _ = config.AddHttpClientInstrumentation();
+                            break;
+                        }
+                    case "AspNetCore":
+                        {
+                            _ = config.AddAspNetCoreInstrumentation();
+                            break;
+                        }
+                    default:
+                        {
+                            break;
+                        }
+                }
             }
+
+            if (otlpExporterOptions is not null)
+            {
+                _ = config.AddOtlpExporter(options => ConfigureOtlpOptions(options, otlpExporterOptions));
+            }
+        });
+    }
+
+    private static void ConfigureTracing(OpenTelemetryBuilder builder, IHostEnvironment environment, IConfiguration section)
+    {
+        IConfigurationSection tracingSection = section.GetSection("WithTracing");
+
+        if (!tracingSection.Exists())
+        {
+            return;
+        }
+
+        string[] instrumentations = tracingSection.GetSection("Instrumentations").Get<string[]>() ?? [];
+        MyOtlpExporterOptions? otlpExporterOptions = tracingSection.GetSection("Exporters:Otlp").Get<MyOtlpExporterOptions>();
+
+        _ = builder.WithTracing(config =>
+        {
+            if (environment.IsDevelopment())
+            {
+                _ = config.SetSampler<AlwaysOnSampler>();
+            }
+
+            foreach (string instrumentation in instrumentations)
+            {
+                switch (instrumentation)
+                {
+                    case "HttpClient":
+                        {
+                            _ = config.AddHttpClientInstrumentation();
+                            break;
+                        }
+                    case "AspNetCore":
+                        {
+                            _ = config.AddAspNetCoreInstrumentation();
+                            break;
+                        }
+                    case "EntityFrameworkCore":
+                        {
+                            _ = config.AddEntityFrameworkCoreInstrumentation();
+                            break;
+                        }
+                    case "Workers":
+                        {
+                            _ = config.AddSource(Constants.WorkersActivitySource.Name);
+                            break;
+                        }
+                    default:
+                        {
+                            break;
+                        }
+                }
+            }
+
+            if (otlpExporterOptions is not null)
+            {
+                _ = config.AddOtlpExporter(options => ConfigureOtlpOptions(options, otlpExporterOptions));
+            }
+        });
+    }
+
+    private static void ConfigureLogging(OpenTelemetryBuilder builder, IConfiguration section)
+    {
+        IConfigurationSection loggingSection = section.GetSection("WithLogging");
+
+        if (!loggingSection.Exists())
+        {
+            return;
+        }
+
+        MyOtlpExporterOptions? otlpExporterOptions = loggingSection.GetSection("Exporters:Otlp").Get<MyOtlpExporterOptions>();
+
+        _ = builder.WithLogging(config =>
+        {
+            if (otlpExporterOptions is not null)
+            {
+                _ = config.AddOtlpExporter(options => ConfigureOtlpOptions(options, otlpExporterOptions));
+            }
+        });
+    }
+
+    private static void ConfigureOtlpOptions(OtlpExporterOptions options, MyOtlpExporterOptions myOptions)
+    {
+        options.Endpoint = new Uri(myOptions.Endpoint);
+        options.Protocol = myOptions.Protocol;
+
+        if (myOptions.Headers is { Count: > 0 })
+        {
+            options.Headers = string.Join(",", myOptions.Headers.Select(static h => $"{h.Key}={h.Value}"));
         }
     }
 
-    private static void RegisterExporters<TBuilder>(
-        TBuilder builder,
-        IConfiguration configuration,
-        IReadOnlyDictionary<string, Action<TBuilder, IConfiguration>> registrations)
+    private sealed record MyOtlpExporterOptions(
+        string Endpoint,
+        OtlpExportProtocol Protocol,
+        IReadOnlyDictionary<string, string> Headers)
     {
-        foreach ((string key, Action<TBuilder, IConfiguration> action) in registrations)
-        {
-            IConfigurationSection section = configuration.GetSection(key);
-            if (section.Exists())
-            {
-                action(builder, section);
-            }
-        }
-    }
-
-    private static void ConfigureOtlpOptions(OtlpExporterOptions options, IConfiguration configuration)
-    {
-        options.Endpoint = new Uri(configuration["Endpoint"]!);
-        options.Protocol = configuration.GetSection("Protocol").Get<OtlpExportProtocol>();
-
-        Dictionary<string, string>? headers = configuration.GetSection("Headers").Get<Dictionary<string, string>>();
-        if (headers is { Count: > 0 })
-        {
-            options.Headers = string.Join(",", headers.Select(static h => $"{h.Key}={h.Value}"));
-        }
+        public MyOtlpExporterOptions() : this(string.Empty, default, new Dictionary<string, string>()) { }
     }
 }

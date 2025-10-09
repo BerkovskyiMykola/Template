@@ -8,12 +8,12 @@ using System.Diagnostics;
 namespace Template.Api.Common.OpenTelemetry;
 
 /// <summary>
-/// Provides application-wide constant values and shared resources for OpenTelemetry services.
+/// Provides application-wide constants and shared OpenTelemetry resources.
 /// </summary>
 internal static class Constants
 {
     /// <summary>
-    /// The <see cref="ActivitySource"/> used for tracing activities within worker services.
+    /// Gets the <see cref="ActivitySource"/> used for tracing activities within worker services.
     /// </summary>
     internal static ActivitySource WorkersActivitySource { get; } = new ActivitySource("Workers");
 }

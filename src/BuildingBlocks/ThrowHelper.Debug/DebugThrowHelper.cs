@@ -213,7 +213,7 @@ public static class DebugThrowHelper
 
     /// <summary>
     /// Throws an exception if <paramref name="argument"/> is null, empty, or consists only of white-space characters.</summary>
-    /// <param name="argument">The string argument to validate.</param>
+    /// <param name="argument">The string argument to validate as non-null, non-empty and not consisting only of white-space characters.</param>
     /// <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
     /// <exception cref="ArgumentNullException"><paramref name="argument"/> is null.</exception>
     /// <exception cref="ArgumentException"><paramref name="argument"/> is empty or consists only of white-space characters.</exception>
@@ -285,7 +285,7 @@ public static class DebugThrowHelper
         => ArgumentOutOfRangeException.ThrowIfGreaterThan(value, other, paramName);
 
     /// <summary>
-    /// Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is greater than or equal <paramref name="other"/>.
+    /// Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is greater than or equal to <paramref name="other"/>.
     /// </summary>
     /// <param name="value">The argument to validate as less than <paramref name="other"/>.</param>
     /// <param name="other">The value to compare with <paramref name="value"/>.</param>

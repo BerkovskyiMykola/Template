@@ -9,11 +9,12 @@ using Template.Api.Common.OpenTelemetry;
 namespace Template.Api.Workers.TestTrace;
 
 /// <summary>
-/// Worker that periodically sends a request to an internal endpoint (/test-trace).
+/// Worker that periodically sends a request to an internal endpoint (<c>/test-trace</c>)
+/// to exercise tracing functionality.
 /// </summary>
-/// <param name="httpClientFactory">The <see cref="IHttpClientFactory"/> used to create <see cref="System.Net.Http.HttpClient"/> to send requests.</param>
-/// <param name="configuration">The <see cref="IConfiguration"/> to get endpoint information.</param>
-/// <param name="logger">The <see cref="ILogger"/> used for logging worker flow.</param>
+/// <param name="httpClientFactory">The <see cref="IHttpClientFactory"/> used to create <see cref="System.Net.Http.HttpClient"/> instances for sending requests.</param>
+/// <param name="configuration">The <see cref="IConfiguration"/> used to read endpoint URLs and other settings.</param>
+/// <param name="logger">The <see cref="ILogger"/> used to log worker lifecycle events and errors.</param>
 internal sealed class Worker(
     IHttpClientFactory httpClientFactory,
     IConfiguration configuration,
@@ -25,7 +26,7 @@ internal sealed class Worker(
     private readonly ILogger<Worker> _logger = logger;
 
     /// <summary>
-    /// Executes the worker, periodically sending a request to an internal endpoint (/test-trace) until <paramref name="stoppingToken"/> is requested.
+    /// Executes the worker, periodically sending a request to an internal <c>/test-trace</c> endpoint until <paramref name="stoppingToken"/> is requested.
     /// </summary>
     /// <param name="stoppingToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>

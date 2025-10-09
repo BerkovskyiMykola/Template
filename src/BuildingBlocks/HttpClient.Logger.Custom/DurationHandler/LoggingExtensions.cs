@@ -15,5 +15,5 @@ namespace HttpClient.Logger.Custom.DurationHandler;
 internal static partial class LoggingExtensions
 {
     [LoggerMessage(1001, LogLevel.Information, "Duration: {durationMilliseconds}ms", EventName = "HttpClientDurationMilliseconds")]
-    internal static partial void LogDurationAsInformation(this ILogger logger, double durationMilliseconds);
+    internal static partial void LogDurationAsInformation(this ILogger logger, long durationMilliseconds);
 }
