@@ -5,7 +5,6 @@
 
 using System.Text;
 using HttpClient.Logger.Custom;
-using Microsoft.Extensions.Configuration;
 
 namespace Template.Api.Common.HttpClients;
 
@@ -41,7 +40,7 @@ internal static class ServiceCollectionExtensions
         {
             _ = builder.AddDurationLoggerHandler();
         }
-        
+
         HttpClient.Logger.Custom.RequestToSendHandler.LoggingFields requestLoggingFields = httpClientLoggingSection
             .GetValue<HttpClient.Logger.Custom.RequestToSendHandler.LoggingFields>("RequestLoggingFields");
 
@@ -76,9 +75,9 @@ internal static class ServiceCollectionExtensions
             {
                 config.LoggingFields = requestLoggingFields;
 
-                foreach (string header in allowedRequestHeaders) 
-                { 
-                    _ = config.AllowedHeaders.Add(header); 
+                foreach (string header in allowedRequestHeaders)
+                {
+                    _ = config.AllowedHeaders.Add(header);
                 }
 
                 foreach (TextMediaTypeOptions textMediaType in allowedTextMediaTypes)

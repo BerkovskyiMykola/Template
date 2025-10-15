@@ -50,7 +50,7 @@ internal sealed class Worker(
                 {
                     await DoWorkAsync().ConfigureAwait(false);
                 }
-                #pragma warning disable CA1031, S2221
+#pragma warning disable CA1031, S2221
                 catch (Exception ex)
                 {
                     _ = activity?
@@ -59,7 +59,7 @@ internal sealed class Worker(
 
                     _logger.LogWorkerIterationFailedAsError(ex);
                 }
-                #pragma warning restore CA1031, S2221
+#pragma warning restore CA1031, S2221
             }
         }
         catch (OperationCanceledException)

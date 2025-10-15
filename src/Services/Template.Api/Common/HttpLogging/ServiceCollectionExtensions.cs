@@ -35,7 +35,7 @@ internal static class ServiceCollectionExtensions
         return services.AddHttpLogging(config =>
         {
             config.LoggingFields = loggingFields;
-            
+
             config.RequestHeaders.Clear();
             foreach (string header in allowedRequestHeaders)
             {

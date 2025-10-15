@@ -19,7 +19,7 @@ internal sealed class Endpoint : IEndpoint
         System.Net.Http.HttpClient client = httpClientFactory.CreateClient(Common.HttpClients.ServiceCollectionExtensions.TestTraceNamedHttpClient);
         HttpResponseMessage response = await client
             .PostAsJsonAsync(
-                $"{configuration["ApiBaseAddress"]}/api/v1/test-trace?test=test", 
+                $"{configuration["ApiBaseAddress"]}/api/v1/test-trace?test=test",
                 new
                 {
                     Name = "Trace Name"
