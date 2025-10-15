@@ -409,9 +409,9 @@ internal static class Helper
             int remaining = _pos - index;
             _chars.Slice(index, remaining).CopyTo(_chars.Slice(index + count));
             s
-#if !NET
+            #if !NET
                 .AsSpan()
-#endif
+            #endif
                 .CopyTo(_chars.Slice(index));
             _pos += count;
         }
@@ -461,9 +461,9 @@ internal static class Helper
             }
 
             s
-#if !NET
+            #if !NET
                 .AsSpan()
-#endif
+            #endif
                 .CopyTo(_chars.Slice(pos));
             _pos += s.Length;
         }
