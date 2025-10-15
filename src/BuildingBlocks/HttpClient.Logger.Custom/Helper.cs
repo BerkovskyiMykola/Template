@@ -257,7 +257,7 @@ internal static class Helper
     }
 
     //Copied from System.Text
-#pragma warning disable
+    #pragma warning disable
     private ref struct ValueStringBuilder
     {
         private char[]? _arrayToReturnToPool;
