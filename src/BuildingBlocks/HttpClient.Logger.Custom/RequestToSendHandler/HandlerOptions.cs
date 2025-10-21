@@ -5,13 +5,13 @@
 
 namespace HttpClient.Logger.Custom.RequestToSendHandler;
 
+#pragma warning disable S2325
+
 /// <summary>
 /// Options for the <see cref="Handler"/>.
 /// </summary>
 public sealed class HandlerOptions
 {
-    private LoggingFields _loggingFields = LoggingFields.None;
-
     /// <summary>
     /// Fields to log for the <see cref="HttpRequestMessage"/>.
     /// Defaults to <see cref="LoggingFields.None"/>.
@@ -19,9 +19,9 @@ public sealed class HandlerOptions
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown if the value assigned is not a valid <see cref="RequestToSendHandler.LoggingFields"/> enum.
     /// </exception>
-    public LoggingFields LoggingFields 
+    public LoggingFields LoggingFields
     { 
-        get => _loggingFields;
+        get;
         set
         {
             if (!Helper.IsFlaggedEnumValid(value))
@@ -32,9 +32,9 @@ public sealed class HandlerOptions
                     $"{nameof(value)} ('{value}') must be a valid {nameof(RequestToSendHandler.LoggingFields)}.");
             }
 
-            _loggingFields = value;
+            field = value;
         } 
-    }
+    } = LoggingFields.None;
 
     /// <summary>
     /// <see cref="HttpRequestMessage.Headers"/> that are allowed to be logged.
@@ -59,8 +59,6 @@ public sealed class HandlerOptions
     /// </summary>
     public MediaTypeOptions AllowedMediaTypes { get; } = new();
 
-    private int _bodyLogLimit;
-
     /// <summary>
     /// Maximum <see cref="HttpRequestMessage.Content"/> size to log (in bytes).
     /// </summary>
@@ -69,12 +67,12 @@ public sealed class HandlerOptions
     /// </exception>
     public int BodyLogLimit
     {
-        get => _bodyLogLimit;
+        get;
         set
         {
             ArgumentOutOfRangeException.ThrowIfNegative(value);
 
-            _bodyLogLimit = value;
+            field = value;
         }
     }
 }
