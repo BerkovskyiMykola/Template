@@ -12,8 +12,6 @@ using OpenTelemetry.Trace;
 
 namespace Template.Api.Common.OpenTelemetry;
 
-#pragma warning disable S3059
-
 /// <summary>  
 /// Provides extension methods for configuring and adding OpenTelemetry services to the application. 
 /// </summary>
