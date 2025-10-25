@@ -26,7 +26,7 @@ internal static class ServiceCollectionExtensions
     /// <param name="configuration">The <see cref="IConfiguration"/> containing OpenTelemetry service settings.</param>  
     /// <param name="environment">The <see cref="IHostEnvironment"/> to configure OpenTelemetry depending on the environment.</param>
     /// <returns>The <see cref="IServiceCollection"/> with OpenTelemetry configured.</returns>  
-    internal static IServiceCollection AddConfiguredOpenTelemetry(
+    public static IServiceCollection AddConfiguredOpenTelemetry(
         this IServiceCollection services,
         IConfiguration configuration,
         IHostEnvironment environment)

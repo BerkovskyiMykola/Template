@@ -19,7 +19,7 @@ internal static class ServiceCollectionExtensions
     /// <param name="services">The <see cref="IServiceCollection"/> to which HTTP logging services will be added.</param>  
     /// <param name="configuration">The <see cref="IConfiguration"/> instance containing HTTP logging settings.</param>  
     /// <returns>The <see cref="IServiceCollection"/> instance with HTTP logging configured.</returns>  
-    internal static IServiceCollection AddConfiguredHttpLogging(
+    public static IServiceCollection AddConfiguredHttpLogging(
         this IServiceCollection services,
         IConfiguration configuration)
     {

@@ -15,5 +15,5 @@ namespace HttpClient.Logger.Custom;
 internal static partial class LoggingExtensions
 {
     [LoggerMessage(4001, LogLevel.Debug, "Decode failure while converting body", EventName = "HttpClientBodyDecodeFailure")]
-    internal static partial void LogBodyDecodeFailureAsDebug(this ILogger logger, Exception ex);
+    public static partial void LogBodyDecodeFailureAsDebug(this ILogger logger, Exception ex);
 }

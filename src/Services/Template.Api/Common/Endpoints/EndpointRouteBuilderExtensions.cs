@@ -17,7 +17,7 @@ internal static class EndpointRouteBuilderExtensions
     /// </summary>
     /// <param name="builder">The <see cref="IEndpointRouteBuilder"/> used to define HTTP endpoints.</param>
     /// <returns>The <see cref="IEndpointRouteBuilder"/> with all mapped endpoints.</returns>
-    internal static IEndpointRouteBuilder MapEndpoints(this IEndpointRouteBuilder builder)
+    public static IEndpointRouteBuilder MapEndpoints(this IEndpointRouteBuilder builder)
     {
         return builder
             .MapTestTraceEndpoints();

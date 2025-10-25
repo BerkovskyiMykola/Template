@@ -33,7 +33,7 @@ internal static class Helper
     /// <param name="allowedHeaders">
     /// A readonly set of allowed header names. <paramref name="headers"/> not in this set will be redacted.
     /// </param>
-    internal static void AddAllowedOrRedactedHeadersToLog(
+    public static void AddAllowedOrRedactedHeadersToLog(
         ICollection<LogField> log,
         HttpHeaders headers,
         IReadOnlySet<string> allowedHeaders)
@@ -59,7 +59,7 @@ internal static class Helper
     /// <returns>
     /// A formatted string that starts with the <paramref name="title"/>, followed by each key-value pair in <paramref name="log"/> on a new line.
     /// </returns>
-    internal static string FormatLog(string title, IReadOnlyList<LogField> log)
+    public static string FormatLog(string title, IReadOnlyList<LogField> log)
     {
         // Currently using ValueStringBuilder (copied from System.Text).
         // This can be replaced with StringBuilder from ObjectPool
@@ -117,7 +117,7 @@ internal static class Helper
     /// If the <paramref name="content"/> is empty, returns <c>null</c>. 
     /// If decoding fails due to a <see cref="DecoderFallbackException"/>, returns the string <c>"&lt;Decoder failure&gt;"</c>.
     /// </returns>
-    internal static async Task<string?> ReadContentAsStringOrDefaultAsync(
+    public static async Task<string?> ReadContentAsStringOrDefaultAsync(
         HttpContent content,
         Encoding encoding,
         long logLimit,
@@ -180,7 +180,7 @@ internal static class Helper
     /// <returns>
     /// <c>true</c> if a supported encoding is found for the specified <paramref name="contentType"/>; otherwise, <c>false</c>.
     /// </returns>
-    internal static bool TryGetEncodingForMediaType(string? contentType, IReadOnlyCollection<MediaTypeState> mediaTypes, [NotNullWhen(true)] out Encoding? encoding)
+    public static bool TryGetEncodingForMediaType(string? contentType, IReadOnlyCollection<MediaTypeState> mediaTypes, [NotNullWhen(true)] out Encoding? encoding)
     {
         encoding = null;
 
@@ -236,7 +236,7 @@ internal static class Helper
     /// <returns>
     /// <c>true</c> if <paramref name="value"/> is a valid combination of defined enum values; otherwise, <c>false</c>.
     /// </returns>
-    internal static bool IsFlaggedEnumValid<T>(T value) where T : struct, Enum
+    public static bool IsFlaggedEnumValid<T>(T value) where T : struct, Enum
     {
         long longValue = Convert.ToInt64(value, null);
         long mask = 0;
@@ -264,21 +264,21 @@ internal static class Helper
         private Span<char> _chars;
         private int _pos;
 
-        internal ValueStringBuilder(Span<char> initialBuffer)
+        public ValueStringBuilder(Span<char> initialBuffer)
         {
             _arrayToReturnToPool = null;
             _chars = initialBuffer;
             _pos = 0;
         }
 
-        internal ValueStringBuilder(int initialCapacity)
+        public ValueStringBuilder(int initialCapacity)
         {
             _arrayToReturnToPool = ArrayPool<char>.Shared.Rent(initialCapacity);
             _chars = _arrayToReturnToPool;
             _pos = 0;
         }
 
-        internal int Length
+        public int Length
         {
             get => _pos;
             set
@@ -289,9 +289,9 @@ internal static class Helper
             }
         }
 
-        internal int Capacity => _chars.Length;
+        public int Capacity => _chars.Length;
 
-        internal void EnsureCapacity(int capacity)
+        public void EnsureCapacity(int capacity)
         {
             // This is not expected to be called this with negative capacity
             Debug.Assert(capacity >= 0);
@@ -307,7 +307,7 @@ internal static class Helper
         /// This overload is pattern matched in the C# 7.3+ compiler so you can omit
         /// the explicit method call, and write eg "fixed (char* c = builder)"
         /// </summary>
-        internal ref char GetPinnableReference()
+        public ref char GetPinnableReference()
         {
             return ref MemoryMarshal.GetReference(_chars);
         }
@@ -316,7 +316,7 @@ internal static class Helper
         /// Get a pinnable reference to the builder.
         /// </summary>
         /// <param name="terminate">Ensures that the builder has a null char after <see cref="Length"/></param>
-        internal ref char GetPinnableReference(bool terminate)
+        public ref char GetPinnableReference(bool terminate)
         {
             if (terminate)
             {
@@ -326,7 +326,7 @@ internal static class Helper
             return ref MemoryMarshal.GetReference(_chars);
         }
 
-        internal ref char this[int index]
+        public ref char this[int index]
         {
             get
             {
@@ -343,13 +343,13 @@ internal static class Helper
         }
 
         /// <summary>Returns the underlying storage of the builder.</summary>
-        internal Span<char> RawChars => _chars;
+        public Span<char> RawChars => _chars;
 
         /// <summary>
         /// Returns a span around the contents of the builder.
         /// </summary>
         /// <param name="terminate">Ensures that the builder has a null char after <see cref="Length"/></param>
-        internal ReadOnlySpan<char> AsSpan(bool terminate)
+        public ReadOnlySpan<char> AsSpan(bool terminate)
         {
             if (terminate)
             {
@@ -359,11 +359,11 @@ internal static class Helper
             return _chars.Slice(0, _pos);
         }
 
-        internal ReadOnlySpan<char> AsSpan() => _chars.Slice(0, _pos);
-        internal ReadOnlySpan<char> AsSpan(int start) => _chars.Slice(start, _pos - start);
-        internal ReadOnlySpan<char> AsSpan(int start, int length) => _chars.Slice(start, length);
+        public ReadOnlySpan<char> AsSpan() => _chars.Slice(0, _pos);
+        public ReadOnlySpan<char> AsSpan(int start) => _chars.Slice(start, _pos - start);
+        public ReadOnlySpan<char> AsSpan(int start, int length) => _chars.Slice(start, length);
 
-        internal bool TryCopyTo(Span<char> destination, out int charsWritten)
+        public bool TryCopyTo(Span<char> destination, out int charsWritten)
         {
             if (_chars.Slice(0, _pos).TryCopyTo(destination))
             {
@@ -379,7 +379,7 @@ internal static class Helper
             }
         }
 
-        internal void Insert(int index, char value, int count)
+        public void Insert(int index, char value, int count)
         {
             if (_pos > _chars.Length - count)
             {
@@ -392,7 +392,7 @@ internal static class Helper
             _pos += count;
         }
 
-        internal void Insert(int index, string? s)
+        public void Insert(int index, string? s)
         {
             if (s == null)
             {
@@ -413,7 +413,7 @@ internal static class Helper
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void Append(char c)
+        public void Append(char c)
         {
             int pos = _pos;
             Span<char> chars = _chars;
@@ -429,7 +429,7 @@ internal static class Helper
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void Append(string? s)
+        public void Append(string? s)
         {
             if (s == null)
             {
@@ -460,7 +460,7 @@ internal static class Helper
             _pos += s.Length;
         }
 
-        internal void Append(char c, int count)
+        public void Append(char c, int count)
         {
             if (_pos > _chars.Length - count)
             {
@@ -475,7 +475,7 @@ internal static class Helper
             _pos += count;
         }
 
-        internal void Append(scoped ReadOnlySpan<char> value)
+        public void Append(scoped ReadOnlySpan<char> value)
         {
             int pos = _pos;
             if (pos > _chars.Length - value.Length)
@@ -488,7 +488,7 @@ internal static class Helper
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal Span<char> AppendSpan(int length)
+        public Span<char> AppendSpan(int length)
         {
             int origPos = _pos;
             if (origPos > _chars.Length - length)
@@ -544,7 +544,7 @@ internal static class Helper
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void Dispose()
+        public void Dispose()
         {
             char[]? toReturn = _arrayToReturnToPool;
             this = default; // for safety, to avoid using pooled array if this instance is erroneously appended to again

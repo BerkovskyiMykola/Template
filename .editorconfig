@@ -547,7 +547,6 @@ dotnet_diagnostic.S2933.severity = error
 dotnet_diagnostic.S2971.severity = error
 dotnet_diagnostic.S3010.severity = error
 dotnet_diagnostic.S3011.severity = error
-dotnet_diagnostic.S3059.severity = error
 dotnet_diagnostic.S3063.severity = error
 dotnet_diagnostic.S3169.severity = error
 dotnet_diagnostic.S3246.severity = error
@@ -1070,3 +1069,7 @@ dotnet_diagnostic.S1309.severity = none
 # S1312: Logger fields should be "private static readonly"
 # This is not applicable due to DI.
 dotnet_diagnostic.S1312.severity = none
+
+# S3059: Types should not have members with visibility set higher than the type's visibility
+# This is not applicable due to DI.
+dotnet_diagnostic.S3059.severity = none

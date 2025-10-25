@@ -16,7 +16,7 @@ internal static class ServiceCollectionExtensions
     /// <summary>
     /// The name of the <see cref="System.Net.Http.HttpClient"/> instance used in <see cref="AddConfiguredTestTraceNamedHttpClient"/>.
     /// </summary>
-    internal const string TestTraceNamedHttpClient = "TestTrace";
+    public const string TestTraceNamedHttpClient = "TestTrace";
 
     /// <summary>  
     /// Adds and configures <see cref="System.Net.Http.HttpClient"/> service, using the <see cref="TestTraceNamedHttpClient"/> name, 
@@ -25,7 +25,7 @@ internal static class ServiceCollectionExtensions
     /// <param name="services">The <see cref="IServiceCollection"/> to which the configured <see cref="System.Net.Http.HttpClient"/> service will be added.</param>  
     /// <param name="configuration">The <see cref="IConfiguration"/> containing configuration settings for the <see cref="System.Net.Http.HttpClient"/> service.</param>  
     /// <returns>The <see cref="IServiceCollection"/> instance with <see cref="System.Net.Http.HttpClient"/> service configured.</returns>  
-    internal static IServiceCollection AddConfiguredTestTraceNamedHttpClient(
+    public static IServiceCollection AddConfiguredTestTraceNamedHttpClient(
         this IServiceCollection services,
         IConfiguration configuration)
     {

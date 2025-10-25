@@ -19,7 +19,7 @@ internal sealed class PooledLogFieldList : IResettable
     /// <summary>
     /// Gets the list of <see cref="LogField"/> items.
     /// </summary>
-    internal List<LogField> Items { get; } = new(DefaultCapacity);
+    public List<LogField> Items { get; } = new(DefaultCapacity);
 
     /// <summary>
     /// Attempts to reset the list for reuse. 

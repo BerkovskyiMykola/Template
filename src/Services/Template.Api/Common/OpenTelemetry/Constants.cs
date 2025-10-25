@@ -15,5 +15,5 @@ internal static class Constants
     /// <summary>
     /// Gets the <see cref="ActivitySource"/> used for tracing activities within worker services.
     /// </summary>
-    internal static ActivitySource WorkersActivitySource { get; } = new ActivitySource("Workers");
+    public static ActivitySource WorkersActivitySource { get; } = new ActivitySource("Workers");
 }

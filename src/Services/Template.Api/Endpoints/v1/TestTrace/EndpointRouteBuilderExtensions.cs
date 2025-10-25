@@ -15,7 +15,7 @@ internal static class EndpointRouteBuilderExtensions
     /// </summary>
     /// <param name="builder">The <see cref="IEndpointRouteBuilder"/> used to define TestTrace HTTP endpoints.</param>
     /// <returns>The <see cref="IEndpointRouteBuilder"/> instance that includes all TestTrace mapped endpoints.</returns>
-    internal static IEndpointRouteBuilder MapTestTraceEndpoints(this IEndpointRouteBuilder builder)
+    public static IEndpointRouteBuilder MapTestTraceEndpoints(this IEndpointRouteBuilder builder)
     {
         Get.Endpoint.MapEndpoint(builder);
         Post.Endpoint.MapEndpoint(builder);
