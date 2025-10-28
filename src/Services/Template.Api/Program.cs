@@ -6,9 +6,12 @@
 using Template.Api.Common.Endpoints;
 using Template.Api.Common.HttpClients;
 using Template.Api.Common.HttpLogging;
+using Template.Api.Common.LoggingProviders;
 using Template.Api.Common.OpenTelemetry;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.AddConfiguredProviders(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
 
