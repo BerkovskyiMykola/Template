@@ -178,7 +178,7 @@ public static class DebugThrowHelper
     /// </summary>
     /// <param name="condition">A boolean value indicating whether to throw the exception.</param>
     /// <param name="paramName">The name of the parameter that caused the exception.</param>
-    /// <param name="actualValue">The actual value of the argument that caused the exception.</param>
+    /// <param name="actualValue">The actual value of the parameter that caused the exception.</param>
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="condition"/> is true.</exception>
     [Conditional("DEBUG")]
@@ -276,7 +276,7 @@ public static class DebugThrowHelper
     /// <summary>
     /// Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is greater than <paramref name="other"/>.
     /// </summary>
-    /// <param name="value">The argument to validate as less or equal than <paramref name="other"/>.</param>
+    /// <param name="value">The argument to validate as less than or equal than <paramref name="other"/>.</param>
     /// <param name="other">The value to compare with <paramref name="value"/>.</param>
     /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is greater than <paramref name="other"/>.</exception>
