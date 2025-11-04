@@ -22,7 +22,9 @@ public static class DebugThrowHelper
     /// <param name="paramName">The name of the parameter that caused the exception.</param>
     /// <exception cref="ArgumentNullException"><paramref name="condition"/> is true.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowArgumentNullException(bool condition, string? paramName)
+    public static void ThrowArgumentNullException(
+        bool condition, 
+        string? paramName)
     {
         if (condition)
         {
@@ -39,7 +41,10 @@ public static class DebugThrowHelper
     /// <param name="innerException">The exception that is the cause of the current exception.</param>
     /// <exception cref="ArgumentNullException"><paramref name="condition"/> is true.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowArgumentNullException(bool condition, string? message, Exception? innerException)
+    public static void ThrowArgumentNullException(
+        bool condition, 
+        string? message, 
+        Exception? innerException)
     {
         if (condition)
         {
@@ -57,7 +62,10 @@ public static class DebugThrowHelper
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <exception cref="ArgumentNullException"><paramref name="condition"/> is true.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowArgumentNullException(bool condition, string? paramName, string? message)
+    public static void ThrowArgumentNullException(
+        bool condition, 
+        string? paramName, 
+        string? message)
     {
         if (condition)
         {
@@ -74,7 +82,9 @@ public static class DebugThrowHelper
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <exception cref="ArgumentException"><paramref name="condition"/> is true.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowArgumentException(bool condition, string? message)
+    public static void ThrowArgumentException(
+        bool condition, 
+        string? message)
     {
         if (condition)
         {
@@ -91,7 +101,10 @@ public static class DebugThrowHelper
     /// <param name="innerException">The exception that is the cause of the current exception.</param>
     /// <exception cref="ArgumentException"><paramref name="condition"/> is true.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowArgumentException(bool condition, string? message, Exception? innerException)
+    public static void ThrowArgumentException(
+        bool condition, 
+        string? message, 
+        Exception? innerException)
     {
         if (condition)
         {
@@ -110,7 +123,11 @@ public static class DebugThrowHelper
     /// <param name="innerException">The exception that is the cause of the current exception.</param>
     /// <exception cref="ArgumentException"><paramref name="condition"/> is true.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowArgumentException(bool condition, string? message, string? paramName, Exception? innerException)
+    public static void ThrowArgumentException(
+        bool condition, 
+        string? message, 
+        string? paramName, 
+        Exception? innerException)
     {
         if (condition)
         {
@@ -129,7 +146,10 @@ public static class DebugThrowHelper
     /// <param name="paramName">The name of the parameter that caused the exception.</param>
     /// <exception cref="ArgumentException"><paramref name="condition"/> is true.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowArgumentException(bool condition, string? message, string? paramName)
+    public static void ThrowArgumentException(
+        bool condition, 
+        string? message, 
+        string? paramName)
     {
         if (condition)
         {
@@ -146,7 +166,9 @@ public static class DebugThrowHelper
     /// <param name="paramName">The name of the parameter that caused the exception.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="condition"/> is true.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowArgumentOutOfRangeException(bool condition, string? paramName)
+    public static void ThrowArgumentOutOfRangeException(
+        bool condition, 
+        string? paramName)
     {
         if (condition)
         {
@@ -163,7 +185,10 @@ public static class DebugThrowHelper
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="condition"/> is true.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowArgumentOutOfRangeException(bool condition, string? paramName, string? message)
+    public static void ThrowArgumentOutOfRangeException(
+        bool condition, 
+        string? paramName, 
+        string? message)
     {
         if (condition)
         {
@@ -181,7 +206,10 @@ public static class DebugThrowHelper
     /// <param name="innerException">The exception that is the cause of the current exception.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="condition"/> is true.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowArgumentOutOfRangeException(bool condition, string? message, Exception? innerException)
+    public static void ThrowArgumentOutOfRangeException(
+        bool condition, 
+        string? message, 
+        Exception? innerException)
     {
         if (condition)
         {
@@ -200,7 +228,11 @@ public static class DebugThrowHelper
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="condition"/> is true.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowArgumentOutOfRangeException(bool condition, string? paramName, object? actualValue, string? message)
+    public static void ThrowArgumentOutOfRangeException(
+        bool condition, 
+        string? paramName, 
+        object? actualValue, 
+        string? message)
     {
         if (condition)
         {
@@ -218,7 +250,9 @@ public static class DebugThrowHelper
     /// <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
     /// <exception cref="ArgumentNullException"><paramref name="argument"/> is null.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowIfNull([NotNull] object? argument, [CallerArgumentExpression(nameof(argument))] string? paramName = null)
+    public static void ThrowIfNull(
+        [NotNull] object? argument, 
+        [CallerArgumentExpression(nameof(argument))] string? paramName = null)
         => ArgumentNullException.ThrowIfNull(
             argument: argument, 
             paramName: paramName);
@@ -231,7 +265,9 @@ public static class DebugThrowHelper
     /// <exception cref="ArgumentNullException"><paramref name="argument"/> is null.</exception>
     /// <exception cref="ArgumentException"><paramref name="argument"/> is empty.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowIfNullOrEmpty([NotNull] string? argument, [CallerArgumentExpression(nameof(argument))] string? paramName = null)
+    public static void ThrowIfNullOrEmpty(
+        [NotNull] string? argument, 
+        [CallerArgumentExpression(nameof(argument))] string? paramName = null)
         => ArgumentException.ThrowIfNullOrEmpty(
             argument: argument, 
             paramName: paramName);
@@ -244,7 +280,9 @@ public static class DebugThrowHelper
     /// <exception cref="ArgumentNullException"><paramref name="argument"/> is null.</exception>
     /// <exception cref="ArgumentException"><paramref name="argument"/> is empty or consists only of white-space characters.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowIfNullOrWhiteSpace([NotNull] string? argument, [CallerArgumentExpression(nameof(argument))] string? paramName = null)
+    public static void ThrowIfNullOrWhiteSpace(
+        [NotNull] string? argument, 
+        [CallerArgumentExpression(nameof(argument))] string? paramName = null)
         => ArgumentException.ThrowIfNullOrWhiteSpace(
             argument: argument, 
             paramName: paramName);
@@ -256,7 +294,10 @@ public static class DebugThrowHelper
     /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is zero.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowIfZero<T>(T value, [CallerArgumentExpression(nameof(value))] string? paramName = null) where T : INumberBase<T>
+    public static void ThrowIfZero<T>(
+        T value, 
+        [CallerArgumentExpression(nameof(value))] string? paramName = null) 
+        where T : INumberBase<T>
         => ArgumentOutOfRangeException.ThrowIfZero(
             value: value, 
             paramName: paramName);
@@ -268,7 +309,10 @@ public static class DebugThrowHelper
     /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is negative.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowIfNegative<T>(T value, [CallerArgumentExpression(nameof(value))] string? paramName = null) where T : INumberBase<T>
+    public static void ThrowIfNegative<T>(
+        T value, 
+        [CallerArgumentExpression(nameof(value))] string? paramName = null) 
+        where T : INumberBase<T>
         => ArgumentOutOfRangeException.ThrowIfNegative(
             value: value, 
             paramName: paramName);
@@ -280,7 +324,10 @@ public static class DebugThrowHelper
     /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is negative or zero.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowIfNegativeOrZero<T>(T value, [CallerArgumentExpression(nameof(value))] string? paramName = null) where T : INumberBase<T>
+    public static void ThrowIfNegativeOrZero<T>(
+        T value, 
+        [CallerArgumentExpression(nameof(value))] string? paramName = null) 
+        where T : INumberBase<T>
         => ArgumentOutOfRangeException.ThrowIfNegativeOrZero(
             value: value, 
             paramName: paramName);
@@ -293,7 +340,11 @@ public static class DebugThrowHelper
     /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is equal to <paramref name="other"/>.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowIfEqual<T>(T value, T other, [CallerArgumentExpression(nameof(value))] string? paramName = null) where T : IEquatable<T>?
+    public static void ThrowIfEqual<T>(
+        T value, 
+        T other, 
+        [CallerArgumentExpression(nameof(value))] string? paramName = null) 
+        where T : IEquatable<T>?
         => ArgumentOutOfRangeException.ThrowIfEqual(
             value: value, 
             other: other, 
@@ -307,7 +358,11 @@ public static class DebugThrowHelper
     /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is not equal to <paramref name="other"/>.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowIfNotEqual<T>(T value, T other, [CallerArgumentExpression(nameof(value))] string? paramName = null) where T : IEquatable<T>?
+    public static void ThrowIfNotEqual<T>(
+        T value, 
+        T other, 
+        [CallerArgumentExpression(nameof(value))] string? paramName = null) 
+        where T : IEquatable<T>?
         => ArgumentOutOfRangeException.ThrowIfNotEqual(
             value: value, 
             other: other, 
@@ -321,7 +376,11 @@ public static class DebugThrowHelper
     /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is greater than <paramref name="other"/>.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowIfGreaterThan<T>(T value, T other, [CallerArgumentExpression(nameof(value))] string? paramName = null) where T : IComparable<T>
+    public static void ThrowIfGreaterThan<T>(
+        T value, 
+        T other, 
+        [CallerArgumentExpression(nameof(value))] string? paramName = null) 
+        where T : IComparable<T>
         => ArgumentOutOfRangeException.ThrowIfGreaterThan(
             value: value, 
             other: other, 
@@ -335,7 +394,11 @@ public static class DebugThrowHelper
     /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is greater than or equal to <paramref name="other"/>.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowIfGreaterThanOrEqual<T>(T value, T other, [CallerArgumentExpression(nameof(value))] string? paramName = null) where T : IComparable<T>
+    public static void ThrowIfGreaterThanOrEqual<T>(
+        T value, 
+        T other, 
+        [CallerArgumentExpression(nameof(value))] string? paramName = null) 
+        where T : IComparable<T>
         => ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(
             value: value, 
             other: other, 
@@ -349,7 +412,11 @@ public static class DebugThrowHelper
     /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is less than <paramref name="other"/>.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowIfLessThan<T>(T value, T other, [CallerArgumentExpression(nameof(value))] string? paramName = null) where T : IComparable<T>
+    public static void ThrowIfLessThan<T>(
+        T value, 
+        T other, 
+        [CallerArgumentExpression(nameof(value))] string? paramName = null) 
+        where T : IComparable<T>
         => ArgumentOutOfRangeException.ThrowIfLessThan(
             value: value, 
             other: other, 
@@ -363,7 +430,11 @@ public static class DebugThrowHelper
     /// <param name="paramName">The name of the parameter with which <paramref name="value"/> corresponds.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="value"/> is less than or equal to <paramref name="other"/>.</exception>
     [Conditional("DEBUG")]
-    public static void ThrowIfLessThanOrEqual<T>(T value, T other, [CallerArgumentExpression(nameof(value))] string? paramName = null) where T : IComparable<T>
+    public static void ThrowIfLessThanOrEqual<T>(
+        T value, 
+        T other, 
+        [CallerArgumentExpression(nameof(value))] string? paramName = null) 
+        where T : IComparable<T>
         => ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(
             value: value, 
             other: other, 
