@@ -38,7 +38,7 @@ public partial class GuardEx
     /// <typeparam name="TEnum">The type of <see langword="enum"/> value type being tested.</typeparam>
     /// <param name="value">The input value to test.</param>
     /// <param name="paramName">The name of the input parameter being tested.</param>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="value"/> is not defined flags enum combination <see langword="enum"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="value"/> is not defined flags <see langword="enum"/> combination.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void IsDefinedFlagsEnumCombination<TEnum>(
         TEnum value,
