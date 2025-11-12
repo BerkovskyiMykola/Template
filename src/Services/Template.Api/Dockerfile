@@ -1,21 +1,21 @@
 # See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 
 
 # This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Directory.Packages.props", "."]
 COPY ["Directory.Build.props", "."]
 COPY ["src/Services/Template.Api/Template.Api.csproj", "src/Services/Template.Api/"]
 COPY ["src/BuildingBlocks/HttpClient.Logger.Custom/HttpClient.Logger.Custom.csproj", "src/BuildingBlocks/HttpClient.Logger.Custom/"]
-COPY ["src/BuildingBlocks/Serilog.Enrichers.Custom/Serilog.Enrichers.Custom.csproj", "src/BuildingBlocks/Serilog.Enrichers.Custom/"]
+COPY ["src/BuildingBlocks/Logging.File.Custom/Logging.File.Custom.csproj", "src/BuildingBlocks/Logging.File.Custom/"]
 RUN dotnet restore "./src/Services/Template.Api/Template.Api.csproj"
 COPY . .
 WORKDIR "/src/src/Services/Template.Api"
