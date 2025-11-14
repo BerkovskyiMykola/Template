@@ -7,11 +7,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace CommunityToolkit.Diagnostics.Extensions;
 
-#pragma warning disable CA1711, S3260
-
-public partial class GuardEx
+public static partial class GuardExt
 {
-    private partial class ThrowHelperEx
+    private static partial class ThrowHelperExt
     {
         /// <summary>
         /// Throws an <see cref="ArgumentOutOfRangeException"/> when <see cref="IsDefinedEnum{TEnum}(TEnum,string)"/> fails.

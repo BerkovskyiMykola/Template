@@ -5,8 +5,6 @@
 
 namespace CommunityToolkit.Diagnostics.Extensions;
 
-#pragma warning disable CA1711
-
-public partial class ThrowHelperEx
+public static partial class ThrowHelperExt
 {
 }

@@ -7,15 +7,13 @@ using System.Diagnostics;
 
 namespace CommunityToolkit.Diagnostics.Extensions;
 
-#pragma warning disable CA1711
-
-public partial class GuardEx
+public static partial class GuardExt
 {
     /// <summary>
     /// Helper methods to efficiently throw exceptions.
     /// </summary>
     [StackTraceHidden]
-    private static partial class ThrowHelperEx
+    private static partial class ThrowHelperExt
     {
 
     }

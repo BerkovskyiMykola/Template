@@ -7,9 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace CommunityToolkit.Diagnostics.Extensions;
 
-#pragma warning disable CA1711
-
-public partial class GuardEx
+public static partial class GuardExt
 {
     /// <summary>
     /// Asserts that the input value is defined <see langword="enum"/>.
@@ -29,7 +27,7 @@ public partial class GuardEx
             return;
         }
 
-        ThrowHelperEx.ThrowArgumentOutOfRangeExceptionForIsDefinedEnum(value, paramName);
+        ThrowHelperExt.ThrowArgumentOutOfRangeExceptionForIsDefinedEnum(value, paramName);
     }
 
     /// <summary>
@@ -60,6 +58,6 @@ public partial class GuardEx
             }
         }
 
-        ThrowHelperEx.ThrowArgumentOutOfRangeExceptionForIsDefinedFlagsEnumCombination(value, paramName);
+        ThrowHelperExt.ThrowArgumentOutOfRangeExceptionForIsDefinedFlagsEnumCombination(value, paramName);
     }
 }
