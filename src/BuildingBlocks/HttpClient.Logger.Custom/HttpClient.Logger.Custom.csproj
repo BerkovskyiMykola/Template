@@ -5,6 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
+	<PackageReference Include="CommunityToolkit.Diagnostics" />
     <PackageReference Include="Microsoft.Extensions.ObjectPool.DependencyInjection" />
   </ItemGroup>
 

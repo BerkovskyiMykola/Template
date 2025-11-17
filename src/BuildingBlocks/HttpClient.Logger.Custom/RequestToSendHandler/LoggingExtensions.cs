@@ -19,9 +19,9 @@ internal static partial class LoggingExtensions
         => logger.Log(
             LogLevel.Information,
             new EventId(2001, "HttpClientRequestToSendLog"),
-            log,
+            new HttpLog("Request to send", log),
             exception: null,
-            formatter: static (log, _) => Helper.FormatLog("Request to send", log));
+            formatter: static (state, _) => state.ToString());
 
     [LoggerMessage(2002, LogLevel.Information, "RequestBody to send: {Body}", EventName = "HttpClientRequestBodyToSend")]
     public static partial void LogRequestBodyToSendAsInformation(this ILogger logger, string body);

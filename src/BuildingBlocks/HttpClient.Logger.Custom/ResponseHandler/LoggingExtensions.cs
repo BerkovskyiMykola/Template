@@ -19,9 +19,9 @@ internal static partial class LoggingExtensions
         => logger.Log(
             LogLevel.Information,
             new EventId(3001, "HttpClientResponseLog"),
-            log,
+            new HttpLog("Response", log),
             exception: null,
-            formatter: static (log, _) => Helper.FormatLog("Response", log));
+            formatter: static (state, _) => state.ToString());
 
     [LoggerMessage(3002, LogLevel.Information, "ResponseBody: {Body}", EventName = "HttpClientResponseBody")]
     public static partial void LogResponseBodyAsInformation(this ILogger logger, string body);
