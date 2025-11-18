@@ -4,22 +4,23 @@
  */
 
 using Microsoft.Extensions.ObjectPool;
-using LogField = System.Collections.Generic.KeyValuePair<string, object?>;
+using StringNullableObjectPair = System.Collections.Generic.KeyValuePair<string, object?>;
 
 namespace HttpClient.Logger.Custom;
 
 /// <summary>
-/// Represents a pooled list of <see cref="LogField"/> objects that implements the <see cref="IResettable"/>.
+/// A pooled, reusable list of <see cref="StringNullableObjectPair"/> instances,
+/// used to reduce allocations during logging.
 /// </summary>
-internal sealed class PooledLogFieldList : IResettable
+internal sealed class PooledStringNullableObjectPairList : IResettable
 {
     private const int DefaultCapacity = 16;
     private const int MaxRetainedCapacity = 128;
 
     /// <summary>
-    /// Gets the list of <see cref="LogField"/> items.
+    /// Gets the list of <see cref="StringNullableObjectPair"/> items.
     /// </summary>
-    public List<LogField> Items { get; } = new(DefaultCapacity);
+    public List<StringNullableObjectPair> Items { get; } = new(DefaultCapacity);
 
     /// <summary>
     /// Attempts to reset the list for reuse. 
@@ -37,6 +38,7 @@ internal sealed class PooledLogFieldList : IResettable
         }
 
         Items.Clear();
+
         return true;
     }
 }

@@ -18,7 +18,6 @@ public static partial class GuardExt
         /// <param name="actualValue">The argument actual value.</param>
         /// <param name="paramName">The argument name.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown with the specified parameters.</exception>
-        /// <returns>This method always throws, so it actually never returns a value.</returns>
         [DoesNotReturn]
         public static void ThrowArgumentOutOfRangeExceptionForIsDefinedEnum<TEnum>(
             TEnum actualValue, 
@@ -38,7 +37,6 @@ public static partial class GuardExt
         /// <param name="actualValue">The argument actual value.</param>
         /// <param name="paramName">The argument name.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown with the specified parameters.</exception>
-        /// <returns>This method always throws, so it actually never returns a value.</returns>
         [DoesNotReturn]
         public static void ThrowArgumentOutOfRangeExceptionForIsDefinedFlagsEnumCombination<TEnum>(
             TEnum actualValue, 

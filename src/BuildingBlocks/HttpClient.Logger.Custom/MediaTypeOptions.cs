@@ -3,8 +3,8 @@
  * Copyright (c) 2025-2025 Mykola Berkovskyi
  */
 
-using System.Collections.ObjectModel;
 using System.Text;
+using CommunityToolkit.Diagnostics;
 using Microsoft.Net.Http.Headers;
 
 namespace HttpClient.Logger.Custom;
@@ -19,15 +19,15 @@ public sealed class MediaTypeOptions
     /// <summary>
     /// Gets the list of configured <see cref="MediaTypeState"/> instances.
     /// </summary>
-    internal ReadOnlyCollection<MediaTypeState> MediaTypeStates { get; }
+    internal IReadOnlyList<MediaTypeState> MediaTypeStates { get; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MediaTypeOptions"/> class.
+    /// Initializes a new instance of the <see cref="MediaTypeOptions"/>.
     /// </summary>
     public MediaTypeOptions()
     {
         _mediaTypeStates = [];
-        MediaTypeStates = _mediaTypeStates.AsReadOnly();
+        MediaTypeStates = _mediaTypeStates;
     }
 
     private void AddText(MediaTypeHeaderValue mediaType)
@@ -44,10 +44,10 @@ public sealed class MediaTypeOptions
     /// If charset is not specified in the <paramref name="contentType"/>, the <see cref="Encoding"/> will default to <see cref="Encoding.UTF8"/>.
     /// </remarks>
     /// <param name="contentType">The content type to add.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="contentType"/> is null.</exception>  
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="contentType"/> is null.</exception>
     public void AddText(string contentType)
     {
-        ArgumentNullException.ThrowIfNull(contentType);
+        Guard.IsNotNull(contentType);
 
         AddText(MediaTypeHeaderValue.Parse(contentType));
     }
@@ -56,15 +56,16 @@ public sealed class MediaTypeOptions
     /// Adds a <paramref name="contentType"/> to be used for logging as text with a specific <paramref name="encoding"/>.
     /// </summary>
     /// <param name="contentType">The content type to add.</param>
-    /// <param name="encoding">The <see cref="Encoding"/> to use for the <paramref name="contentType"/>.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="contentType"/> or <paramref name="encoding"/> is null.</exception> 
+    /// <param name="encoding">The encoding to use for the <paramref name="contentType"/>.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="contentType"/> or <paramref name="encoding"/> is null.</exception>
     public void AddText(string contentType, Encoding encoding)
     {
-        ArgumentNullException.ThrowIfNull(contentType);
-        ArgumentNullException.ThrowIfNull(encoding);
+        Guard.IsNotNull(contentType);
+        Guard.IsNotNull(encoding);
 
         MediaTypeHeaderValue mediaType = MediaTypeHeaderValue.Parse(contentType);
         mediaType.Encoding = encoding;
+
         AddText(mediaType);
     }
 

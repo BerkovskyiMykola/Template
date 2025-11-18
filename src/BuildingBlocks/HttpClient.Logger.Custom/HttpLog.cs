@@ -19,45 +19,41 @@ namespace HttpClient.Logger.Custom;
 internal sealed class HttpLog : IReadOnlyList<StringNullableObjectPair>
 {
     private readonly string _title;
-    private readonly IReadOnlyList<StringNullableObjectPair> _stringNullableObjectPairs;
+    private readonly IReadOnlyList<StringNullableObjectPair> _keyValuePairs;
     private string? _cachedToString;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HttpLog"/>.
     /// </summary>
-    /// <param name="title">The title for the log.</param>
-    /// <param name="stringNullableObjectPairs">A read-only list of pairs to be included in the log.</param>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="title"/> or <paramref name="stringNullableObjectPairs"/> is null.</exception>
-    /// <exception cref="ArgumentException">Thrown when <paramref name="title"/> is whitespace.</exception>
     /// <remarks>
     /// Argument validation is performed only in <c>DEBUG</c> builds.
     /// </remarks>
-    public HttpLog(string title, IReadOnlyList<StringNullableObjectPair> stringNullableObjectPairs)
+    /// <param name="title">The title for the log.</param>
+    /// <param name="keyValuePairs">A read-only list of pairs to be included in the log.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="title"/> or <paramref name="keyValuePairs"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="title"/> is whitespace.</exception>
+    public HttpLog(
+        string title, 
+        IReadOnlyList<StringNullableObjectPair> keyValuePairs)
     {
         #if DEBUG
         Guard.IsNotNullOrWhiteSpace(title);
-        Guard.IsNotNull(stringNullableObjectPairs);
+        Guard.IsNotNull(keyValuePairs);
         #endif
 
         _title = title;
-        _stringNullableObjectPairs = stringNullableObjectPairs;
+        _keyValuePairs = keyValuePairs;
     }
 
     /// <inheritdoc/>
-    public StringNullableObjectPair this[int index] => _stringNullableObjectPairs[index];
+    public StringNullableObjectPair this[int index] => _keyValuePairs[index];
 
     /// <inheritdoc/>
-    public int Count => _stringNullableObjectPairs.Count;
+    public int Count => _keyValuePairs.Count;
 
     /// <inheritdoc/>
-    public IEnumerator<StringNullableObjectPair> GetEnumerator()
-    {
-        int count = _stringNullableObjectPairs.Count;
-        for (int i = 0; i < count; i++)
-        {
-            yield return _stringNullableObjectPairs[i];
-        }
-    }
+    public IEnumerator<StringNullableObjectPair> GetEnumerator() 
+        => _keyValuePairs.GetEnumerator();
 
     /// <inheritdoc/>
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -69,26 +65,28 @@ internal sealed class HttpLog : IReadOnlyList<StringNullableObjectPair>
         {
             // Use 2kb as a rough average size for request/response headers
             using ValueStringBuilder builder = new(2 * 1024);
-            int count = _stringNullableObjectPairs.Count;
+
             builder.Append(_title);
             builder.Append(':');
             builder.Append(Environment.NewLine);
 
+            int count = _keyValuePairs.Count;
+
             for (int i = 0; i < count - 1; i++)
             {
-                StringNullableObjectPair kvp = _stringNullableObjectPairs[i];
-                builder.Append(kvp.Key);
+                StringNullableObjectPair keyValuePair = _keyValuePairs[i];
+                builder.Append(keyValuePair.Key);
                 builder.Append(": ");
-                builder.Append(kvp.Value?.ToString());
+                builder.Append(keyValuePair.Value?.ToString());
                 builder.Append(Environment.NewLine);
             }
 
             if (count > 0)
             {
-                StringNullableObjectPair kvp = _stringNullableObjectPairs[count - 1];
-                builder.Append(kvp.Key);
+                StringNullableObjectPair keyValuePair = _keyValuePairs[count - 1];
+                builder.Append(keyValuePair.Key);
                 builder.Append(": ");
-                builder.Append(kvp.Value?.ToString());
+                builder.Append(keyValuePair.Value?.ToString());
             }
 
             _cachedToString = builder.ToString();

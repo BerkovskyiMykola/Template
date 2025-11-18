@@ -27,7 +27,9 @@ public static partial class GuardExt
             return;
         }
 
-        ThrowHelperExt.ThrowArgumentOutOfRangeExceptionForIsDefinedEnum(value, paramName);
+        ThrowHelperExt.ThrowArgumentOutOfRangeExceptionForIsDefinedEnum(
+            value, 
+            paramName);
     }
 
     /// <summary>
@@ -45,12 +47,15 @@ public static partial class GuardExt
     {
         long valueAsInt64 = Convert.ToInt64(value, null);
         long mask = 0;
+
         foreach (TEnum enumValue in Enum.GetValues<TEnum>())
         {
             long enumValueAsInt64 = Convert.ToInt64(enumValue, null);
+
             if ((enumValueAsInt64 & valueAsInt64) == enumValueAsInt64)
             {
                 mask |= enumValueAsInt64;
+
                 if (mask == valueAsInt64)
                 {
                     return;
@@ -58,6 +63,8 @@ public static partial class GuardExt
             }
         }
 
-        ThrowHelperExt.ThrowArgumentOutOfRangeExceptionForIsDefinedFlagsEnumCombination(value, paramName);
+        ThrowHelperExt.ThrowArgumentOutOfRangeExceptionForIsDefinedFlagsEnumCombination(
+            value, 
+            paramName);
     }
 }

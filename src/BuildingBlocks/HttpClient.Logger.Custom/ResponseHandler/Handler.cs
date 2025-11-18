@@ -15,15 +15,15 @@ namespace HttpClient.Logger.Custom.ResponseHandler;
 /// according to configured <see cref="HandlerOptions"/>.
 /// </summary>
 /// <param name="options">The options controlling which parts of the <see cref="HttpResponseMessage"/> are logged.</param>
-/// <param name="objectPoolPooledLogFieldList">The object pool for <see cref="PooledLogFieldList"/> instances.</param>
+/// <param name="objectPoolPooledLogFieldList">The object pool for <see cref="PooledStringNullableObjectPairList"/> instances.</param>
 /// <param name="logger">The logger used for logging <see cref="HttpResponseMessage"/> according to configured <paramref name="options"/>.</param>
 internal sealed class Handler(
     HandlerOptions options,
-    ObjectPool<PooledLogFieldList> objectPoolPooledLogFieldList,
+    ObjectPool<PooledStringNullableObjectPairList> objectPoolPooledLogFieldList,
     ILogger logger) : DelegatingHandler
 {
     private readonly HandlerOptions _options = options;
-    private readonly ObjectPool<PooledLogFieldList> _objectPoolPooledLogFieldList = objectPoolPooledLogFieldList;
+    private readonly ObjectPool<PooledStringNullableObjectPairList> _objectPoolPooledLogFieldList = objectPoolPooledLogFieldList;
     private readonly ILogger _logger = logger;
 
     /// <summary>
@@ -50,7 +50,7 @@ internal sealed class Handler(
 
     private void LogResponsePropertiesAndHeaders(HttpResponseMessage response)
     {
-        PooledLogFieldList pooledLogFieldList = _objectPoolPooledLogFieldList.Get();
+        PooledStringNullableObjectPairList pooledLogFieldList = _objectPoolPooledLogFieldList.Get();
 
         List<LogField> log = pooledLogFieldList.Items;
 
