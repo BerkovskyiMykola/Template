@@ -4,31 +4,47 @@
  */
 
 using Microsoft.Extensions.Logging;
-using LogField = System.Collections.Generic.KeyValuePair<string, object?>;
+using StringNullableObjectPair = System.Collections.Generic.KeyValuePair<string, object?>;
 
 namespace HttpClient.Logger.Custom.ResponseHandler;
 
 #pragma warning disable S109 
 
 /// <summary>
-/// Provides extension methods for logging <see cref="HttpResponseMessage"/>.
+/// Extension methods for logging <see cref="HttpResponseMessage"/>.
 /// </summary>
 internal static partial class LoggingExtensions
 {
-    public static void LogResponseLogAsInformation(this ILogger logger, IReadOnlyList<LogField> log) 
-        => logger.Log(
+    public static void LogResponseLogAsInformation(
+        this ILogger logger, 
+        IReadOnlyList<StringNullableObjectPair> keyValuePairs)
+    {
+        logger.Log(
             LogLevel.Information,
             new EventId(3001, "HttpClientResponseLog"),
-            new HttpLog("Response", log),
+            new HttpLog("Response", keyValuePairs),
             exception: null,
             formatter: static (state, _) => state.ToString());
+    }
 
-    [LoggerMessage(3002, LogLevel.Information, "ResponseBody: {Body}", EventName = "HttpClientResponseBody")]
+    [LoggerMessage(
+        3002, 
+        LogLevel.Information, 
+        "ResponseBody: {Body}", 
+        EventName = "HttpClientResponseBody")]
     public static partial void LogResponseBodyAsInformation(this ILogger logger, string body);
 
-    [LoggerMessage(3003, LogLevel.Debug, "Unrecognized Content-Type for response body", EventName = "HttpClientUnrecognizedResponseMediaType")]
+    [LoggerMessage(
+        3003, 
+        LogLevel.Debug, 
+        "Unrecognized Content-Type for response body", 
+        EventName = "HttpClientUnrecognizedResponseMediaType")]
     public static partial void LogUnrecognizedResponseMediaTypeAsDebug(this ILogger logger);
 
-    [LoggerMessage(3004, LogLevel.Debug, "No Content-Type header for response body", EventName = "HttpClientResponseNoMediaType")]
+    [LoggerMessage(
+        3004, 
+        LogLevel.Debug, 
+        "No Content-Type header for response body", 
+        EventName = "HttpClientResponseNoMediaType")]
     public static partial void LogResponseNoMediaTypeAsDebug(this ILogger logger);
 }

@@ -3,6 +3,8 @@
  * Copyright (c) 2025-2025 Mykola Berkovskyi
  */
 
+using CommunityToolkit.Diagnostics.Extensions;
+
 namespace HttpClient.Logger.Custom.ResponseHandler;
 
 #pragma warning disable S2325
@@ -24,13 +26,7 @@ public sealed class HandlerOptions
         get;
         set
         {
-            if (!Helper.IsFlaggedEnumValid(value))
-            {
-                throw new ArgumentOutOfRangeException(
-                    nameof(value),
-                    value,
-                    $"{nameof(value)} ('{value}') must be a valid {nameof(ResponseHandler.LoggingFields)}.");
-            }
+            GuardExt.IsDefinedFlagsEnumCombination(value);
 
             field = value;
         }

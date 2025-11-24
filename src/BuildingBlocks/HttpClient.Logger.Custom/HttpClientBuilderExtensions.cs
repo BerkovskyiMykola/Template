@@ -26,7 +26,7 @@ public static class HttpClientBuilderExtensions
         this IHttpClientBuilder builder)
     {
         Guard.IsNotNull(builder);
-        
+
         return builder.AddHttpMessageHandler(sp =>
         {
             ILoggerFactory loggerFactory = sp.GetRequiredService<ILoggerFactory>();
@@ -52,21 +52,21 @@ public static class HttpClientBuilderExtensions
         Guard.IsNotNull(configure);
 
         _ = builder.Services.Configure(builder.Name, configure);
-        _ = builder.Services.AddPooled<PooledStringNullableObjectPairList>();
+        _ = builder.Services.AddPooled<ResettableStringNullableObjectPairList>();
 
         return builder.AddHttpMessageHandler(sp =>
         {
-            IOptionsFactory<RequestToSendHandler.HandlerOptions> optionsFactory 
+            IOptionsFactory<RequestToSendHandler.HandlerOptions> optionsFactory
                 = sp.GetRequiredService<IOptionsFactory<RequestToSendHandler.HandlerOptions>>();
-            ObjectPool<PooledStringNullableObjectPairList> objectPool 
-                = sp.GetRequiredService<ObjectPool<PooledStringNullableObjectPairList>>();
+            ObjectPool<ResettableStringNullableObjectPairList> objectPool
+                = sp.GetRequiredService<ObjectPool<ResettableStringNullableObjectPairList>>();
             ILoggerFactory loggerFactory = sp.GetRequiredService<ILoggerFactory>();
             ILogger logger = loggerFactory.CreateLogger(
                 $"System.Net.Http.HttpClient.{builder.Name}.RequestToSendLoggerHandler");
 
             return new RequestToSendHandler.Handler(
-                optionsFactory.Create(builder.Name), 
-                objectPool, 
+                optionsFactory.Create(builder.Name),
+                objectPool,
                 logger);
         });
     }
@@ -86,21 +86,21 @@ public static class HttpClientBuilderExtensions
         Guard.IsNotNull(configure);
 
         _ = builder.Services.Configure(builder.Name, configure);
-        _ = builder.Services.AddPooled<PooledStringNullableObjectPairList>();
+        _ = builder.Services.AddPooled<ResettableStringNullableObjectPairList>();
 
         return builder.AddHttpMessageHandler(sp =>
         {
-            IOptionsFactory<ResponseHandler.HandlerOptions> optionsFactory 
+            IOptionsFactory<ResponseHandler.HandlerOptions> optionsFactory
                 = sp.GetRequiredService<IOptionsFactory<ResponseHandler.HandlerOptions>>();
-            ObjectPool<PooledStringNullableObjectPairList> objectPool 
-                = sp.GetRequiredService<ObjectPool<PooledStringNullableObjectPairList>>();
+            ObjectPool<ResettableStringNullableObjectPairList> objectPool
+                = sp.GetRequiredService<ObjectPool<ResettableStringNullableObjectPairList>>();
             ILoggerFactory loggerFactory = sp.GetRequiredService<ILoggerFactory>();
             ILogger logger = loggerFactory.CreateLogger(
                 $"System.Net.Http.HttpClient.{builder.Name}.ResponseLoggerHandler");
 
             return new ResponseHandler.Handler(
-                optionsFactory.Create(builder.Name), 
-                objectPool, 
+                optionsFactory.Create(builder.Name),
+                objectPool,
                 logger);
         });
     }

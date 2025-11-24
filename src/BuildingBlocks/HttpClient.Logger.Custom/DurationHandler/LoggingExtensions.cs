@@ -10,10 +10,14 @@ namespace HttpClient.Logger.Custom.DurationHandler;
 #pragma warning disable S109 
 
 /// <summary>
-/// Provides extension methods for logging <see cref="System.Net.Http.HttpClient"/> operation duration information.
+/// Extension methods for logging <see cref="System.Net.Http.HttpClient"/> operation duration information.
 /// </summary>
 internal static partial class LoggingExtensions
 {
-    [LoggerMessage(1001, LogLevel.Information, "Duration: {durationMilliseconds}ms", EventName = "HttpClientDurationMilliseconds")]
+    [LoggerMessage(
+        1001, 
+        LogLevel.Information, 
+        "Duration: {durationMilliseconds}ms", 
+        EventName = "HttpClientDurationMilliseconds")]
     public static partial void LogDurationAsInformation(this ILogger logger, long durationMilliseconds);
 }

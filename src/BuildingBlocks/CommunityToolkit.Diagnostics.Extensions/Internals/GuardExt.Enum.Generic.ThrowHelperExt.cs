@@ -20,7 +20,7 @@ public static partial class GuardExt
         /// <exception cref="ArgumentOutOfRangeException">Thrown with the specified parameters.</exception>
         [DoesNotReturn]
         public static void ThrowArgumentOutOfRangeExceptionForIsDefinedEnum<TEnum>(
-            TEnum actualValue, 
+            TEnum actualValue,
             string? paramName)
             where TEnum : struct, Enum
         {
@@ -39,7 +39,7 @@ public static partial class GuardExt
         /// <exception cref="ArgumentOutOfRangeException">Thrown with the specified parameters.</exception>
         [DoesNotReturn]
         public static void ThrowArgumentOutOfRangeExceptionForIsDefinedFlagsEnumCombination<TEnum>(
-            TEnum actualValue, 
+            TEnum actualValue,
             string? paramName)
             where TEnum : struct, Enum
         {

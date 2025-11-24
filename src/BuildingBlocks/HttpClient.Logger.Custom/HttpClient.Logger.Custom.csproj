@@ -9,4 +9,8 @@
     <PackageReference Include="Microsoft.Extensions.ObjectPool.DependencyInjection" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CommunityToolkit.Diagnostics.Extensions\CommunityToolkit.Diagnostics.Extensions.csproj" />
+  </ItemGroup>
+
 </Project>

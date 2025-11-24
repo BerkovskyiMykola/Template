@@ -3,6 +3,8 @@
  * Copyright (c) 2025-2025 Mykola Berkovskyi
  */
 
+using CommunityToolkit.Diagnostics.Extensions;
+
 namespace HttpClient.Logger.Custom.RequestToSendHandler;
 
 #pragma warning disable S2325
@@ -20,20 +22,14 @@ public sealed class HandlerOptions
     /// Thrown if the value assigned is not a valid <see cref="RequestToSendHandler.LoggingFields"/> enum.
     /// </exception>
     public LoggingFields LoggingFields
-    { 
+    {
         get;
         set
         {
-            if (!Helper.IsFlaggedEnumValid(value))
-            {
-                throw new ArgumentOutOfRangeException(
-                    nameof(value),
-                    value,
-                    $"{nameof(value)} ('{value}') must be a valid {nameof(RequestToSendHandler.LoggingFields)}.");
-            }
+            GuardExt.IsDefinedFlagsEnumCombination(value);
 
             field = value;
-        } 
+        }
     } = LoggingFields.None;
 
     /// <summary>

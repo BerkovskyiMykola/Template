@@ -4,29 +4,44 @@
  */
 
 using System.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using Microsoft.Extensions.Logging;
 
 namespace HttpClient.Logger.Custom.DurationHandler;
 
 /// <summary>
-/// A <see cref="DelegatingHandler"/> implementation that logs the <see cref="System.Net.Http.HttpClient"/> operation duration.
+/// Logs the duration of <see cref="System.Net.Http.HttpClient"/> operations.
 /// </summary>
-/// <param name="logger">The <see cref="ILogger"/> used for logging <see cref="System.Net.Http.HttpClient"/> operation duration information.</param>
-internal sealed class Handler(ILogger logger) : DelegatingHandler
+internal sealed class Handler : DelegatingHandler
 {
-    private readonly ILogger _logger = logger;
+    private readonly ILogger _logger;
 
-    /// <summary>
-    /// Sends an <paramref name="request"/> asynchronously and logs the <see cref="System.Net.Http.HttpClient"/> operation duration.
+    ///<summary>
+    /// Initializes a new instance of the <see cref="Handler"/>.
     /// </summary>
-    /// <param name="request">The <see cref="HttpRequestMessage"/> to send.</param>
-    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-    /// <returns>A <see cref="Task{TResult}"/> that represents the asynchronous operation, containing the <see cref="HttpResponseMessage"/>.</returns>
-    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    /// <param name="logger">Used to log operation duration information.</param>
+    public Handler(ILogger logger)
     {
+        #if DEBUG
+        Guard.IsNotNull(logger);
+        #endif
+
+        _logger = logger;
+    }
+
+    /// <inheritdoc/>
+    protected override async Task<HttpResponseMessage> SendAsync(
+        HttpRequestMessage request, 
+        CancellationToken cancellationToken)
+    {
+        #if DEBUG
+        Guard.IsNotNull(request);
+        #endif
+
         Stopwatch stopwatch = Stopwatch.StartNew();
 
-        HttpResponseMessage response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        HttpResponseMessage response = await base.SendAsync(request, cancellationToken)
+            .ConfigureAwait(false);
 
         stopwatch.Stop();
 

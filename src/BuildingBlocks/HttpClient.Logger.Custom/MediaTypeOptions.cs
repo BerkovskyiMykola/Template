@@ -32,6 +32,10 @@ public sealed class MediaTypeOptions
 
     private void AddText(MediaTypeHeaderValue mediaType)
     {
+        #if DEBUG
+        Guard.IsNotNull(mediaType);
+        #endif
+
         mediaType.Encoding ??= Encoding.UTF8;
 
         _mediaTypeStates.Add(new MediaTypeState(mediaType, mediaType.Encoding));
@@ -78,12 +82,12 @@ public sealed class MediaTypeOptions
     /// Represents the state of a <see cref="Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/>, including its <see cref="System.Text.Encoding"/>.
     /// </summary>
     /// <param name="MediaTypeHeaderValue">
-    /// The <see cref="Microsoft.Net.Http.Headers.MediaTypeHeaderValue"/> that defines the media type.
+    /// The media type.
     /// </param>
     /// <param name="Encoding">
-    /// The <see cref="System.Text.Encoding"/> to use for content of this media type.
+    /// The encoding to use for content of this media type.
     /// </param>
     internal sealed record MediaTypeState(
-        MediaTypeHeaderValue MediaTypeHeaderValue, 
+        MediaTypeHeaderValue MediaTypeHeaderValue,
         Encoding Encoding);
 }

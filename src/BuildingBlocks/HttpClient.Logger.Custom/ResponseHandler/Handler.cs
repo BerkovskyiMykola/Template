@@ -4,39 +4,59 @@
  */
 
 using System.Text;
+using CommunityToolkit.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ObjectPool;
-using LogField = System.Collections.Generic.KeyValuePair<string, object?>;
+using StringNullableObjectPair = System.Collections.Generic.KeyValuePair<string, object?>;
 
 namespace HttpClient.Logger.Custom.ResponseHandler;
 
 /// <summary>
-/// A <see cref="DelegatingHandler"/> implementation that logs <see cref="HttpResponseMessage"/>
-/// according to configured <see cref="HandlerOptions"/>.
+/// Logs <see cref="HttpResponseMessage"/> according to configured <see cref="HandlerOptions"/>.
 /// </summary>
-/// <param name="options">The options controlling which parts of the <see cref="HttpResponseMessage"/> are logged.</param>
-/// <param name="objectPoolPooledLogFieldList">The object pool for <see cref="PooledStringNullableObjectPairList"/> instances.</param>
-/// <param name="logger">The logger used for logging <see cref="HttpResponseMessage"/> according to configured <paramref name="options"/>.</param>
-internal sealed class Handler(
-    HandlerOptions options,
-    ObjectPool<PooledStringNullableObjectPairList> objectPoolPooledLogFieldList,
-    ILogger logger) : DelegatingHandler
+internal sealed class Handler : DelegatingHandler
 {
-    private readonly HandlerOptions _options = options;
-    private readonly ObjectPool<PooledStringNullableObjectPairList> _objectPoolPooledLogFieldList = objectPoolPooledLogFieldList;
-    private readonly ILogger _logger = logger;
+    private readonly HandlerOptions _options;
+    private readonly ObjectPool<ResettableStringNullableObjectPairList> _objectPoolStringNullableObjectPairList;
+    private readonly ILogger _logger;
 
-    /// <summary>
-    /// Sends an <paramref name="request"/> asynchronously and logs the <see cref="HttpResponseMessage"/> based on the configured <see cref="HandlerOptions"/>.
+    ///<summary>
+    /// Initializes a new instance of the <see cref="Handler"/>.
     /// </summary>
-    /// <param name="request">The <see cref="HttpRequestMessage"/> to send.</param>
-    /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-    /// <returns>A <see cref="Task{TResult}"/> that represents the asynchronous operation, containing the <see cref="HttpResponseMessage"/>.</returns>
-    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    /// <param name="options">Controls which parts of the <see cref="HttpResponseMessage"/> are logged.</param>
+    /// <param name="objectPoolStringNullableObjectPairList">Provides pooled <see cref="ResettableStringNullableObjectPairList"/> instances.</param>
+    /// <param name="logger">Used to log <see cref="HttpResponseMessage"/> entries.</param>
+    public Handler(
+        HandlerOptions options,
+        ObjectPool<ResettableStringNullableObjectPairList> objectPoolStringNullableObjectPairList,
+        ILogger logger)
     {
-        bool shouldLog = _logger.IsEnabled(LogLevel.Information) && _options.LoggingFields is not LoggingFields.None;
+        #if DEBUG
+        Guard.IsNotNull(options);
+        Guard.IsNotNull(objectPoolStringNullableObjectPairList);
+        Guard.IsNotNull(logger);
+        #endif
 
-        HttpResponseMessage response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        _options = options;
+        _objectPoolStringNullableObjectPairList = objectPoolStringNullableObjectPairList;
+        _logger = logger;
+    }
+
+    /// <inheritdoc/>
+    protected override async Task<HttpResponseMessage> SendAsync(
+        HttpRequestMessage request, 
+        CancellationToken cancellationToken)
+    {
+        #if DEBUG
+        Guard.IsNotNull(request);
+        #endif
+
+        bool shouldLog = 
+            _logger.IsEnabled(LogLevel.Information) && 
+            _options.LoggingFields is not LoggingFields.None;
+
+        HttpResponseMessage response = await base.SendAsync(request, cancellationToken)
+            .ConfigureAwait(false);
 
         if (shouldLog)
         {
@@ -50,9 +70,14 @@ internal sealed class Handler(
 
     private void LogResponsePropertiesAndHeaders(HttpResponseMessage response)
     {
-        PooledStringNullableObjectPairList pooledLogFieldList = _objectPoolPooledLogFieldList.Get();
+        #if DEBUG
+        Guard.IsNotNull(response);
+        #endif
 
-        List<LogField> log = pooledLogFieldList.Items;
+        ResettableStringNullableObjectPairList pooledLogFieldList = 
+            _objectPoolStringNullableObjectPairList.Get();
+
+        List<StringNullableObjectPair> log = pooledLogFieldList;
 
         try
         {
@@ -63,7 +88,10 @@ internal sealed class Handler(
 
             if (_options.LoggingFields.HasFlag(LoggingFields.Headers))
             {
-                Helper.AddAllowedOrRedactedHeadersToLog(log, response.Headers, _options.AllowedHeaders);
+                Helper.AddAllowedOrRedactedHeadersToCollection(
+                    log, 
+                    response.Headers, 
+                    _options.AllowedHeaders);
             }
 
             if (log.Count > 0)
@@ -73,12 +101,16 @@ internal sealed class Handler(
         }
         finally
         {
-            _objectPoolPooledLogFieldList.Return(pooledLogFieldList);
+            _objectPoolStringNullableObjectPairList.Return(pooledLogFieldList);
         }
     }
 
     private async Task LogResponseBodyAsync(HttpResponseMessage response, CancellationToken cancellationToken)
     {
+        #if DEBUG
+        Guard.IsNotNull(response);
+        #endif
+
         if (!_options.LoggingFields.HasFlag(LoggingFields.Body))
         {
             return;
@@ -101,7 +133,16 @@ internal sealed class Handler(
             return;
         }
 
-        string? body = await Helper.ReadContentAsStringOrDefaultAsync(response.Content, encoding, _options.BodyLogLimit, _logger, cancellationToken).ConfigureAwait(false);
+        await response.Content.LoadIntoBufferAsync(cancellationToken).ConfigureAwait(false);
+
+        string? body = await 
+            Helper.ReadContentAsStringOrDefaultAsync(
+                response.Content, 
+                encoding, 
+                _options.BodyLogLimit, 
+                _logger, 
+                cancellationToken)
+            .ConfigureAwait(false);
 
         if (body is null)
         {

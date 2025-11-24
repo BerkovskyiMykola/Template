@@ -13,7 +13,7 @@ using StringNullableObjectPair = System.Collections.Generic.KeyValuePair<string,
 namespace HttpClient.Logger.Custom;
 
 /// <summary>
-/// Represents a log composed of a title and a read-only list of pairs, typically used to capture
+/// Represents a log composed of a title and a read-only list of string - nullable object pairs, typically used to capture
 /// HTTP-related information for diagnostics or auditing purposes.
 /// </summary>
 internal sealed class HttpLog : IReadOnlyList<StringNullableObjectPair>
@@ -33,7 +33,7 @@ internal sealed class HttpLog : IReadOnlyList<StringNullableObjectPair>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="title"/> or <paramref name="keyValuePairs"/> is null.</exception>
     /// <exception cref="ArgumentException">Thrown when <paramref name="title"/> is whitespace.</exception>
     public HttpLog(
-        string title, 
+        string title,
         IReadOnlyList<StringNullableObjectPair> keyValuePairs)
     {
         #if DEBUG
@@ -52,7 +52,7 @@ internal sealed class HttpLog : IReadOnlyList<StringNullableObjectPair>
     public int Count => _keyValuePairs.Count;
 
     /// <inheritdoc/>
-    public IEnumerator<StringNullableObjectPair> GetEnumerator() 
+    public IEnumerator<StringNullableObjectPair> GetEnumerator()
         => _keyValuePairs.GetEnumerator();
 
     /// <inheritdoc/>
@@ -75,6 +75,7 @@ internal sealed class HttpLog : IReadOnlyList<StringNullableObjectPair>
             for (int i = 0; i < count - 1; i++)
             {
                 StringNullableObjectPair keyValuePair = _keyValuePairs[i];
+
                 builder.Append(keyValuePair.Key);
                 builder.Append(": ");
                 builder.Append(keyValuePair.Value?.ToString());
@@ -84,6 +85,7 @@ internal sealed class HttpLog : IReadOnlyList<StringNullableObjectPair>
             if (count > 0)
             {
                 StringNullableObjectPair keyValuePair = _keyValuePairs[count - 1];
+
                 builder.Append(keyValuePair.Key);
                 builder.Append(": ");
                 builder.Append(keyValuePair.Value?.ToString());
@@ -96,7 +98,7 @@ internal sealed class HttpLog : IReadOnlyList<StringNullableObjectPair>
     }
 
     //Copied from System.Text
-    #pragma warning disable
+#pragma warning disable
     private ref struct ValueStringBuilder
     {
         private char[]? _arrayToReturnToPool;
@@ -393,5 +395,5 @@ internal sealed class HttpLog : IReadOnlyList<StringNullableObjectPair>
             }
         }
     }
-    #pragma warning restore
+#pragma warning restore
 }

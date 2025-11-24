@@ -28,7 +28,7 @@ public static partial class GuardExt
         }
 
         ThrowHelperExt.ThrowArgumentOutOfRangeExceptionForIsDefinedEnum(
-            value, 
+            value,
             paramName);
     }
 
@@ -42,7 +42,7 @@ public static partial class GuardExt
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void IsDefinedFlagsEnumCombination<TEnum>(
         TEnum value,
-        [CallerArgumentExpression(nameof(value))] string? paramName = null) 
+        [CallerArgumentExpression(nameof(value))] string? paramName = null)
         where TEnum : struct, Enum
     {
         long valueAsInt64 = Convert.ToInt64(value, null);
@@ -64,7 +64,7 @@ public static partial class GuardExt
         }
 
         ThrowHelperExt.ThrowArgumentOutOfRangeExceptionForIsDefinedFlagsEnumCombination(
-            value, 
+            value,
             paramName);
     }
 }
