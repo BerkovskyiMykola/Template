@@ -21,7 +21,7 @@ builder.Services.AddConfiguredHttpLogging(builder.Configuration);
 
 builder.Services.AddSingleton(TimeProvider.System);
 
-builder.Services.AddConfiguredTestTraceNamedHttpClient(builder.Configuration);
+builder.Services.AddConfiguredTestTraceNamedHttpClient();
 
 builder.Services.AddHostedService<Template.Api.Workers.TestTrace.Worker>();
 

@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\BuildingBlocks\HttpClient.Logger.Custom\HttpClient.Logger.Custom.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\Logging.File.Custom\Logging.File.Custom.csproj" />
   </ItemGroup>
 	
