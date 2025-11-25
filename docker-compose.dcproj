@@ -3,7 +3,6 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <DockerPublishLocally>False</DockerPublishLocally>
     <ProjectGuid>88d13d12-415a-4ee3-84d0-1520811f3af8</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>

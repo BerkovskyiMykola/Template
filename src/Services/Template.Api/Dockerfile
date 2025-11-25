@@ -14,7 +14,6 @@ WORKDIR /src
 COPY ["Directory.Packages.props", "."]
 COPY ["Directory.Build.props", "."]
 COPY ["src/Services/Template.Api/Template.Api.csproj", "src/Services/Template.Api/"]
-COPY ["src/BuildingBlocks/HttpClient.Logger.Custom/HttpClient.Logger.Custom.csproj", "src/BuildingBlocks/HttpClient.Logger.Custom/"]
 COPY ["src/BuildingBlocks/Logging.File.Custom/Logging.File.Custom.csproj", "src/BuildingBlocks/Logging.File.Custom/"]
 RUN dotnet restore "./src/Services/Template.Api/Template.Api.csproj"
 COPY . .
