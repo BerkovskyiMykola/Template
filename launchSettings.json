@@ -4,7 +4,8 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "template.api": "StartDebugging"
+        "template.api": "StartDebugging",
+        "gateway.api": "StartDebugging"
       }
     }
   }

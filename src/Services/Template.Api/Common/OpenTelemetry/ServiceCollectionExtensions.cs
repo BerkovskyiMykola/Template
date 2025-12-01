@@ -135,11 +135,6 @@ internal static class ServiceCollectionExtensions
                             _ = config.AddAspNetCoreInstrumentation();
                             break;
                         }
-                    case "EntityFrameworkCore":
-                        {
-                            _ = config.AddEntityFrameworkCoreInstrumentation();
-                            break;
-                        }
                     case "Workers":
                         {
                             _ = config.AddSource(Constants.WorkersActivitySource.Name);

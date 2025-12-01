@@ -1,4 +1,4 @@
-﻿services:
+services:
   aspire.dashboard:
     image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
 
@@ -7,3 +7,10 @@
     build:
       context: .
       dockerfile: src/Services/Template.Api/Dockerfile
+
+  gateway.api:
+    image: ${DOCKER_REGISTRY-}gateway.api
+    build:
+      context: .
+      dockerfile: src/Gateway/Api/Dockerfile
+
