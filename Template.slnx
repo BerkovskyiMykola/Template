@@ -7,11 +7,14 @@
   </Folder>
   <Folder Name="/src/" />
   <Folder Name="/src/BuildingBlocks/">
-    <Project Path="src/BuildingBlocks/CommunityToolkit.Diagnostics.Extensions/CommunityToolkit.Diagnostics.Extensions.csproj" />
-    <Project Path="src/BuildingBlocks/Logging.File.Custom/Logging.File.Custom.csproj" />
+    <Project Path="src/BuildingBlocks/CommunityToolkit.Diagnostics.Extensions/CommunityToolkit.Diagnostics.Extensions.csproj" Id="33b6a40f-1e15-45a4-81ab-6c52e01cdfc6" />
+    <Project Path="src/BuildingBlocks/Logging.File.Custom/Logging.File.Custom.csproj" Id="702046ad-d398-4c9f-aba0-8f20b1cc53a3" />
+  </Folder>
+  <Folder Name="/src/Gateway/">
+    <Project Path="src/Gateway/Api/Api.csproj" Id="e33842e8-3b3c-472d-b620-f9dd40059453" />
   </Folder>
   <Folder Name="/src/Services/">
-    <Project Path="src/Services/Template.Api/Template.Api.csproj" />
+    <Project Path="src/Services/Template.Api/Template.Api.csproj" Id="6af7d955-45ac-4a12-b8c0-63c64e869bd5" />
   </Folder>
   <Project Path="docker-compose.dcproj">
     <Build />
