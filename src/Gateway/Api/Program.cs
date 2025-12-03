@@ -3,7 +3,12 @@
  * Copyright (c) 2025-2025 Mykola Berkovskyi
  */
 
+using Api.Common.Logging;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+// Observability
+builder.Logging.AddFileIfConfigured(builder.Configuration);
 
 // Serialization / Formatting
 builder.Services.ConfigureHttpJsonOptions(config => { });

@@ -9,6 +9,11 @@
 	
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+	<PackageReference Include="CommunityToolkit.Diagnostics" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\Logging.File.Custom\Logging.File.Custom.csproj" />
   </ItemGroup>
 	
 </Project>
