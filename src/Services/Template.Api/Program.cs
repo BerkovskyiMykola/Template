@@ -34,6 +34,8 @@ builder.Services.AddHostedService<Template.Api.Workers.TestTrace.Worker>();
 
 WebApplication app = builder.Build();
 
+app.UseHttpLogging();
+
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 
@@ -43,8 +45,6 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
     #pragma warning restore IDE0058
 }
-
-app.UseHttpLogging();
 
 app.MapEndpoints();
 
