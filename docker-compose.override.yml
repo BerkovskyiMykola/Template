@@ -3,7 +3,7 @@ services:
     environment:
       - ASPIRE_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS=true
     ports:
-      - 18888:18888
+      - 4317:18888
 
   template.api:
     environment:
@@ -12,9 +12,7 @@ services:
       - OpenTelemetry__WithMetrics__Exporters__Otlp__Endpoint=http://aspire.dashboard:18889
       - OpenTelemetry__WithTracing__Exporters__Otlp__Endpoint=http://aspire.dashboard:18889
       - OpenTelemetry__WithLogging__Exporters__Otlp__Endpoint=http://aspire.dashboard:18889
-      - ApiBaseAddress=http://template.api:8080
-    ports:
-      - 9001:80
+      - ApiBaseAddress=http://template.api:80
     depends_on:
       - aspire.dashboard
 
@@ -23,6 +21,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=80
       - ASPNETCORE_HTTPS_PORTS=443
+      - OpenTelemetry__MetricsExporters__Otlp__Endpoint=http://aspire.dashboard:18889
+      - OpenTelemetry__TracesExporters__Otlp__Endpoint=http://aspire.dashboard:18889
+      - OpenTelemetry__LogsExporters__Otlp__Endpoint=http://aspire.dashboard:18889
     ports:
       - 80:80
       - 443:443

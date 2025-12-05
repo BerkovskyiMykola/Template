@@ -4,11 +4,13 @@
  */
 
 using Api.Common.Logging;
+using Api.Common.Telemetry;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Observability
 builder.Logging.AddFileIfConfigured(builder.Configuration);
+builder.Services.AddOpenTelemetryIfConfigured(builder.Configuration, builder.Environment);
 
 // Serialization / Formatting
 builder.Services.ConfigureHttpJsonOptions(config => { });
