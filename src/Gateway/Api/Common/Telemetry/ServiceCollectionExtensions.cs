@@ -41,29 +41,29 @@ internal static class ServiceCollectionExtensions
         Guard.IsNotNull(hostEnvironment);
         #endif
 
-        MyOtelOptions? otelOptions = configuration.GetSection("OpenTelemetry").Get<MyOtelOptions>();
+        MyOtelOptions? options = configuration.GetSection("OpenTelemetry").Get<MyOtelOptions>();
 
-        if (otelOptions is null || !otelOptions.HasAnyExporter)
+        if (options is null || !options.HasAnyExporter)
         {
             return services;
         }
 
-        OpenTelemetryBuilder otelBuilder = services.AddOpenTelemetry()
+        OpenTelemetryBuilder builder = services.AddOpenTelemetry()
             .ConfigureResource(resourceBuilder =>
             {
                 resourceBuilder
                     .AddService(
-                        otelOptions.Resource.ServiceName,
-                        serviceInstanceId: otelOptions.Resource.ServiceInstanceId)
+                        options.Resource.ServiceName,
+                        serviceInstanceId: options.Resource.ServiceInstanceId)
                     .AddEnvironmentVariableDetector()
                     .AddTelemetrySdk();
             });
 
-        MyMetricsExportersOptions? metricsExportersOptions = otelOptions.MetricsExporters;
+        MyMetricsExportersOptions? metricsExportersOptions = options.MetricsExporters;
 
         if (metricsExportersOptions is not null && metricsExportersOptions.HasAnyExporter)
         {
-            _ = otelBuilder.WithMetrics(meterProviderBuilder =>
+            _ = builder.WithMetrics(meterProviderBuilder =>
             {
                 _ = meterProviderBuilder
                     .AddRuntimeInstrumentation()
@@ -74,11 +74,11 @@ internal static class ServiceCollectionExtensions
             });
         }
 
-        MyTracesExportersOptions? tracesExportersOptions = otelOptions.TracesExporters;
+        MyTracesExportersOptions? tracesExportersOptions = options.TracesExporters;
 
         if (tracesExportersOptions is not null && tracesExportersOptions.HasAnyExporter)
         {
-            _ = otelBuilder.WithTracing(tracerProviderBuilder =>
+            _ = builder.WithTracing(tracerProviderBuilder =>
             {
                 _ = tracerProviderBuilder
                     .AddHttpClientInstrumentation()
@@ -93,11 +93,11 @@ internal static class ServiceCollectionExtensions
             });
         }
 
-        MyLogsExportersOptions? logsExportersOptions = otelOptions.LogsExporters;
+        MyLogsExportersOptions? logsExportersOptions = options.LogsExporters;
 
         if (logsExportersOptions is not null && logsExportersOptions.HasAnyExporter)
         {
-            _ = otelBuilder.WithLogging(logsExportersOptions.ConfigureLoggerProviderBuilder);
+            _ = builder.WithLogging(logsExportersOptions.ConfigureLoggerProviderBuilder);
         }
 
         return services;
@@ -131,7 +131,7 @@ internal static class ServiceCollectionExtensions
             options.Endpoint = new Uri(Endpoint);
             options.Protocol = Protocol;
 
-            if (Headers is { Count: > 0 })
+            if (Headers.Count > 0)
             {
                 options.Headers = string.Join(
                     ",", 
