@@ -9,12 +9,17 @@ namespace CommunityToolkit.Diagnostics.Extensions;
 
 public static partial class GuardExt
 {
-    /// <summary>
-    /// Helper methods to efficiently throw exceptions.
-    /// </summary>
     [StackTraceHidden]
     private static partial class ThrowHelperExt
     {
-
+        private static string AssertString(object? obj)
+        {
+            return obj switch
+            {
+                string _ => $"\"{obj}\"",
+                null => "null",
+                _ => $"<{obj}>"
+            };
+        }
     }
 }
