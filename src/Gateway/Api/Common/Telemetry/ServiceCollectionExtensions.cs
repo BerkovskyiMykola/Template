@@ -4,6 +4,7 @@
  */
 
 using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Diagnostics.Extensions;
 using OpenTelemetry;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Logs;
@@ -103,31 +104,106 @@ internal static class ServiceCollectionExtensions
         return services;
     }
 
-    private sealed record MyResourceOptions(
-        string ServiceName, 
-        string ServiceInstanceId)
+    private sealed class MyResourceOptions
     {
-        public MyResourceOptions() 
-            : this("Gateway.Api", Ulid.NewUlid().ToString())
+        #pragma warning disable S2325
+        public string ServiceName
+        #pragma warning restore S2325
         {
-        }
+            get;
+            set
+            {
+                #if DEBUG
+                Guard.IsNotWhiteSpace(value);
+                #endif
+
+                field = value;
+            }
+        } = "Gateway.Api";
+
+        #pragma warning disable S2325
+        public string ServiceInstanceId
+        #pragma warning restore S2325
+        {
+            get;
+            set
+            {
+                #if DEBUG
+                Guard.IsNotWhiteSpace(value);
+                #endif
+
+                field = value;
+            }
+        } = Ulid.NewUlid().ToString();
     }
 
-    private sealed record MyOtlpExporterOptions(
-        string Endpoint, 
-        OtlpExportProtocol Protocol, 
-        IReadOnlyDictionary<string, string> Headers)
+    private sealed class MyOtlpExporterOptions
     {
-        public MyOtlpExporterOptions()
-            : this(
-                "http://localhost:4317", 
-                OtlpExportProtocol.Grpc, 
-                new Dictionary<string, string>())
+        #pragma warning disable S2325
+        public string Endpoint
+        #pragma warning restore S2325
         {
-        }
+            get;
+            set
+            {
+                #if DEBUG
+                Guard.IsNotWhiteSpace(value);
+                GuardExt.IsUrl(value);
+                #endif
+
+                field = value;
+            }
+        } = "http://localhost:4317";
+
+        #pragma warning disable S2325
+        public OtlpExportProtocol Protocol
+        #pragma warning restore S2325
+        {
+            get;
+            set
+            {
+                #if DEBUG
+                GuardExt.IsDefinedEnum(value);
+                #endif
+
+                field = value;
+            }
+        } = OtlpExportProtocol.Grpc;
+
+        #pragma warning disable S2325
+        public Dictionary<string, string> Headers
+        #pragma warning restore S2325
+        {
+            get;
+            set
+            {
+                #if DEBUG
+                Guard.IsNotNull(value);
+
+                foreach (KeyValuePair<string, string> kvp in value)
+                {
+                    if (string.IsNullOrWhiteSpace(kvp.Key))
+                    {
+                        throw new ArgumentException("Header key cannot be null or whitespace.", nameof(value));
+                    }
+
+                    if (string.IsNullOrWhiteSpace(kvp.Value))
+                    {
+                        throw new ArgumentException($"Header '{kvp.Key}' has null or whitespace value.", nameof(value));
+                    }
+                }
+                #endif
+
+                field = value;
+            }
+        } = [];
 
         public void ConfigureOtlpExporterOptions(OtlpExporterOptions options)
         {
+            #if DEBUG
+            Guard.IsNotNull(options);
+            #endif
+
             options.Endpoint = new Uri(Endpoint);
             options.Protocol = Protocol;
 
@@ -135,18 +211,25 @@ internal static class ServiceCollectionExtensions
             {
                 options.Headers = string.Join(
                     ",", 
-                    Headers.Select(static h => $"{h.Key}={h.Value}"));
+                    Headers.Select(static header => $"{header.Key}={header.Value}"));
             }
         }
     }
 
-    private sealed record MyMetricsExportersOptions(
-        MyOtlpExporterOptions? Otlp)
+    private sealed class MyMetricsExportersOptions
     {
+        #pragma warning disable S3459, S1144
+        public MyOtlpExporterOptions? Otlp { get; set; }
+        #pragma warning restore S3459, S1144
+
         public bool HasAnyExporter => Otlp is not null;
 
         public void ConfigureMeterProviderBuilder(MeterProviderBuilder builder)
         {
+            #if DEBUG
+            Guard.IsNotNull(builder);
+            #endif
+
             if (Otlp is not null)
             {
                 _ = builder.AddOtlpExporter(Otlp.ConfigureOtlpExporterOptions);
@@ -154,13 +237,20 @@ internal static class ServiceCollectionExtensions
         }
     }
 
-    private sealed record MyTracesExportersOptions(
-        MyOtlpExporterOptions? Otlp)
+    private sealed class MyTracesExportersOptions
     {
+        #pragma warning disable S3459, S1144
+        public MyOtlpExporterOptions? Otlp { get; set; }
+        #pragma warning restore S3459, S1144
+
         public bool HasAnyExporter => Otlp is not null;
 
         public void ConfigureTracerProviderBuilder(TracerProviderBuilder builder)
         {
+            #if DEBUG
+            Guard.IsNotNull(builder);
+            #endif
+
             if (Otlp is not null)
             {
                 _ = builder.AddOtlpExporter(Otlp.ConfigureOtlpExporterOptions);
@@ -168,13 +258,20 @@ internal static class ServiceCollectionExtensions
         }
     }
 
-    private sealed record MyLogsExportersOptions(
-        MyOtlpExporterOptions? Otlp)
+    private sealed class MyLogsExportersOptions
     {
+        #pragma warning disable S3459, S1144
+        public MyOtlpExporterOptions? Otlp { get; set; }
+        #pragma warning restore S3459, S1144
+
         public bool HasAnyExporter => Otlp is not null;
 
         public void ConfigureLoggerProviderBuilder(LoggerProviderBuilder builder)
         {
+            #if DEBUG
+            Guard.IsNotNull(builder);
+            #endif
+
             if (Otlp is not null)
             {
                 _ = builder.AddOtlpExporter(Otlp.ConfigureOtlpExporterOptions);
@@ -182,16 +279,21 @@ internal static class ServiceCollectionExtensions
         }
     }
 
-    private sealed record MyOtelOptions(
-        MyResourceOptions Resource,
-        MyMetricsExportersOptions? MetricsExporters,
-        MyTracesExportersOptions? TracesExporters,
-        MyLogsExportersOptions? LogsExporters)
+    private sealed class MyOtelOptions
     {
-        public MyOtelOptions()
-            : this(new(), null, null, null)
-        {
-        }
+        public MyResourceOptions Resource { get; set; } = new();
+
+        #pragma warning disable S3459, S1144
+        public MyMetricsExportersOptions? MetricsExporters { get; set; }
+        #pragma warning restore S3459, S1144
+
+        #pragma warning disable S3459, S1144
+        public MyTracesExportersOptions? TracesExporters { get; set; }
+        #pragma warning restore S3459, S1144
+
+        #pragma warning disable S3459, S1144
+        public MyLogsExportersOptions? LogsExporters { get; set; }
+        #pragma warning restore S3459, S1144
 
         public bool HasAnyExporter 
             => (MetricsExporters?.HasAnyExporter ?? false) 

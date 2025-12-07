@@ -19,6 +19,7 @@
   </ItemGroup>
 	
   <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\CommunityToolkit.Diagnostics.Extensions\CommunityToolkit.Diagnostics.Extensions.csproj" />
     <ProjectReference Include="..\..\BuildingBlocks\Logging.File.Custom\Logging.File.Custom.csproj" />
   </ItemGroup>
 	

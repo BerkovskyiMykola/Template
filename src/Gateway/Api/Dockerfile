@@ -15,6 +15,8 @@ WORKDIR /src
 COPY ["Directory.Packages.props", "."]
 COPY ["Directory.Build.props", "."]
 COPY ["src/Gateway/Api/Api.csproj", "src/Gateway/Api/"]
+COPY ["src/BuildingBlocks/CommunityToolkit.Diagnostics.Extensions/CommunityToolkit.Diagnostics.Extensions.csproj", "src/BuildingBlocks/CommunityToolkit.Diagnostics.Extensions/"]
+COPY ["src/BuildingBlocks/Logging.File.Custom/Logging.File.Custom.csproj", "src/BuildingBlocks/Logging.File.Custom/"]
 RUN dotnet restore "./src/Gateway/Api/Api.csproj"
 COPY . .
 WORKDIR "/src/src/Gateway/Api"
