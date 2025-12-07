@@ -7,8 +7,6 @@ using System.Runtime.CompilerServices;
 
 namespace CommunityToolkit.Diagnostics.Extensions;
 
-#pragma warning disable CA1062
-
 public static partial class GuardExt
 {
     /// <summary>
@@ -22,7 +20,9 @@ public static partial class GuardExt
         string value,
         [CallerArgumentExpression(nameof(value))] string? paramName = null)
     {
+        #pragma warning disable CA1062
         if (value.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+        #pragma warning restore CA1062
             || value.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
             || value.StartsWith("ftp://", StringComparison.OrdinalIgnoreCase))
         {
