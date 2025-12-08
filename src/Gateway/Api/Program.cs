@@ -13,7 +13,7 @@ builder.Logging.AddFileIfConfigured(builder.Configuration);
 builder.Services.AddOpenTelemetryIfConfigured(builder.Configuration, builder.Environment);
 
 // Serialization / Formatting
-builder.Services.ConfigureHttpJsonOptions(config => { });
+builder.Services.ConfigureHttpJsonOptions(options => { });
 builder.Services.AddProblemDetails();
 
 WebApplication app = builder.Build();

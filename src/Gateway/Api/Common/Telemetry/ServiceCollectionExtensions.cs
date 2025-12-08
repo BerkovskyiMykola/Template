@@ -180,16 +180,16 @@ internal static class ServiceCollectionExtensions
                 #if DEBUG
                 Guard.IsNotNull(value);
 
-                foreach (KeyValuePair<string, string> kvp in value)
+                foreach (KeyValuePair<string, string> header in value)
                 {
-                    if (string.IsNullOrWhiteSpace(kvp.Key))
+                    if (string.IsNullOrWhiteSpace(header.Key))
                     {
                         throw new ArgumentException("Header key cannot be null or whitespace.", nameof(value));
                     }
 
-                    if (string.IsNullOrWhiteSpace(kvp.Value))
+                    if (string.IsNullOrWhiteSpace(header.Value))
                     {
-                        throw new ArgumentException($"Header '{kvp.Key}' has null or whitespace value.", nameof(value));
+                        throw new ArgumentException($"Header '{header.Key}' has null or whitespace value.", nameof(value));
                     }
                 }
                 #endif
