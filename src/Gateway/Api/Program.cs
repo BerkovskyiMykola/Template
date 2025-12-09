@@ -11,6 +11,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 // Observability
 builder.Logging.AddFileIfConfigured(builder.Configuration);
 builder.Services.AddOpenTelemetryIfConfigured(builder.Configuration, builder.Environment);
+builder.Services.AddHttpLoggingIfConfigured(builder.Configuration);
 
 // Serialization / Formatting
 builder.Services.ConfigureHttpJsonOptions(options => { });
