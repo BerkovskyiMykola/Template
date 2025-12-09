@@ -104,18 +104,16 @@ internal static class ServiceCollectionExtensions
         return services;
     }
 
-    private sealed class MyResourceOptions
+    private sealed record MyResourceOptions
     {
         #pragma warning disable S2325
         public string ServiceName
         #pragma warning restore S2325
         {
             get;
-            set
+            init
             {
-                #if DEBUG
                 Guard.IsNotWhiteSpace(value);
-                #endif
 
                 field = value;
             }
@@ -126,30 +124,26 @@ internal static class ServiceCollectionExtensions
         #pragma warning restore S2325
         {
             get;
-            set
+            init
             {
-                #if DEBUG
                 Guard.IsNotWhiteSpace(value);
-                #endif
 
                 field = value;
             }
         } = Ulid.NewUlid().ToString();
     }
 
-    private sealed class MyOtlpExporterOptions
+    private sealed record MyOtlpExporterOptions
     {
         #pragma warning disable S2325
         public string Endpoint
         #pragma warning restore S2325
         {
             get;
-            set
+            init
             {
-                #if DEBUG
                 Guard.IsNotWhiteSpace(value);
                 GuardExt.IsUrl(value);
-                #endif
 
                 field = value;
             }
@@ -160,11 +154,9 @@ internal static class ServiceCollectionExtensions
         #pragma warning restore S2325
         {
             get;
-            set
+            init
             {
-                #if DEBUG
                 GuardExt.IsDefinedEnum(value);
-                #endif
 
                 field = value;
             }
@@ -175,9 +167,8 @@ internal static class ServiceCollectionExtensions
         #pragma warning restore S2325
         {
             get;
-            set
+            init
             {
-                #if DEBUG
                 Guard.IsNotNull(value);
 
                 foreach (KeyValuePair<string, string> header in value)
@@ -192,7 +183,6 @@ internal static class ServiceCollectionExtensions
                         throw new ArgumentException($"Header '{header.Key}' has null or whitespace value.", nameof(value));
                     }
                 }
-                #endif
 
                 field = value;
             }
@@ -216,10 +206,10 @@ internal static class ServiceCollectionExtensions
         }
     }
 
-    private sealed class MyMetricsExportersOptions
+    private sealed record MyMetricsExportersOptions
     {
         #pragma warning disable S3459, S1144
-        public MyOtlpExporterOptions? Otlp { get; set; }
+        public MyOtlpExporterOptions? Otlp { get; init; }
         #pragma warning restore S3459, S1144
 
         public bool HasAnyExporter => Otlp is not null;
@@ -237,10 +227,10 @@ internal static class ServiceCollectionExtensions
         }
     }
 
-    private sealed class MyTracesExportersOptions
+    private sealed record MyTracesExportersOptions
     {
         #pragma warning disable S3459, S1144
-        public MyOtlpExporterOptions? Otlp { get; set; }
+        public MyOtlpExporterOptions? Otlp { get; init; }
         #pragma warning restore S3459, S1144
 
         public bool HasAnyExporter => Otlp is not null;
@@ -258,10 +248,10 @@ internal static class ServiceCollectionExtensions
         }
     }
 
-    private sealed class MyLogsExportersOptions
+    private sealed record MyLogsExportersOptions
     {
         #pragma warning disable S3459, S1144
-        public MyOtlpExporterOptions? Otlp { get; set; }
+        public MyOtlpExporterOptions? Otlp { get; init; }
         #pragma warning restore S3459, S1144
 
         public bool HasAnyExporter => Otlp is not null;
@@ -279,20 +269,20 @@ internal static class ServiceCollectionExtensions
         }
     }
 
-    private sealed class MyOtelOptions
+    private sealed record MyOtelOptions
     {
-        public MyResourceOptions Resource { get; set; } = new();
+        public MyResourceOptions Resource { get; init; } = new();
 
         #pragma warning disable S3459, S1144
-        public MyMetricsExportersOptions? MetricsExporters { get; set; }
+        public MyMetricsExportersOptions? MetricsExporters { get; init; }
         #pragma warning restore S3459, S1144
 
         #pragma warning disable S3459, S1144
-        public MyTracesExportersOptions? TracesExporters { get; set; }
+        public MyTracesExportersOptions? TracesExporters { get; init; }
         #pragma warning restore S3459, S1144
 
         #pragma warning disable S3459, S1144
-        public MyLogsExportersOptions? LogsExporters { get; set; }
+        public MyLogsExportersOptions? LogsExporters { get; init; }
         #pragma warning restore S3459, S1144
 
         public bool HasAnyExporter 
