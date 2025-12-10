@@ -19,6 +19,8 @@ builder.Services.AddProblemDetails();
 
 WebApplication app = builder.Build();
 
+app.UseHttpLoggingIfConfigured(app.Configuration);
+
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 
