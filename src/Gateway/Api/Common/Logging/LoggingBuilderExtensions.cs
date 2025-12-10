@@ -33,10 +33,12 @@ internal static class LoggingBuilderExtensions
         Guard.IsNotNull(configuration);
         #endif
 
-        if (configuration.GetSection("Logging:File").Exists())
+        if (!configuration.GetSection("Logging:File").Exists())
         {
-            _ = loggingBuilder.AddFile();
+            return loggingBuilder;
         }
+
+        _ = loggingBuilder.AddFile();
 
         return loggingBuilder;
     }
