@@ -9,7 +9,7 @@
     <PackageVersion Include="Microsoft.Extensions.Compliance.Redaction" Version="10.1.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.AutoActivation" Version="10.1.0" />
     <PackageVersion Include="Microsoft.Extensions.Http.Diagnostics" Version="10.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.1.0" />
     <PackageVersion Include="Microsoft.Extensions.ObjectPool.DependencyInjection" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Telemetry" Version="10.1.0" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
@@ -19,6 +19,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.14.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.14.0" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.16.1.129956" />
+	<PackageVersion Include="System.CommandLine" Version="2.0.1" />
     <PackageVersion Include="Ulid" Version="1.4.1" />
   </ItemGroup>
 </Project>
