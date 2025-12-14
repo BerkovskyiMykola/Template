@@ -9,6 +9,8 @@ using Api.Common.Telemetry;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Observability
+builder.Services.AddRedaction();
+builder.Logging.EnableRedaction();
 builder.Logging.AddFileIfConfigured(builder.Configuration);
 builder.Services.AddOpenTelemetryIfConfigured(builder.Configuration, builder.Environment);
 builder.Services.AddHttpLoggingIfConfigured(builder.Configuration);
