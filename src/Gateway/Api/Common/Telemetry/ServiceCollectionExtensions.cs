@@ -54,7 +54,7 @@ internal static class ServiceCollectionExtensions
             {
                 resourceBuilder
                     .AddService(
-                        options.Resource.ServiceName,
+                        hostEnvironment.ApplicationName,
                         serviceInstanceId: options.Resource.ServiceInstanceId)
                     .AddEnvironmentVariableDetector()
                     .AddTelemetrySdk();
@@ -106,19 +106,6 @@ internal static class ServiceCollectionExtensions
 
     private sealed record MyResourceOptions
     {
-        #pragma warning disable S2325
-        public string ServiceName
-        #pragma warning restore S2325
-        {
-            get;
-            init
-            {
-                Guard.IsNotWhiteSpace(value);
-
-                field = value;
-            }
-        } = "Gateway.Api";
-
         #pragma warning disable S2325
         public string ServiceInstanceId
         #pragma warning restore S2325

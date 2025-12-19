@@ -12,7 +12,6 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 ///Ambient metadata
 builder.Services.AddBuildMetadata(builder.Configuration.GetSection("AmbientMetadata:Build"));
-
 builder.UseApplicationMetadata("AmbientMetadata:Application");
 
 // Observability
