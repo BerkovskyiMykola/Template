@@ -10,6 +10,7 @@
     <PackageVersion Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Compliance.Redaction" Version="10.1.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.AutoActivation" Version="10.1.0" />
+    <PackageVersion Include="Microsoft.Extensions.Diagnostics.ExceptionSummarization" Version="10.1.0" />
     <PackageVersion Include="Microsoft.Extensions.Http.Diagnostics" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.1.0" />
     <PackageVersion Include="Microsoft.Extensions.ObjectPool.DependencyInjection" Version="10.0.0" />

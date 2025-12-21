@@ -16,7 +16,6 @@ builder.UseApplicationMetadata("AmbientMetadata:Application");
 
 // Observability
 builder.Services.AddRedaction();
-builder.Logging.EnableRedaction();
 builder.Logging.AddFileIfConfigured(builder.Configuration);
 builder.Services.AddOpenTelemetryIfConfigured(builder.Configuration, builder.Environment);
 builder.Services.AddHttpLoggingIfConfigured(builder.Configuration);
