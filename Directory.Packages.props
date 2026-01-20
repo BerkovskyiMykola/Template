@@ -4,16 +4,16 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="CommunityToolkit.Diagnostics" Version="8.4.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.Middleware" Version="10.1.0" />
-    <PackageVersion Include="Microsoft.Extensions.AmbientMetadata.Application" Version="10.1.0" />
-    <PackageVersion Include="Microsoft.Extensions.AmbientMetadata.Build" Version="10.1.0-preview.1.25608.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.Middleware" Version="10.2.0" />
+    <PackageVersion Include="Microsoft.Extensions.AmbientMetadata.Application" Version="10.2.0" />
+    <PackageVersion Include="Microsoft.Extensions.AmbientMetadata.Build" Version="10.2.0" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Hybrid" Version="10.1.0" />
     <PackageVersion Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.Extensions.Compliance.Redaction" Version="10.1.0" />
+    <PackageVersion Include="Microsoft.Extensions.Compliance.Redaction" Version="10.2.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.AutoActivation" Version="10.1.0" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.ExceptionSummarization" Version="10.1.0" />
     <PackageVersion Include="Microsoft.Extensions.Http.Diagnostics" Version="10.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.1.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.2.0" />
     <PackageVersion Include="Microsoft.Extensions.ObjectPool.DependencyInjection" Version="10.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Resilience" Version="10.1.0" />
     <PackageVersion Include="Microsoft.Extensions.Telemetry" Version="10.1.0" />
