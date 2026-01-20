@@ -44,6 +44,8 @@ internal static class ServiceCollectionExtensions
 
         services.AddHttpLogging(options.ConfigureHttpLoggingOptions);
 
+        services.AddHttpLoggingRedaction(options => { });
+
         return services;
     }
 

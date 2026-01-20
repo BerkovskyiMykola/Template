@@ -9,6 +9,7 @@
   </PropertyGroup>
 	
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.Middleware" />
     <PackageReference Include="Microsoft.Extensions.AmbientMetadata.Application" />
     <PackageReference Include="Microsoft.Extensions.AmbientMetadata.Build" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
