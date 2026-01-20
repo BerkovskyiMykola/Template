@@ -3,16 +3,13 @@
  * Copyright (c) 2025-2025 Mykola Berkovskyi
  */
 
+using Api.Common.AmbientMetadata;
 using Api.Common.Logging;
 using Api.Common.Telemetry;
-using Microsoft.Extensions.AmbientMetadata;
-using Microsoft.Extensions.Options;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-///Ambient metadata
-builder.Services.AddBuildMetadata(builder.Configuration.GetSection("AmbientMetadata:Build"));
-builder.UseApplicationMetadata("AmbientMetadata:Application");
+builder.AddConfiguredAmbientMetadata();
 
 // Observability
 builder.Services.AddRedaction();
@@ -40,8 +37,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("api/ambient-metadata/build", static (IOptions<BuildMetadata> options) => options.Value);
-
-app.MapGet("api/ambient-metadata/application", static (IOptions<ApplicationMetadata> options) => options.Value);
+app.MapConfiguredAmbientMetadataEndpoints();
 
 await app.RunAsync().ConfigureAwait(false);

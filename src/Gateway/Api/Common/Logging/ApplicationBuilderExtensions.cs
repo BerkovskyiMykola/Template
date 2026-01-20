@@ -21,7 +21,7 @@ internal static class ApplicationBuilderExtensions
     /// </remarks>
     /// <param name="app">The application to which the HttpLogging will be added.</param>  
     /// <param name="configuration">The configuration used to check whether the HttpLogging is configured.</param>  
-    /// <returns>The original services.</returns> 
+    /// <returns>The original host application.</returns> 
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="app"/> or <paramref name="configuration"/> is null.</exception>
     public static IApplicationBuilder UseHttpLoggingIfConfigured(
         this IApplicationBuilder app, 
