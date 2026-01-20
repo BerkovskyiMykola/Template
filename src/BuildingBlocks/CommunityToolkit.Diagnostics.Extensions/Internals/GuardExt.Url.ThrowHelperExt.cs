@@ -11,12 +11,6 @@ public static partial class GuardExt
 {
     private static partial class ThrowHelperExt
     {
-        /// <summary>
-        /// Throws an <see cref="ArgumentException"/> when <see cref="IsUrl(string,string)"/> fails.
-        /// </summary>
-        /// <param name="value">The argument value.</param>
-        /// <param name="paramName">The argument name.</param>
-        /// <exception cref="ArgumentException">Thrown with the specified parameters.</exception>
         [DoesNotReturn]
         public static void ThrowArgumentExceptionForIsUrl(
             string value,

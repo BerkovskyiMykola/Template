@@ -11,13 +11,6 @@ public static partial class GuardExt
 {
     private static partial class ThrowHelperExt
     {
-        /// <summary>
-        /// Throws an <see cref="ArgumentOutOfRangeException"/> when <see cref="IsDefinedEnum{TEnum}(TEnum,string)"/> fails.
-        /// </summary>
-        /// <typeparam name="TEnum">The type of the input actual value.</typeparam>
-        /// <param name="actualValue">The argument actual value.</param>
-        /// <param name="paramName">The argument name.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown with the specified parameters.</exception>
         [DoesNotReturn]
         public static void ThrowArgumentOutOfRangeExceptionForIsDefinedEnum<TEnum>(
             TEnum actualValue,
@@ -30,13 +23,6 @@ public static partial class GuardExt
                 $"Parameter \"{paramName}\" ({typeof(TEnum).Name}) must be defined enum.");
         }
 
-        /// <summary>
-        /// Throws an <see cref="ArgumentOutOfRangeException"/> when <see cref="IsDefinedFlagsEnumCombination{TEnum}(TEnum,string)"/> fails.
-        /// </summary>
-        /// <typeparam name="TEnum">The type of the input actual value.</typeparam>
-        /// <param name="actualValue">The argument actual value.</param>
-        /// <param name="paramName">The argument name.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown with the specified parameters.</exception>
         [DoesNotReturn]
         public static void ThrowArgumentOutOfRangeExceptionForIsDefinedFlagsEnumCombination<TEnum>(
             TEnum actualValue,
