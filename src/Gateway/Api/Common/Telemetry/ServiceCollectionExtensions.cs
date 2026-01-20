@@ -106,9 +106,7 @@ internal static class ServiceCollectionExtensions
 
     private sealed record MyResourceOptions
     {
-        #pragma warning disable S2325
         public string ServiceInstanceId
-        #pragma warning restore S2325
         {
             get;
             init
@@ -122,9 +120,7 @@ internal static class ServiceCollectionExtensions
 
     private sealed record MyOtlpExporterOptions
     {
-        #pragma warning disable S2325
         public string Endpoint
-        #pragma warning restore S2325
         {
             get;
             init
@@ -136,9 +132,7 @@ internal static class ServiceCollectionExtensions
             }
         } = "http://localhost:4317";
 
-        #pragma warning disable S2325
         public OtlpExportProtocol Protocol
-        #pragma warning restore S2325
         {
             get;
             init
@@ -149,9 +143,7 @@ internal static class ServiceCollectionExtensions
             }
         } = OtlpExportProtocol.Grpc;
 
-        #pragma warning disable S2325
         public Dictionary<string, string> Headers
-        #pragma warning restore S2325
         {
             get;
             init

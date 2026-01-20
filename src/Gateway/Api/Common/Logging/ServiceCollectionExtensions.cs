@@ -51,9 +51,7 @@ internal static class ServiceCollectionExtensions
 
     private sealed record MyHttpLoggingOptions
     {
-        #pragma warning disable S2325
         public HttpLoggingFields? LoggingFields 
-        #pragma warning restore S2325
         { 
             get;
 
@@ -70,9 +68,7 @@ internal static class ServiceCollectionExtensions
             } 
         }
 
-        #pragma warning disable S2325
         public string[]? RequestHeaders 
-        #pragma warning restore S2325
         { 
             get;
 
@@ -95,9 +91,7 @@ internal static class ServiceCollectionExtensions
             }
         }
 
-        #pragma warning disable S2325
         public string[]? ResponseHeaders 
-        #pragma warning restore S2325
         { 
             get;
 
@@ -120,9 +114,7 @@ internal static class ServiceCollectionExtensions
             }
         }
 
-        #pragma warning disable S2325
         public string[]? TextMediaTypes 
-        #pragma warning restore S2325
         { 
             get;
 
@@ -150,9 +142,7 @@ internal static class ServiceCollectionExtensions
             }
         }
 
-        #pragma warning disable S2325
         public int? RequestBodyLogLimit 
-        #pragma warning restore S2325
         { 
             get;
             
@@ -169,9 +159,7 @@ internal static class ServiceCollectionExtensions
             }
         }
 
-        #pragma warning disable S2325
         public int? ResponseBodyLogLimit 
-        #pragma warning restore S2325
         { 
             get;
             

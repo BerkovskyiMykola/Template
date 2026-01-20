@@ -5,8 +5,6 @@
 
 namespace Logging.File.Custom;
 
-#pragma warning disable S2325
-
 /// <summary>
 /// Options for a <see cref="Logger"/>.
 /// </summary>
